@@ -56,7 +56,7 @@ for j in range(num_epochs):
 		batch_label = labels_test[i*batch_size:(i+1)*batch_size]  
 		batch_error = sess.run(MSE, feed_dict={input_placeholder: batch_input, label_placeholder: batch_label})
 		test_error[j] += batch_error/num_batches
-	print("epoch %d has a training error of %f and a testing error of %f" % (j+1,  train_error, train_error[j], test_error[j]))
+	print("epoch %d has a training error of %f and a testing error of %f" % (j+1, train_error[j], test_error[j]))
 saver.save(sess, save_path)
 
 #Plot results
