@@ -1,1 +1,75 @@
+import numpy as np
+import tensorflow as tf
+import matplotlib.pyplot as plt 
+import pylab
+
+#Hyperparameters
+label_dim = 1
+max_seasons = 4
+num_predictors = 10
+hidden_size = 32
+lr = .001
+save_path = "Weights/saved.weights"
+
+#load in data
+inputs =
+labels = 
+inputs_train, inputs_test = np.split(inputs, [int(num_players*.75)])
+labels_train, labels_test = np.split(labels, [int(num_players*.75]))
+batch_size = 1 #We barely have any data so this can be low
+num_entries = len(inputs_train)
+num_batches = int(np.floor(num_entries/batch_size))
+num_test_batches = int(np.floor(len(inputs_test)/batch_size))
+
+#Initialize Placeholders
+input_placeholder = tf.placeholder(tf.float32, shape = (None, max_seasons, num_predictors), name='input_placeholder')  
+label_placeholder = tf.placeholder(tf.float32, shape = (None, label_dim), name='label_placeholder')
+
+#Build architecture
+LSTM_cell = tf.nn.rnn_cell.BasicLSTMCell(num_units = hidden_size)
+outputs, state = tf.nn.bidirectional_dynamic_rnn(LSTM_cell, LSTM_cell, input_placeholder, dtype = tf.float32)
+final_hidden = (state[0][1], state[1][1])
+final_hidden = tf.concat(final_hidden, 1)
+W = tf.get_variable(dtype = tf.float32, shape = [hidden_size*2, label_dim], name = "W", trainable = True)
+b = tf.get_variable(dtype = tf.float32, shape = [label_dim], name = "b", trainable = True)
+pred = tf.matmul(final_hidden, W)+b
+MSE = tf.reduce_mean(tf.squared_difference(pred, label_placeholder))
+
+train_step = tf.train.AdamOptimizer(lr).minimize(MSE)
+
+sess = tf.Session()
+tf.global_variables_initializer().run(session = sess)
+
+#Train Model
+saver = tf.train.Saver()
+num_epochs = 100
+train_accuracy = []
+test_accuracy  = []
+for j in range(num_epochs):
+	train_accuracy.append(0)
+	for i in range(num_batches):  
+		batch_input = inputs_train[i*batch_size:(i+1)*batch_size]  
+		batch_label = labels_train[i*batch_size:(i+1)*batch_size]  
+		_, batch_accuracy, _pred, train_error= sess.run([train_step, accuracy, pred, MSE], feed_dict={input_placeholder: batch_input, label_placeholder: batch_label})			
+		train_accuracy[j] += batch_accuracy/num_batches
+	test_accuracy.append(0)
+	for i in range(num_test_batches):
+		batch_input = inputs_test[i*batch_size:(i+1)*batch_size]  
+		batch_label = labels_test[i*batch_size:(i+1)*batch_size]  
+		batch_accuracy = sess.run(accuracy, feed_dict={input_placeholder: batch_input, label_placeholder: batch_label})
+		test_accuracy[j] += batch_accuracy/num_batches
+	print("epoch %d has train error of %f, train accuracy of %f and test accuracy of %f" % (j+1,  train_error, train_accuracy[j], test_accuracy[j]))
+saver.save(sess, save_path)
+
+#Plot results
+plt.figure()
+plt.plot(train_accuracy, 'r--', label = 'Train')
+plt.plot(test_accuracy, 'k--', label = 'Test')
+plt.title('Training Curve')
+plt.xlabel('Epoch')
+plt.ylabel('Accuracy')
+plt.legend(loc = 'upper left')
+axes = plt.gca()
+pylab.savefig("training_curve.png")
+plt.close()
 
