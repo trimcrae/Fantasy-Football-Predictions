@@ -259,7 +259,6 @@ th,td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;white
 td.n,th.n{text-align:right;font-variant-numeric:tabular-nums}tr.now td{background:var(--now)}tbody tr:last-child td{border-bottom:none}
 .tm{display:inline-flex;align-items:center;gap:7px;font-weight:600;vertical-align:middle}.tm img{width:22px;height:22px;border-radius:5px}.tm.s img{width:18px;height:18px}.opp{display:inline-flex;align-items:center;gap:5px;color:var(--ink2)}
 .plan{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;color:var(--ink2);white-space:normal;letter-spacing:.01em}
-.ent{color:var(--ink3);font-size:12px;white-space:normal}
 .reason{display:none;white-space:normal;color:var(--ink2);font-size:12.5px;max-width:420px}.showall .reason{display:table-cell}
 .grid-t td{padding:4px 6px;font-size:12px;text-align:center}.grid-t td.now{font-weight:700;background:var(--now)}.grid-t td:first-child{text-align:left}
 .notes{margin:14px 0 0;padding:0 0 0 18px;color:var(--ink2);font-size:13.5px;line-height:1.5}.notes li{margin:5px 0}
@@ -499,7 +498,7 @@ def render_week_page(season: int, week: int, snaps: list[dict], games: pd.DataFr
                 lock = " <span class=\"tag\">locked</span>" if r["status"] == "locked" else ""
                 rows.append(f"<div class=\"row\"><div>{_team(team, 30)}{lock}</div><div class=\"mid\">{_meter(r['p_win'])}<span class=\"sub\">{pre} {_esc(opp)} &middot; {_esc(r['kickoff'])}</span></div>"
                             f"<div class=\"r\"><b>&times;{len(ents)}</b> {_badge(res)}</div>"
-                            f"<div class=\"m\"><span class=\"why\">{_pick_why(s, team, full=True)}</span> <span class=\"ent why more\">{_esc(' '.join('#' + e for e in ents))}</span></div></div>")
+                            f"<div class=\"m\"><span class=\"why\">{_pick_why(s, team, full=True)}</span></div></div>")
             card.append(f"<div class=\"picks-list\">{''.join(rows)}</div>")
             if ex.get("exposure"):
                 card.append(f"<p class=\"why\">{_esc(ex['exposure'])}</p>")
