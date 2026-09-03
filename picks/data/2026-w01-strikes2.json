@@ -27,7 +27,7 @@
   17,
   18
  ],
- "generated_at": "2026-09-03T12:44:57.518315-04:00",
+ "generated_at": "2026-09-03T12:49:15.584280-04:00",
  "ratings_source": "market",
  "n_lines_posted": 112,
  "n_priced_games": 112,
@@ -108,9 +108,9 @@
   },
   {
    "team": "DET",
-   "p_now": 0.718,
-   "score": 0.0361,
-   "p_season": 0.1524,
+   "p_now": 0.7221,
+   "score": 0.0363,
+   "p_season": 0.1532,
    "plan": [
     "LAC",
     "SF",
@@ -160,7 +160,7 @@
    "team": "LV",
    "p_now": 0.6369,
    "score": 0.0346,
-   "p_season": 0.1441,
+   "p_season": 0.1443,
    "plan": [
     "LAC",
     "SF",
@@ -208,9 +208,9 @@
   },
   {
    "team": "CIN",
-   "p_now": 0.6369,
-   "score": 0.0336,
-   "p_season": 0.1489,
+   "p_now": 0.6309,
+   "score": 0.0334,
+   "p_season": 0.1472,
    "plan": [
     "LAC",
     "SF",
@@ -489,8 +489,8 @@
    "opp": "NO",
    "home": true,
    "neutral": false,
-   "prob": 0.718,
-   "spread": 6.6741,
+   "prob": 0.7221,
+   "spread": 6.8154,
    "source": "moneyline",
    "kickoff": "2026-09-13T13:00:00-04:00",
    "locked": false,
@@ -524,19 +524,6 @@
    "qb_note": ""
   },
   {
-   "team": "CIN",
-   "opp": "TB",
-   "home": true,
-   "neutral": false,
-   "prob": 0.6369,
-   "spread": 4.052,
-   "source": "moneyline",
-   "kickoff": "2026-09-13T13:00:00-04:00",
-   "locked": false,
-   "played": false,
-   "qb_note": ""
-  },
-  {
    "team": "LV",
    "opp": "MIA",
    "home": true,
@@ -545,6 +532,19 @@
    "spread": 4.052,
    "source": "moneyline",
    "kickoff": "2026-09-13T16:25:00-04:00",
+   "locked": false,
+   "played": false,
+   "qb_note": ""
+  },
+  {
+   "team": "CIN",
+   "opp": "TB",
+   "home": true,
+   "neutral": false,
+   "prob": 0.6309,
+   "spread": 3.8685,
+   "source": "moneyline",
+   "kickoff": "2026-09-13T13:00:00-04:00",
    "locked": false,
    "played": false,
    "qb_note": ""
@@ -784,6 +784,19 @@
    "qb_note": ""
   },
   {
+   "team": "TB",
+   "opp": "CIN",
+   "home": false,
+   "neutral": false,
+   "prob": 0.3691,
+   "spread": -3.8685,
+   "source": "moneyline",
+   "kickoff": "2026-09-13T13:00:00-04:00",
+   "locked": false,
+   "played": false,
+   "qb_note": ""
+  },
+  {
    "team": "SF",
    "opp": "LA",
    "home": false,
@@ -792,19 +805,6 @@
    "spread": -4.052,
    "source": "moneyline",
    "kickoff": "2026-09-10T20:35:00-04:00",
-   "locked": false,
-   "played": false,
-   "qb_note": ""
-  },
-  {
-   "team": "TB",
-   "opp": "CIN",
-   "home": false,
-   "neutral": false,
-   "prob": 0.3631,
-   "spread": -4.052,
-   "source": "moneyline",
-   "kickoff": "2026-09-13T13:00:00-04:00",
    "locked": false,
    "played": false,
    "qb_note": ""
@@ -840,8 +840,8 @@
    "opp": "DET",
    "home": false,
    "neutral": false,
-   "prob": 0.282,
-   "spread": -6.6741,
+   "prob": 0.2779,
+   "spread": -6.8154,
    "source": "moneyline",
    "kickoff": "2026-09-13T13:00:00-04:00",
    "locked": false,
@@ -1037,7 +1037,7 @@
    "66% now vs 81%. Later plan differs in 4 weeks (wk 2: LAC 73% for SF 81%, ...).",
    "64% now vs 81%. Later plan differs in 4 weeks (wk 2: LAC 73% for SF 81%, ...).",
    "62% now vs 81%. Later plan differs in 4 weeks (wk 2: LAC 73% for SF 81%, ...).",
-   "64% now vs 81%. Later plan differs in 4 weeks (wk 2: LAC 73% for SF 81%, ...).",
+   "63% now vs 81%. Later plan differs in 4 weeks (wk 2: LAC 73% for SF 81%, ...).",
    "58% now vs 81%. Later plan differs in 3 weeks (wk 2: LAC 73% for SF 81%, ...).",
    "61% now vs 81%. Later plan differs in 1 week (wk 16: LAC 61% for BAL 65%).",
    "64% now vs 81%. Later plan differs in 4 weeks (wk 2: LAC 73% for SF 81%, ...).",
@@ -1126,6 +1126,10 @@
   },
   {
    "generated_at": "2026-09-03T12:43:03.223407-04:00",
+   "picks": "LAC"
+  },
+  {
+   "generated_at": "2026-09-03T12:44:57.518315-04:00",
    "picks": "LAC"
   }
  ]
