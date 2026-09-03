@@ -200,7 +200,7 @@ def cmd_snapshot(args):
             ratings = _ratings(args, cfg, season)
             ratings_loaded = True
         res = make_plan(state, df, cfg, ledger, ratings, now=now, season=season, week=week,
-                        source=args.source, overrides=overrides)
+                        source=args.source, overrides=overrides, keep_wins=True)
         previous = load_snapshot(snapshot_path(res.season, res.week, pool.stem, data_dir))
         snap = build_snapshot(res, pool.stem, generated_at=now, previous=previous, ledger=ledger, cfg=cfg)
         path = write_snapshot(snap, data_dir)

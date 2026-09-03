@@ -409,7 +409,7 @@ def _pool_summary_tiles(s: dict) -> str:
 def _pick_why(s: dict, team: str, full: bool = False) -> str:
     """Timing sentence always; the price and the passed-over favourites only in details mode."""
     pk = ((s.get("explain") or {}).get("picks") or {}).get(team) or {}
-    base = _esc(pk.get("timing", ""))
+    base = _esc(" ".join(x for x in (pk.get("timing", ""), pk.get("hedge", "")) if x))
     if not full:
         return base
     more = " ".join(pk.get(k, "") for k in ("probability", "not_used") if pk.get(k))
