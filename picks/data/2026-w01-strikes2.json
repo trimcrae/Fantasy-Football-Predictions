@@ -27,7 +27,7 @@
   17,
   18
  ],
- "generated_at": "2026-09-03T11:55:55.759276-04:00",
+ "generated_at": "2026-09-03T11:58:40.417692-04:00",
  "ratings_source": "market",
  "n_lines_posted": 112,
  "n_priced_games": 112,
@@ -1021,11 +1021,11 @@
  },
  "qb_situations": [],
  "explain": {
-  "summary": "Simulated chance of at most 2 losses in 18 picks. Score 3.0% is the same under the 16x future discount; it ranks plans, it is not a forecast.",
+  "summary": "Chance of at most 2 losses in 18 picks, from simulated seasons. The score treats later weeks as far less certain; it ranks plans and is not a forecast.",
   "exposure": "",
   "picks": {
    "LAC": {
-    "probability": "moneyline, LAC +10.2 at home.",
+    "probability": "From the betting odds: LAC favoured by 10.2 at home.",
     "timing": "Best spot on the remaining schedule; LAC's next best is 68% (wk 2 vs LV).",
     "not_used": ""
    }
@@ -1052,9 +1052,9 @@
    "1": "Avg 66% per pick; weakest wk 14 CHI 59%."
   },
   "notes": [
-   "Ratings: fitted from 112 posted lines, seeded by last season regressed to average.",
+   "Team ratings are backed out of the 112 point spreads posted so far, starting from last season's ratings pulled toward average.",
    "Week 18 spots are shrunk 20% toward 50% for resting starters.",
-   "Later-week percentages are the planning view, discounted 16x toward 50%; survival percentages are simulated without that discount.",
+   "Percentages for later weeks are deliberately pulled toward 50% because far-off games are trusted much less; the season survival percentages are not.",
    "A tie is a loss. Only this week's pick is a recommendation; later weeks re-solve every run."
   ]
  },
@@ -1093,6 +1093,10 @@
   },
   {
    "generated_at": "2026-09-03T11:39:27.596344-04:00",
+   "picks": "LAC"
+  },
+  {
+   "generated_at": "2026-09-03T11:55:55.759276-04:00",
    "picks": "LAC"
   }
  ]

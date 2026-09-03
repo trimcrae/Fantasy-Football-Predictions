@@ -27,7 +27,7 @@
   17,
   18
  ],
- "generated_at": "2026-09-03T11:55:52.578984-04:00",
+ "generated_at": "2026-09-03T11:58:37.088799-04:00",
  "ratings_source": "market",
  "n_lines_posted": 112,
  "n_priced_games": 112,
@@ -3901,47 +3901,47 @@
  },
  "qb_situations": [],
  "explain": {
-  "summary": "Simulated chance one of 25 entries wins 18 straight. Alone each survives 0.55%; independent that would be 12.8%, shared teams pull it to 8.8%.",
+  "summary": "Chance that one of 25 entries wins 18 straight, from simulated seasons. Alone each survives 0.55%; if they were independent that would be 12.8%, but they share teams, so 8.8%.",
   "exposure": "Board: 2 teams at 75%+, then 72%. Spreading further would lower P(at least one survives). If ARI wins, 12 entries go out together.",
   "picks": {
    "LAC": {
-    "probability": "moneyline, LAC +10.2 at home.",
+    "probability": "From the betting odds: LAC favoured by 10.2 at home.",
     "timing": "Best spot on the remaining schedule; LAC's next best is 68% (wk 2 vs LV).",
     "not_used": ""
    },
    "JAX": {
-    "probability": "moneyline, JAX +8.4 at home.",
+    "probability": "From the betting odds: JAX favoured by 8.4 at home.",
     "timing": "#2 spot on the remaining schedule; JAX's next best is 60% (wk 12 vs TEN).",
     "not_used": "Passed: LAC 81% saved for wk 2."
    },
    "LA": {
-    "probability": "moneyline, LA +4.1 neutral site.",
-    "timing": "#37 spot on the remaining schedule; LA projects 74% in wk 6 vs ARI, but that is discounted as far off.",
+    "probability": "From the betting odds: LA favoured by 4.1 neutral site.",
+    "timing": "#37 spot on the remaining schedule; LA projects 74% in wk 6 vs ARI, but far-off games are deliberately trusted less.",
     "not_used": "Passed: LAC 81% saved for wk 2; JAX 77% saved for wk 12; DET 72% saved for wk 5."
    },
    "BAL": {
-    "probability": "moneyline, BAL +3.2 on the road.",
-    "timing": "#64 spot on the remaining schedule; BAL projects 68% in wk 4 vs TEN, but that is discounted as far off.",
+    "probability": "From the betting odds: BAL favoured by 3.2 on the road.",
+    "timing": "#64 spot on the remaining schedule; BAL projects 68% in wk 4 vs TEN, but far-off games are deliberately trusted less.",
     "not_used": "Passed: LAC 81% saved for wk 16; JAX 77% saved for wk 12; DET 72% saved for wk 3."
    },
    "DET": {
-    "probability": "moneyline, DET +6.7 at home.",
+    "probability": "From the betting odds: DET favoured by 6.7 at home.",
     "timing": "#7 spot on the remaining schedule; DET's next best is 69% (wk 3 vs NYJ).",
     "not_used": "Passed: LAC 81% saved for wk 16; JAX 77% saved for wk 12."
    }
   },
   "options": [
    "Best now and best schedule after.",
-   "77% now vs 81%. Later plan differs in 6 weeks (wk 2: LAC 68% for SF 75%, ...). Higher P(season): plans are ranked on the discounted score.",
-   "72% now vs 81%. Later plan differs in 2 weeks (wk 2: LAC 68% for SF 75%, ...). Higher P(season): plans are ranked on the discounted score.",
+   "77% now vs 81%. Later plan differs in 6 weeks (wk 2: LAC 68% for SF 75%, ...). Higher P(season) yet ranked lower: the score trusts this week's line more than later projections.",
+   "72% now vs 81%. Later plan differs in 2 weeks (wk 2: LAC 68% for SF 75%, ...). Higher P(season) yet ranked lower: the score trusts this week's line more than later projections.",
    "66% now vs 81%. Later plan differs in 6 weeks (wk 2: LAC 68% for SF 75%, ...).",
-   "64% now vs 81%. Later plan differs in 4 weeks (wk 2: LAC 68% for SF 75%, ...). Higher P(season): plans are ranked on the discounted score.",
-   "62% now vs 81%. Later plan differs in 4 weeks (wk 2: LAC 68% for SF 75%, ...). Higher P(season): plans are ranked on the discounted score.",
+   "64% now vs 81%. Later plan differs in 4 weeks (wk 2: LAC 68% for SF 75%, ...). Higher P(season) yet ranked lower: the score trusts this week's line more than later projections.",
+   "62% now vs 81%. Later plan differs in 4 weeks (wk 2: LAC 68% for SF 75%, ...). Higher P(season) yet ranked lower: the score trusts this week's line more than later projections.",
    "64% now vs 81%. Later plan differs in 5 weeks (wk 2: LAC 68% for SF 75%, ...).",
    "58% now vs 81%. Later plan differs in 3 weeks (wk 2: LAC 68% for SF 75%, ...).",
-   "61% now vs 81%. Later plan differs in 1 week (wk 16: LAC 61% for BAL 65%). Higher P(season): plans are ranked on the discounted score.",
+   "61% now vs 81%. Later plan differs in 1 week (wk 16: LAC 61% for BAL 65%). Higher P(season) yet ranked lower: the score trusts this week's line more than later projections.",
    "54% now vs 81%. Later plan differs in 4 weeks (wk 2: LAC 68% for SF 75%, ...).",
-   "64% now vs 81%. Later plan differs in 4 weeks (wk 2: LAC 68% for SF 75%, ...). Higher P(season): plans are ranked on the discounted score.",
+   "64% now vs 81%. Later plan differs in 4 weeks (wk 2: LAC 68% for SF 75%, ...). Higher P(season) yet ranked lower: the score trusts this week's line more than later projections.",
    "61% now vs 81%. Later plan differs in 2 weeks (wk 9: KC 67% for SEA 71%, ...).",
    "57% now vs 81%. Later plan differs in 1 week (wk 11: LAC 65% for KC 68%).",
    "57% now vs 81%. Later plan differs in 5 weeks (wk 2: LAC 68% for SF 75%, ...).",
@@ -3976,14 +3976,14 @@
    "25": "Avg 66% per pick; weakest wk 12 WAS 56%."
   },
   "notes": [
-   "Ratings: fitted from 112 posted lines, seeded by last season regressed to average.",
+   "Team ratings are backed out of the 112 point spreads posted so far, starting from last season's ratings pulled toward average.",
    "1 on BAL (61%) not LAC (81%): 1 saves LAC for wk 16.",
    "1 on DET (72%) not LAC (81%): 1 saves LAC for wk 16.",
    "10 on JAX (77%) not LAC (81%): 10 save LAC for wk 2, 11, 14, 16.",
    "1 on LA (64%) not LAC (81%): 1 saves LAC for wk 2.",
    "Road pick BAL: the line already includes home field.",
    "Week 18 spots are shrunk 20% toward 50% for resting starters.",
-   "Later-week percentages are the planning view, discounted 16x toward 50%; survival percentages are simulated without that discount.",
+   "Percentages for later weeks are deliberately pulled toward 50% because far-off games are trusted much less; the season survival percentages are not.",
    "A tie is a loss. Only this week's pick is a recommendation; later weeks re-solve every run."
   ]
  },
@@ -4022,6 +4022,10 @@
   },
   {
    "generated_at": "2026-09-03T11:39:24.416026-04:00",
+   "picks": "LAC x12, JAX x10, LA, BAL, DET"
+  },
+  {
+   "generated_at": "2026-09-03T11:55:52.578984-04:00",
    "picks": "LAC x12, JAX x10, LA, BAL, DET"
   }
  ]

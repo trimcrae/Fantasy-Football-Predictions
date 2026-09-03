@@ -247,6 +247,17 @@ ul.notes{font-size:13.5px;line-height:1.5;padding-left:20px;max-width:900px}ul.n
 """
 
 
+def _source_label(src) -> str:
+    s = str(src)
+    if s == "moneyline":
+        return "odds"
+    if s.startswith("blend"):
+        return "line + model"
+    if s == "model+wk18":
+        return "model, wk 18"
+    return s
+
+
 def _esc(x) -> str:
     return html.escape("" if x is None else str(x))
 
@@ -446,7 +457,7 @@ def render_week_page(season: int, week: int, snaps: list[dict], games: pd.DataFr
             for team, (ents, r) in sorted(counts.items(), key=lambda kv: (-len(kv[1][0]), -(kv[1][1]["p_win"] or 0))):
                 res = graded.get(ents[0], "unknown")
                 rows.append(f"<tr><td><b>{_esc(team)}</b></td><td class=\"n\">{len(ents)}</td><td>{_esc(_opp(r))}</td><td class=\"n\">{_pct(r['p_win'])}</td>"
-                            f"<td class=\"n\">{_spread(r['spread'])}</td><td>{_esc(r['source'])}</td><td>{_esc(r['kickoff'])}</td>"
+                            f"<td class=\"n\">{_spread(r['spread'])}</td><td>{_esc(_source_label(r['source']))}</td><td>{_esc(r['kickoff'])}</td>"
                             f"<td class=\"{_res_cls(res)}\">{_res_mark(res)}</td><td class=\"muted\">{_esc(' '.join('#' + e for e in ents))}</td></tr>")
                 pk = (ex.get("picks") or {}).get(team) or {}
                 why = " ".join(pk.get(k, "") for k in ("probability", "timing", "not_used") if pk.get(k))
@@ -473,7 +484,7 @@ def render_week_page(season: int, week: int, snaps: list[dict], games: pd.DataFr
                            f"<td class=\"n\">{_pct(o['p_season'], 2)}</td><td class=\"path\">{_esc(' '.join(o['plan']))}</td>"
                            f"<td class=\"whycell\">{_esc(whys[i]) if i < len(whys) else ''}</td></tr>" for i, o in enumerate(s["options"]))
             sec.append("<h3>This week's options</h3><div class=\"sub\">Use the team now and play the rest of the season optimally. "
-                       "Score is the discounted number the plan is chosen on; P(season) is the simulated survival probability, the number to believe.</div>"
+                       "Score is what plans are ranked on (it trusts later weeks much less); P(season) is the chance of surviving the season, the number to believe.</div>"
                        f"<div class=\"tw\"><table><tr><th>team</th><th class=\"n\">win prob now</th><th class=\"n\">score</th><th class=\"n\">P(season)</th><th>rest of the plan</th><th>why</th></tr>{rows}</table></div>")
 
         # board
@@ -482,7 +493,7 @@ def render_week_page(season: int, week: int, snaps: list[dict], games: pd.DataFr
             res = grade(games, season, week, r["team"]) if r.get("played") else ("pending" if r.get("locked") else "")
             flag = " <span class=\"lock\">kicked off</span>" if r.get("locked") and not r.get("played") else ""
             rows.append(f"<tr><td><b>{_esc(r['team'])}</b></td><td>{_esc(_opp(r))}</td><td class=\"n\">{_pct(r['prob'])}</td><td class=\"n\">{_spread(r['spread'])}</td>"
-                        f"<td>{_esc(r['source'])}{flag}</td><td>{_esc(_kick(r['kickoff']))}</td><td class=\"{_res_cls(res)}\">{_res_mark(res)}</td><td class=\"muted\">{_esc(r.get('qb_note', ''))}</td></tr>")
+                        f"<td>{_esc(_source_label(r['source']))}{flag}</td><td>{_esc(_kick(r['kickoff']))}</td><td class=\"{_res_cls(res)}\">{_res_mark(res)}</td><td class=\"muted\">{_esc(r.get('qb_note', ''))}</td></tr>")
         sec.append(f"<details><summary>Week {week} board ({len(s['board'])} teams)</summary><div class=\"tw\"><table><tr><th>team</th><th>opponent</th><th class=\"n\">win prob</th>"
                    f"<th class=\"n\">spread</th><th>source</th><th>kickoff</th><th>result</th><th>QB note</th></tr>{''.join(rows)}</table></div></details>")
 
