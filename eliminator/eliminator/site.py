@@ -244,7 +244,8 @@ main{max-width:1040px;margin:0 auto;padding:28px 20px 64px}
 .pick img{width:56px;height:56px;border-radius:10px;flex:none}
 .pick .who{flex:1;min-width:0}.pick .team{font-size:30px;font-weight:700;letter-spacing:-.01em;line-height:1.05}.pick .vs{color:var(--ink2);font-size:14px;margin-top:2px}
 .pick .num{font-size:44px;font-weight:700;letter-spacing:-.03em;line-height:1;text-align:right}.pick .num small{display:block;font-size:11.5px;font-weight:500;color:var(--ink3);letter-spacing:.02em;text-transform:uppercase;margin-top:4px}
-.why{color:var(--ink2);font-size:13.5px;line-height:1.45;margin:6px 0 0}.why.more{display:none}.showall .why.more{display:inline}
+.why{color:var(--ink2);font-size:13.5px;line-height:1.45;margin:6px 0 0}.why.more{display:none}.showall .why.more{display:inline}.showall .m.why.more{display:block;margin-top:4px}
+.opts .row{padding:9px 0}.opts .plan{display:inline-block;margin-top:3px}
 .tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin:16px 0 6px}
 .tile{background:var(--chip);border-radius:10px;padding:10px 12px}.tile .l{font-size:11.5px;color:var(--ink3);text-transform:uppercase;letter-spacing:.03em}.tile .v{font-size:22px;font-weight:650;letter-spacing:-.01em;margin-top:2px}.tile .v small{font-size:13px;font-weight:500;color:var(--ink3)}
 .chips{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 4px}
@@ -510,10 +511,14 @@ def render_week_page(season: int, week: int, snaps: list[dict], games: pd.DataFr
         # options
         if s.get("options"):
             whys = ex.get("options") or []
-            rows = "".join(f"<tr><td>{_team(o['team'])}</td><td>{_meter(o['p_now'])}</td><td class=\"n\">{_surv(o['p_season'])}</td><td class=\"n reason\">{_pct(o['score'], 2)}</td>"
-                           f"<td class=\"plan mh\">{_esc(' '.join(o['plan']))}</td><td class=\"reason\">{_esc(whys[i]) if i < len(whys) else ''}</td></tr>" for i, o in enumerate(s["options"]))
-            sec.append(f"<div class=\"card\"><h2>This week's options</h2><div class=\"sub\">Use the team now and play the rest of the season optimally. P(season) is the chance of surviving the season; Details adds the ranking score and the reasoning.</div>"
-                       f"<div class=\"tw\"><table><thead><tr><th>team</th><th>win now</th><th class=\"n\">P(season)</th><th class=\"n reason\">score</th><th class=\"mh\">rest of the plan</th><th class=\"reason\">why</th></tr></thead><tbody>{rows}</tbody></table></div></div>")
+            rows = []
+            for i, o in enumerate(s["options"]):
+                why = whys[i] if i < len(whys) else ""
+                rows.append(f"<div class=\"row\"><div>{_team(o['team'], 26)}</div><div class=\"mid\">{_meter(o['p_now'])}</div>"
+                            f"<div class=\"r\"><b>{_surv(o['p_season'])}</b><span class=\"sub\"> season</span></div>"
+                            f"<div class=\"m why more\"><span class=\"sub\">score {_pct(o['score'], 2)}</span> &middot; {_esc(why)}<br><span class=\"plan\">{_esc(' '.join(o['plan']))}</span></div></div>")
+            sec.append(f"<div class=\"card\"><h2>This week's options</h2><div class=\"sub\">Use the team now and play the rest of the season optimally. The right-hand number is the chance of surviving the season; Details adds the ranking score, the reasoning and the rest of the plan.</div>"
+                       f"<div class=\"picks-list opts\">{''.join(rows)}</div></div>")
 
         more = []
         # board
