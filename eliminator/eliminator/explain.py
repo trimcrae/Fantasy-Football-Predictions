@@ -172,7 +172,7 @@ def explain_option(res: PlanResult, option, best, cfg: dict | None = None) -> st
     """Why an alternative ranks where it does."""
     p = res.projection
     if option is best:
-        return "Best now and best schedule after."
+        return "Best now and best schedule after for a single entry."
     now, bnow = float(option.detail.get("now_prob", 0)), float(best.detail.get("now_prob", 0))
     diffs = [(i, option.teams[i], best.teams[i]) for i in range(1, min(len(option.teams), len(best.teams))) if option.teams[i] != best.teams[i]]
     out = f"{_pct(now)} now vs {_pct(bnow)}."
