@@ -58,6 +58,6 @@ def test_auto_rejects_last_seasons_ratings_before_week_one(games_all, cfg, befor
     # a page that contradicts this season's lines is rejected whatever its records say
     wrong = agree.copy(); wrong["gpf"] = -wrong["gpf"]; wrong.attrs["games_played"] = 0
     st = assemble(games_all, 2026, 1, cfg, [], wrong, "auto")
-    assert st.source == "market" and "disagrees" in st.detail["inpredictable_check"]["reason"]
+    assert st.source == "market" and "disagree" in st.detail["inpredictable_check"]["reason"]
     # explicit choice is honoured
     assert assemble(games_all, 2026, 1, cfg, [], wrong, "inpredictable").source == "inpredictable"

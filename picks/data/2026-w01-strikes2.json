@@ -27,16 +27,16 @@
   17,
   18
  ],
- "generated_at": "2026-09-03T11:57:12.776950-04:00",
+ "generated_at": "2026-09-03T11:58:40.417692-04:00",
  "ratings_source": "market",
  "n_lines_posted": 112,
  "n_priced_games": 112,
  "summary": {
-  "p_any": 0.1663,
-  "expected_survivors": 0.1663,
+  "p_any": 0.1623,
+  "expected_survivors": 0.1623,
   "n_live": 1,
   "p_each": [
-   0.1663
+   0.1623
   ],
   "p_plugin_first": 0.0299
  },
@@ -52,7 +52,7 @@
    "status": "new",
    "on_file": null,
    "score": 0.0299,
-   "p_season": 0.1663
+   "p_season": 0.1623
   }
  ],
  "options": [
@@ -60,7 +60,7 @@
    "team": "LAC",
    "p_now": 0.8119,
    "score": 0.0299,
-   "p_season": 0.1663,
+   "p_season": 0.1623,
    "plan": [
     "SF",
     "DET",
@@ -85,7 +85,7 @@
    "team": "JAX",
    "p_now": 0.7659,
    "score": 0.0282,
-   "p_season": 0.1502,
+   "p_season": 0.156,
    "plan": [
     "LAC",
     "SF",
@@ -110,7 +110,7 @@
    "team": "DET",
    "p_now": 0.718,
    "score": 0.0267,
-   "p_season": 0.1512,
+   "p_season": 0.147,
    "plan": [
     "LAC",
     "SF",
@@ -135,7 +135,7 @@
    "team": "PHI",
    "p_now": 0.6575,
    "score": 0.0257,
-   "p_season": 0.1417,
+   "p_season": 0.1398,
    "plan": [
     "LAC",
     "SF",
@@ -160,7 +160,7 @@
    "team": "LV",
    "p_now": 0.6369,
    "score": 0.0256,
-   "p_season": 0.1448,
+   "p_season": 0.1442,
    "plan": [
     "LAC",
     "SF",
@@ -185,7 +185,7 @@
    "team": "PIT",
    "p_now": 0.6225,
    "score": 0.0252,
-   "p_season": 0.1424,
+   "p_season": 0.144,
    "plan": [
     "LAC",
     "SF",
@@ -210,7 +210,7 @@
    "team": "CIN",
    "p_now": 0.6369,
    "score": 0.0251,
-   "p_season": 0.142,
+   "p_season": 0.1382,
    "plan": [
     "LAC",
     "SF",
@@ -235,7 +235,7 @@
    "team": "CHI",
    "p_now": 0.583,
    "score": 0.0238,
-   "p_season": 0.1411,
+   "p_season": 0.1382,
    "plan": [
     "LAC",
     "SF",
@@ -260,7 +260,7 @@
    "team": "BAL",
    "p_now": 0.6092,
    "score": 0.0232,
-   "p_season": 0.1379,
+   "p_season": 0.1313,
    "plan": [
     "SF",
     "DET",
@@ -285,7 +285,7 @@
    "team": "TEN",
    "p_now": 0.5427,
    "score": 0.0229,
-   "p_season": 0.131,
+   "p_season": 0.1317,
    "plan": [
     "LAC",
     "SF",
@@ -310,7 +310,7 @@
    "team": "LA",
    "p_now": 0.6369,
    "score": 0.0225,
-   "p_season": 0.131,
+   "p_season": 0.1352,
    "plan": [
     "LAC",
     "SF",
@@ -335,7 +335,7 @@
    "team": "KC",
    "p_now": 0.5721,
    "score": 0.0224,
-   "p_season": 0.1298,
+   "p_season": 0.1323,
    "plan": [
     "SF",
     "DET",
@@ -360,7 +360,7 @@
    "team": "SEA",
    "p_now": 0.6092,
    "score": 0.0224,
-   "p_season": 0.127,
+   "p_season": 0.1278,
    "plan": [
     "SF",
     "DET",
@@ -385,7 +385,7 @@
    "team": "DAL",
    "p_now": 0.5721,
    "score": 0.0222,
-   "p_season": 0.1263,
+   "p_season": 0.1232,
    "plan": [
     "LAC",
     "SF",
@@ -410,7 +410,7 @@
    "team": "MIN",
    "p_now": 0.5174,
    "score": 0.0222,
-   "p_season": 0.1326,
+   "p_season": 0.1327,
    "plan": [
     "LAC",
     "SF",
@@ -435,7 +435,7 @@
    "team": "HOU",
    "p_now": 0.4826,
    "score": 0.0212,
-   "p_season": 0.125,
+   "p_season": 0.1255,
    "plan": [
     "LAC",
     "SF",
@@ -881,7 +881,7 @@
    "alive": true,
    "strikes_left": 2,
    "score": 0.0299,
-   "p_season": 0.1663,
+   "p_season": 0.1623,
    "path": [
     {
      "week": 1,
@@ -1021,11 +1021,11 @@
  },
  "qb_situations": [],
  "explain": {
-  "summary": "Simulated chance of at most 2 losses in 18 picks. Score 3.0% is the same under the 16x future discount; it ranks plans, it is not a forecast.",
+  "summary": "Chance of at most 2 losses in 18 picks, from simulated seasons. The score treats later weeks as far less certain; it ranks plans and is not a forecast.",
   "exposure": "",
   "picks": {
    "LAC": {
-    "probability": "moneyline, LAC +10.2 at home.",
+    "probability": "From the betting odds: LAC favoured by 10.2 at home.",
     "timing": "Best spot on the remaining schedule; LAC's next best is 68% (wk 2 vs LV).",
     "not_used": ""
    }
@@ -1052,9 +1052,9 @@
    "1": "Avg 66% per pick; weakest wk 14 CHI 59%."
   },
   "notes": [
-   "Ratings: market fit; inpredictable rejected (page still shows last season (516 games played before week 1)).",
+   "Team ratings are backed out of the 112 point spreads posted so far, starting from last season's ratings pulled toward average.",
    "Week 18 spots are shrunk 20% toward 50% for resting starters.",
-   "Later-week percentages are the planning view, discounted 16x toward 50%; survival percentages are simulated without that discount.",
+   "Percentages for later weeks are deliberately pulled toward 50% because far-off games are trusted much less; the season survival percentages are not.",
    "A tie is a loss. Only this week's pick is a recommendation; later weeks re-solve every run."
   ]
  },

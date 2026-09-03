@@ -112,7 +112,7 @@ def assemble(games_all: pd.DataFrame, season: int, current_week: int, cfg: dict,
         if stale:
             reason = f"page still shows last season ({played} games played before week 1)"
         elif rmse > max_rmse:
-            reason = f"disagrees with this season's lines (rmse {rmse:.1f} pts vs {max_rmse:.1f} allowed)"
+            reason = f"ratings disagree with this season's lines by {rmse:.1f} points per team on average (limit {max_rmse:.1f})"
         inp_check = {"rmse": rmse, "games_played": played, "reason": reason}
     if source == "auto":
         if inp_healthy is None:

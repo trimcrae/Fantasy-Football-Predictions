@@ -19,15 +19,15 @@ def _pct(x: float, d: int = 0) -> str:
 def _src(source: str) -> str:
     s = str(source)
     if s == "moneyline":
-        return "moneyline"
+        return "From the betting odds"
     if s == "spread":
-        return "posted spread"
+        return "From the point spread"
     if s == "result":
-        return "final score"
+        return "From the final score"
     if s.startswith("blend"):
-        return "posted line blended with the model"
+        return "From the posted line, blended with our projection"
     if s.startswith("model"):
-        return "model only, no line yet" + (", week-18 rest shrink" if "wk18" in s else "")
+        return "From our projection, no line posted yet" + (" (week 18, starters may rest)" if "wk18" in s else "")
     return s
 
 
@@ -64,10 +64,12 @@ def explain_probability(res: PlanResult, team: str, cfg: dict | None = None) -> 
     """Why this week's win probability is what it is: the price, and any gap to the ratings."""
     r = res.projection.row(res.week, team)
     where = "neutral site" if r["neutral"] else ("at home" if r["home"] else "on the road")
-    out = f"{_src(r['source'])}, {team} {r['spread']:+.1f} {where}."
+    sp = float(r["spread"])
+    side = f"favoured by {abs(sp):.1f}" if sp > 0 else (f"an underdog by {abs(sp):.1f}" if sp < 0 else "a pick'em")
+    out = f"{_src(r['source'])}: {team} {side} {where}."
     if not np.isnan(r.get("line_spread", np.nan)) and abs(float(r["model_spread"]) - float(r["line_spread"])) >= 2.0:
         d = float(r["line_spread"]) - float(r["model_spread"])
-        out += f" Market {abs(d):.1f} pts {'above' if d > 0 else 'below'} the ratings."
+        out += f" The line is {abs(d):.1f} pts {'kinder' if d > 0 else 'harsher'} to {team} than our ratings."
     if r.get("qb_note"):
         out += f" QB: {r['qb_note']}."
     return out
@@ -85,7 +87,7 @@ def explain_timing(res: PlanResult, team: str) -> str:
     gap = float(r["prob"]) - pr
     if gap >= 0:
         return f"{head}; {team}'s next best is {_pct(pr)} (wk {w} vs {opp})."
-    return f"{head}; {team} projects {_pct(pr)} in wk {w} vs {opp}, but that is discounted as far off."
+    return f"{head}; {team} projects {_pct(pr)} in wk {w} vs {opp}, but far-off games are deliberately trusted less."
 
 
 def explain_not_used(res: PlanResult, entry, team: str) -> str:
@@ -126,12 +128,12 @@ def explain_summary(res: PlanResult, cfg: dict | None = None) -> str:
     n_weeks = len(res.projection.weeks)
     if s.mode == "strikes":
         e = live[0]
-        return f"Simulated chance of at most {e.strikes_left} loss{'es' if e.strikes_left != 1 else ''} in {n_weeks} picks. Score {_pct(e.path.value, 1)} is the same under the 16x future discount; it ranks plans, it is not a forecast."
+        return f"Chance of at most {e.strikes_left} loss{'es' if e.strikes_left != 1 else ''} in {n_weeks} picks, from simulated seasons. The score treats later weeks as far less certain; it ranks plans and is not a forecast."
     sims = [float(e.alive_mask.mean()) for e in live if e.alive_mask is not None]
     per = float(np.mean(sims)) if sims else float("nan")
     indep = 1 - (1 - per) ** len(live)
-    return (f"Simulated chance one of {len(live)} entries wins {n_weeks} straight. Alone each survives {_pct(per, 2)}; "
-            f"independent that would be {_pct(indep, 1)}, shared teams pull it to {_pct(res.summary['p_any'], 1)}.")
+    return (f"Chance that one of {len(live)} entries wins {n_weeks} straight, from simulated seasons. Alone each survives {_pct(per, 2)}; "
+            f"if they were independent that would be {_pct(indep, 1)}, but they share teams, so {_pct(res.summary['p_any'], 1)}.")
 
 
 def explain_option(res: PlanResult, option, best) -> str:
@@ -149,7 +151,7 @@ def explain_option(res: PlanResult, option, best) -> str:
         out += " Same plan after."
     sim, bsim = option.detail.get("sim"), best.detail.get("sim")
     if sim is not None and bsim is not None and sim > bsim:
-        out += " Higher P(season): plans are ranked on the discounted score."
+        out += " Higher P(season) yet ranked lower: the score trusts this week's line more than later projections."
     return out
 
 
@@ -169,16 +171,16 @@ def notes(res: PlanResult, cfg: dict | None = None) -> list[str]:
     m = (cfg or {}).get("model", {})
     chk = (st.detail or {}).get("inpredictable_check")
     if chk and chk.get("reason"):
-        out.append(f"Ratings: market fit; inpredictable rejected ({chk['reason']}).")
+        out.append(f"Team ratings are backed out of the point spreads posted so far; inpredictable's ratings were not used because the {chk['reason']}.")
     elif st.source == "inpredictable":
-        out.append("Ratings: inpredictable.")
+        out.append("Team ratings come from inpredictable (betting-market power ratings).")
     else:
-        out.append(f"Ratings: fitted from {st.detail.get('n_lines')} posted lines, seeded by last season regressed to average.")
+        out.append(f"Team ratings are backed out of the {st.detail.get('n_lines')} point spreads posted so far, starting from last season's ratings pulled toward average.")
     board = p.table[(p.table["week"] == res.week) & p.table["home"]]
     big = board[(board["line_spread"].notna()) & ((board["line_spread"] - board["model_spread"]).abs() >= 3.0)]
     for r in big.itertuples(index=False):
         d = float(r.line_spread) - float(r.model_spread)
-        out.append(f"{r.team} vs {r.opp}: line {abs(d):.1f} pts {'above' if d > 0 else 'below'} the ratings; the line rules this week, ratings rule later weeks.")
+        out.append(f"{r.team} vs {r.opp}: the line is {abs(d):.1f} pts {'kinder' if d > 0 else 'harsher'} to {r.team} than our ratings; the line decides this week, the ratings decide later weeks.")
     tw = res.this_week()
     if not tw.empty:
         board_all = p.table[(p.table["week"] == res.week) & (p.table["prob"] > 0)].sort_values("prob", ascending=False)
@@ -210,7 +212,7 @@ def notes(res: PlanResult, cfg: dict | None = None) -> list[str]:
                 out.append(f"{team}: {r['qb_note']}.")
     if 18 in p.weeks:
         out.append(f"Week 18 spots are shrunk {int(round(100 * (1 - float(m.get('week18_shrink', 0.8)))))}% toward 50% for resting starters.")
-    out.append(f"Later-week percentages are the planning view, discounted {float(m.get('future_discount', 16.0)):.0f}x toward 50%; survival percentages are simulated without that discount.")
+    out.append("Percentages for later weeks are deliberately pulled toward 50% because far-off games are trusted much less; the season survival percentages are not.")
     out.append("A tie is a loss. Only this week's pick is a recommendation; later weeks re-solve every run.")
     return out
 
