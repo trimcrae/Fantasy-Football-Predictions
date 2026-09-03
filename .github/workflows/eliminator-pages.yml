@@ -1,0 +1,86 @@
+# Weekly survivor-pool recommendations, published to GitHub Pages.
+#
+# Every run: refresh the nflverse feed, plan both pools, save the week's snapshot under
+# eliminator/site/data/, commit that (plus any picks the pipeline filled in for games that
+# have kicked off) back to master, then render the site and deploy it.
+name: Eliminator picks site
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [master]
+    paths:
+      - "eliminator/**"
+      - ".github/workflows/eliminator-pages.yml"
+  schedule:
+    # Times are UTC. ET is UTC-4 until early November, then UTC-5.
+    - cron: "0 13 * * *"    # every morning ~9 ET: fresh lines, Tuesday picks up Monday-night results
+    - cron: "0 22 * * 4"    # Thursday ~6 ET, before Thursday night kickoff
+    - cron: "30 15 * * 0"   # Sunday ~11:30 ET, before the early window
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: eliminator-pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: eliminator/requirements.txt
+
+      - name: Install
+        run: pip install -r eliminator/requirements.txt
+
+      - name: Snapshot this week's recommendations
+        working-directory: eliminator
+        env:
+          ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
+        run: python -m eliminator snapshot
+
+      - name: Commit snapshot and filled-in picks
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add eliminator/site/data eliminator/state
+          if git diff --cached --quiet; then
+            echo "nothing to commit"
+          else
+            git commit -m "eliminator: snapshot $(date -u +'%Y-%m-%d %H:%M UTC')"
+            git pull --rebase origin master
+            git push origin HEAD:master
+          fi
+
+      - name: Render site
+        working-directory: eliminator
+        run: python -m eliminator site --offline --out ../_site
+
+      - uses: actions/configure-pages@v5
+        with:
+          enablement: true
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

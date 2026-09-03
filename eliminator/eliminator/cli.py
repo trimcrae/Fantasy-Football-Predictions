@@ -89,6 +89,23 @@ def cmd_calibrate(args):
     print(f"written {p}")
 
 
+def _plan_inputs(args, cfg, state: PoolState, df):
+    """Season, time, QB ledger and line overrides (manual + live odds) shared by plan and snapshot."""
+    season = int(args.season or state.season or cfg.get("season") or latest_season(df))
+    now = _now(args)
+    ledger = load_ledger(STATE_DIR / "qb_status.yaml", cfg["qb"])
+    overrides = load_overrides(STATE_DIR / "overrides.yaml")
+    if not args.offline:
+        from .data.odds_api import live_overrides
+        games = regular_season(df, season)
+        wk = getattr(args, "week", None) or current_week(games, now)
+        live = live_overrides(cfg, games, wk)
+        if live:
+            manual = overrides.get("lines") or []
+            overrides["lines"] = manual + [r for r in live if not any(m.get("home") == r["home"] and int(m.get("week", 0)) == r["week"] for m in manual)]
+    return season, now, ledger, overrides
+
+
 def cmd_plan(args):
     cfg = load_config()
     if args.scenarios:
@@ -97,19 +114,8 @@ def cmd_plan(args):
         cfg["model"]["future_discount"] = args.discount
     df = load_games(refresh=not args.offline, max_age_hours=cfg["data"]["max_age_hours"])
     state = PoolState.load(Path(args.pool))
-    season = int(args.season or state.season or cfg.get("season") or latest_season(df))
+    season, now, ledger, overrides = _plan_inputs(args, cfg, state, df)
     state.season = season
-    now = _now(args)
-    ledger = load_ledger(STATE_DIR / "qb_status.yaml", cfg["qb"])
-    overrides = load_overrides(STATE_DIR / "overrides.yaml")
-    if not args.offline:
-        from .data.odds_api import live_overrides
-        games = regular_season(df, season)
-        wk = args.week or current_week(games, now)
-        live = live_overrides(cfg, games, wk)
-        if live:
-            manual = overrides.get("lines") or []
-            overrides["lines"] = manual + [r for r in live if not any(m.get("home") == r["home"] and int(m.get("week", 0)) == r["week"] for m in manual)]
     ratings = _ratings(args, cfg, season)
     res = make_plan(state, df, cfg, ledger, ratings, now=now, season=season, week=args.week,
                     source=args.source, objective=args.objective, overrides=overrides)
@@ -125,6 +131,51 @@ def cmd_plan(args):
         n = commit_picks(res)
         state.save()
         print(f"committed {n} picks for week {res.week} to {state.path}")
+
+
+def cmd_snapshot(args):
+    from .site import DATA_DIR, backfill_state, build_snapshot, load_snapshot, pool_files, snapshot_path, write_snapshot
+    cfg = load_config()
+    if args.scenarios:
+        cfg["simulation"]["scenarios"] = args.scenarios
+    df = load_games(refresh=not args.offline, max_age_hours=cfg["data"]["max_age_hours"])
+    data_dir = Path(args.data_dir) if args.data_dir else DATA_DIR
+    pools = [Path(p) for p in args.pool] if args.pool else pool_files(STATE_DIR)
+    ratings = None
+    ratings_loaded = False
+    for pool in pools:
+        state = PoolState.load(pool)
+        season, now, ledger, overrides = _plan_inputs(args, cfg, state, df)
+        state.season = season
+        games = regular_season(df, season)
+        week = args.week or current_week(games, now)
+        if not args.no_backfill:
+            n = backfill_state(state, games, week, now, data_dir)
+            if n:
+                state.save()
+                print(f"[{pool.stem}] filled {n} missing pick(s) for kicked-off games from earlier snapshots")
+        if not ratings_loaded:
+            ratings = _ratings(args, cfg, season)
+            ratings_loaded = True
+        res = make_plan(state, df, cfg, ledger, ratings, now=now, season=season, week=week,
+                        source=args.source, overrides=overrides)
+        previous = load_snapshot(snapshot_path(res.season, res.week, pool.stem, data_dir))
+        snap = build_snapshot(res, pool.stem, generated_at=now, previous=previous)
+        path = write_snapshot(snap, data_dir)
+        print(render(res, show_paths=False))
+        print(f"written {path}\n")
+
+
+def cmd_site(args):
+    from .site import BUILD_DIR, DATA_DIR, build_site
+    try:
+        df = load_games(refresh=not args.offline)
+    except Exception as exc:  # no cached feed and no network: pages still render, ungraded
+        print(f"[site] schedule unavailable ({exc}); results will not be graded")
+        df = None
+    out = build_site(df, data_dir=Path(args.data_dir) if args.data_dir else DATA_DIR,
+                     out_dir=Path(args.out) if args.out else BUILD_DIR, built_at=_now(args))
+    print(f"wrote {len(out)} files to {out[0].parent}")
 
 
 def cmd_status(args):
@@ -221,6 +272,22 @@ def main(argv=None):
     p.add_argument("--json", help="write picks/board/ratings to this file")
     p.add_argument("--commit", action="store_true", help="write this week's picks into the pool file")
     p.set_defaults(fn=cmd_plan)
+
+    p = sub.add_parser("snapshot", help="plan every pool and record this week's recommendations for the site"); common(p)
+    p.add_argument("--pool", action="append", help="pool file (repeatable); default: every pool in state/")
+    p.add_argument("--week", type=int)
+    p.add_argument("--scenarios", type=int)
+    p.add_argument("--source", choices=["auto", "inpredictable", "market", "blend"])
+    p.add_argument("--inpredictable-file")
+    p.add_argument("--no-inpredictable", action="store_true")
+    p.add_argument("--data-dir", help="where snapshots live (default site/data)")
+    p.add_argument("--no-backfill", action="store_true", help="do not fill missing kicked-off picks from earlier snapshots")
+    p.set_defaults(fn=cmd_snapshot)
+
+    p = sub.add_parser("site", help="render the snapshots into static HTML (GitHub Pages)"); common(p)
+    p.add_argument("--data-dir", help="where snapshots live (default site/data)")
+    p.add_argument("--out", help="output directory (default site/build)")
+    p.set_defaults(fn=cmd_site)
 
     p = sub.add_parser("status", help="results and survival of each entry"); common(p)
     p.add_argument("--pool", default=str(STATE_DIR / "multi25.yaml")); p.add_argument("--week", type=int)
