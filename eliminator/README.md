@@ -42,9 +42,11 @@ Other commands: `calibrate` (refit all model parameters from history, writes
 ## Picks site (GitHub Pages)
 
 `.github/workflows/eliminator-pages.yml` publishes the recommendations for every pool format
-to GitHub Pages at `https://<user>.github.io/Fantasy-Football-Predictions/`. It runs every
-morning, Thursday evening and Sunday late morning during the season (and on any push that
-touches `eliminator/`), and it can be started by hand from the Actions tab.
+to GitHub Pages at `https://<user>.github.io/Fantasy-Football-Predictions/` (the page itself
+lives under `/picks/`; the root forwards there). Pages serves the `master` branch, root
+folder. The workflow runs every morning, Thursday evening and Sunday late morning during the
+season (and on any push that touches `eliminator/`), and it can be started by hand from the
+Actions tab.
 
 Each run does three things:
 
@@ -52,22 +54,18 @@ Each run does three things:
    writes `site/data/<season>/w<NN>-<pool>.json`. The current week's file is overwritten on
    every run (earlier recommendations that week are kept inside it as revisions); once the
    season moves on, the file is frozen and becomes the record of what was recommended.
-2. The snapshot and the pool files are committed back to `master`. Before planning, any pick a
-   pool file is missing for a game that has already kicked off is filled in from that week's
-   snapshot, so the entries stay alive from week to week without anyone running
-   `plan --commit`. A pick you enter yourself (`record`, or editing the YAML) is never touched,
-   and if you enter it before kickoff the planner locks it exactly as it would your own.
-3. `python -m eliminator site` renders the snapshots: a landing page with this week's picks
-   per format and a week-by-week table graded against final scores, plus one page per week
-   with the board, the options table and every entry's season plan. Raw JSON is served under
-   `data/`.
-
-**One-time setting.** GitHub Pages must be set to deploy from this workflow, not from the
-branch: repository **Settings > Pages > Build and deployment > Source: GitHub Actions**. With
-the branch source, GitHub's own Jekyll build of the repository root runs on every push and
-replaces the site this workflow publishes; the workflow detects that state, warns in the
-build job and fails the deploy job with the same instruction (the workflow token is not
-allowed to change the setting itself).
+   Before planning, any pick a pool file is missing for a game that has already kicked off is
+   filled in from that week's snapshot, so the entries stay alive from week to week without
+   anyone running `plan --commit`. A pick you enter yourself (`record`, or editing the YAML)
+   is never touched, and if you enter it before kickoff the planner locks it exactly as it
+   would your own.
+2. `python -m eliminator site` renders the snapshots into `picks/` at the repository root: a
+   landing page with this week's picks per format and a week-by-week table graded against
+   final scores, plus one page per week with the board, the options table and every entry's
+   season plan. Raw JSON is served under `picks/data/`.
+3. The snapshot, the pool files and the rendered site are committed back to `master`;
+   GitHub's Pages build of the branch publishes them. The workflow waits for that build and
+   fails if the live page is not the picks site.
 
 To view locally: `python -m eliminator site --offline` writes `site/build/`; open
 `site/build/index.html`. Put a The Odds API key in the `ODDS_API_KEY` repository secret to
