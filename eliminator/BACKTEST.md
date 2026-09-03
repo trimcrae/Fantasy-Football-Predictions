@@ -13,8 +13,12 @@ Two numbers per season:
 
 * **realised** - whether the entry (or any entry) actually survived, and when it went out;
 * **expected** - the survival probability of the picks *at closing prices*, i.e. the product
-  (or the two-strike tail probability) of the picked teams' de-vigged closing win
-  probabilities over all 18 weeks. This is the pick-quality measure: it does not depend on
+  (or, for the two-strike pool, the probability of at most one loss) of the picked teams'
+  de-vigged closing win probabilities over all 18 weeks.
+
+The two-strike pool eliminates on the second loss (`strikes: 2`), so its entry can lose
+once. Earlier versions of this file scored it as "at most two losses"; every two-strike
+number below is for the real rule. This is the pick-quality measure: it does not depend on
   which upsets happened to land, only on how good the chosen spots were.
 
 ## Valuing the future: re-picking beats discounting
@@ -63,7 +67,7 @@ chosen. Geometric mean of the expected season survival over the 11 seasons, plus
 | future_discount | 0.5 | 1 (calibrated) | 2 | 4 | 8 | **16** | 32 | 64 | greedy |
 |---|---|---|---|---|---|---|---|---|---|
 | single elimination | 1.41% | 1.42% | 1.46% | 1.50% | 1.60% | **1.78%** | 1.76% | 1.81% | 1.58% |
-| two strikes | 24.0% | 24.2% | 24.7% | 24.8% | 25.6% | **27.2%** | 27.1% | - | 25.5% |
+| two strikes (out on the 2nd loss) | - | 8.3% | - | 8.7% | - | **9.9%** | - | 10.0% | 9.0% |
 
 Reading: planning on the calibrated projection is *worse* than not planning at all. The
 optimiser selects the future weeks whose projections happen to be most optimistic, so the
@@ -96,24 +100,30 @@ chance of at least one full-season survival across these 11 years). One entry su
 weeks of single elimination is rare no matter how well it is played, which is exactly why the
 25-entry pool is worth diversifying.
 
-### One entry, two strikes
+### One entry, two strikes (out on the second loss)
 
-| season | out in week | expected survival |
-|---|---|---|
-| 2015 | 12 | 21.5% |
-| 2016 | survived | 19.5% |
-| 2017 | 9 | 35.8% |
-| 2018 | 14 | 26.9% |
-| 2019 | survived | 44.5% |
-| 2020 | survived | 39.7% |
-| 2021 | 11 | 32.4% |
-| 2022 | 7 | 16.6% |
-| 2023 | 14 | 20.8% |
-| 2024 | 3 | 22.4% |
-| 2025 | 14 | 33.9% |
+Previous planner (`future_discount = 16`) and, for comparison, the current policy planner
+(`horizon: 1`), each replayed with one life:
 
-Survived 3 of 11 seasons; geometric-mean expected survival 27.2%, so the realised count is
-right where the closing prices say it should be.
+| season | discount x16: out in week | expected | policy h=1: out in week | expected |
+|---|---|---|---|---|
+| 2015 | 5 | 7.1% | 8 | 9.1% |
+| 2016 | 11 | 6.3% | 11 | 7.1% |
+| 2017 | 6 | 14.3% | 5 | 11.3% |
+| 2018 | 5 | 9.6% | 3 | 13.6% |
+| 2019 | 13 | 19.7% | 10 | 17.5% |
+| 2020 | survived | 16.6% | survived | 14.8% |
+| 2021 | 10 | 12.6% | 9 | 13.3% |
+| 2022 | 6 | 5.1% | 7 | 6.6% |
+| 2023 | 13 | 6.8% | 12 | 8.5% |
+| 2024 | 2 | 7.6% | 2 | 6.4% |
+| 2025 | 5 | 13.3% | 14 | 16.3% |
+
+Each survived 1 of 11 seasons (2020); geometric-mean expected survival 9.9% for the previous
+planner and 10.7% for the current one, so the realised count is right where the closing
+prices say it should be. With one life instead of two, a two-strike season is worth about a
+third of what the old scoring said, and the lone-entry pool sits much closer to single
+elimination than to a comfortable hedge.
 
 ### 25 entries, single elimination
 

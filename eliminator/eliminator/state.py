@@ -5,7 +5,7 @@ state/<pool>.yaml::
     name: ESPN eliminator
     mode: multi            # multi (single elimination, many entries) | strikes (one entry)
     entries: 25            # multi only
-    strikes: 0             # losses allowed before elimination (2 for the two-strike pool)
+    strikes: 2             # strikes that eliminate: out on the 2nd loss (0 or 1 = single elimination)
     season: 2026
     picks:                 # entry id -> {week: team}; entry ids are 1..N by default
       "1": {1: LAC, 2: BUF}
@@ -47,6 +47,12 @@ class PoolState:
     picks: dict[str, dict[int, str]] = field(default_factory=dict)
     path: Path | None = None
 
+    @property
+    def lives(self) -> int:
+        """Losses an entry can take and stay alive. ``strikes`` counts the loss that puts it out
+        (two strikes: the second loss eliminates), so a two-strike entry has one life."""
+        return lives(self.strikes)
+
     @staticmethod
     def load(path: Path) -> "PoolState":
         raw = yaml.safe_load(path.read_text()) or {}
@@ -75,6 +81,11 @@ class PoolState:
             if k not in ids:
                 ids.append(k)
         return ids
+
+
+def lives(strikes: int) -> int:
+    """Losses allowed before elimination for a pool that eliminates on the ``strikes``-th loss."""
+    return max(int(strikes) - 1, 0)
 
 
 def _idkey(s: str):
@@ -120,7 +131,7 @@ def evaluate_entries(state: PoolState, games: pd.DataFrame, current_week: int, n
                         results[w] = "pending"
                 else:
                     provisional_now = team
-        alive = losses <= state.strikes
+        alive = losses <= state.lives
         out.append(EntryStatus(entry_id=eid, picks=picks, used=used, results=results, losses=losses, alive=alive,
                                locked_now=locked_now, provisional_now=provisional_now))
     return out

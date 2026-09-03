@@ -58,21 +58,24 @@ class PlanResult:
                          "p_season_sim": e.p_season() if e.path is not None and e.p_season() is not None else np.nan})
         return pd.DataFrame(rows)
 
+    def status_of(self, entry_id: str) -> EntryStatus:
+        return next(x for x in self.statuses if x.entry_id == entry_id)
+
     def strikes_left_of(self, entry_id: str) -> int:
-        """Strikes the entry has left after every result in so far (what to show, not what the
-        optimiser plans with: see ``make_plan``)."""
-        st = next(x for x in self.statuses if x.entry_id == entry_id)
-        return max(self.state.strikes - st.losses, 0)
+        """Strikes the entry has left after every result in so far: 2 of 2 at the start of a
+        two-strike pool, 1 after a loss, 0 when it is out. What to show, not what the optimiser
+        plans with (``EntryPlan.strikes_left`` is the losses it can still take, see ``make_plan``)."""
+        return max(self.state.strikes - self.status_of(entry_id).losses, 0)
 
     def decided_now(self, entry_id: str) -> bool:
         """This week's pick has kicked off and its result is in."""
-        st = next(x for x in self.statuses if x.entry_id == entry_id)
+        st = self.status_of(entry_id)
         return st.locked_now is not None and st.results.get(self.week) in ("win", "loss")
 
     def _died_this_week(self, st: EntryStatus) -> bool:
         """An entry that was still alive coming into this week and lost this week's game."""
         lost_now = st.results.get(self.week) in ("loss", "missed")
-        return lost_now and st.losses - 1 <= self.state.strikes
+        return lost_now and st.losses - 1 <= self.state.lives
 
     def picks_by_team(self) -> pd.DataFrame:
         tw = self.this_week()
@@ -117,7 +120,7 @@ def make_plan(state: PoolState, games_all: pd.DataFrame, cfg: dict, ledger: list
         # come from the results: PlanResult.strikes_left_of.)
         losses_ahead = s.losses - (1 if s.locked_now is not None and s.results.get(week) == "loss" else 0)
         entries.append(EntryPlan(entry_id=s.entry_id, available=available, fixed=fixed,
-                                 strikes_left=max(state.strikes - losses_ahead, 0), alive=s.alive or ignore_elimination))
+                                 strikes_left=max(state.lives - losses_ahead, 0), alive=s.alive or ignore_elimination))
     plan_disc = float(cfg["model"].get("future_discount", 1.0))
     real_disc = float(cfg["simulation"].get("discount", 1.0))
     sim = simulate_season(proj, cfg, n=scenarios, discount=real_disc)            # calibrated: reporting, and choosing in policy mode

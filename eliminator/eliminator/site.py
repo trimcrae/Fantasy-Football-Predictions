@@ -28,7 +28,7 @@ import pandas as pd
 from .config import ROOT
 from .data.schedule import ET
 from .plan import PlanResult
-from .state import PoolState
+from .state import PoolState, lives
 from .teams import TEAMS
 
 SCHEMA = 1
@@ -220,7 +220,7 @@ def week_record(snaps: list[dict], games: pd.DataFrame | None) -> dict[str, dict
                 graded[r["entry"]] = res
                 if res == "loss":
                     losses[r["entry"]] = losses.get(r["entry"], 0) + 1
-            alive = [e for e in (str(i) for i in range(1, n_entries + 1)) if losses.get(e, 0) <= strikes]
+            alive = [e for e in (str(i) for i in range(1, n_entries + 1)) if losses.get(e, 0) <= lives(strikes)]
             by_week[s["week"]] = {"graded": graded, "alive_after": len(alive), "losses": dict(losses)}
         out[pool] = {"by_week": by_week, "strikes": strikes, "entries": n_entries}
     return out

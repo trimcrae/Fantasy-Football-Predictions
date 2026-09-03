@@ -76,7 +76,8 @@ def test_make_plan_strikes_and_locked_pick(games_all, cfg, before_week1):
     e = res.entries[0]
     assert TEAMS[e.path.teams[0]] == locked_team
     assert res.this_week().iloc[0]["status"] == "locked"
-    assert e.strikes_left == 2
+    assert e.strikes_left == 1                  # two strikes: one loss can be taken, the second is out
+    assert res.strikes_left_of("1") == 2
 
 
 def test_evaluate_entries_results(games_all, before_week1):
@@ -160,12 +161,21 @@ def test_locked_loss_is_charged_once(games_all, cfg):
     assert e.alive and res.strikes_left_of("1") == 1 and res.decided_now("1")
     assert TEAMS[e.path.teams[0]] == home and e.path.probs[0] == 0.0
     _, pwin, _ = policy_run(res.sim, [TEAMS.index(home)], e.available)
-    expected = survival_given_lines(pwin[:, 1:], strikes=1).mean()        # one strike left for the weeks ahead
-    assert abs(e.path.value - expected) < 1e-9
-    assert e.path.value > 0.5 * survival_given_lines(pwin[:, 1:], strikes=0).mean() + 0.01
+    expected = survival_given_lines(pwin[:, 1:], strikes=0).mean()        # one strike left: no more losses allowed
+    assert abs(e.path.value - expected) < 1e-9 and e.path.value > 0
     assert "strikes left: 1 of 2" in render(res)
     from eliminator.explain import explain_summary
-    assert explain_summary(res).startswith("Chance of at most 1 loss in 17 picks")
+    assert explain_summary(res).startswith("Chance of no losses in 17 picks")
     # a locked pick still pending is charged nothing yet
-    pending = make_plan(state, games_all, cfg, [], None, now=after, season=2026, source="market", scenarios=1000)
-    assert pending.entries[0].strikes_left == 2 and pending.strikes_left_of("1") == 2 and not pending.decided_now("1")
+    pending = make_plan(state, games_all, cfg, [], None, now=after, season=2026, source="market", scenarios=1000, keep_wins=True)
+    assert pending.entries[0].strikes_left == 1 and pending.strikes_left_of("1") == 2 and not pending.decided_now("1")
+    assert explain_summary(pending).startswith("Chance of at most 1 loss in 18 picks")
+    # a second loss puts the entry out
+    state.picks["1"][2] = "KC"
+    g2 = g.copy(); wk2 = (g2.season == 2026) & (g2.week == 2)
+    g2.loc[wk2, "result"] = 3.0; g2.loc[wk2, "played"] = True; g2.loc[wk2, "home_win"] = 1.0
+    kc_home = bool(g2[wk2 & (g2.home == "KC")].shape[0])
+    if kc_home:                                          # make KC lose whichever side it is on
+        g2.loc[wk2 & (g2.home == "KC"), ["result", "home_win"]] = [-3.0, 0.0]
+    st = evaluate_entries(state, regular_season(g2, 2026), 3, dt.datetime(2026, 9, 30, 12, 0, tzinfo=ET))[0]
+    assert st.losses == 2 and not st.alive

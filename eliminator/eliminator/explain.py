@@ -267,10 +267,12 @@ def explain_summary(res: PlanResult, cfg: dict | None = None) -> str:
     n_weeks = len(res.projection.weeks)
     if s.mode == "strikes":
         e = live[0]
-        k = res.strikes_left_of(e.entry_id)
+        k = int(e.strikes_left)                  # losses it can still take (a two-strike entry starts with one)
         if res.decided_now(e.entry_id):          # this week's game is over: the odds are about the weeks left
             n_weeks -= 1
-        losses = f"at most {k} loss{'es' if k != 1 else ''}" if k else "no losses"
+            if res.status_of(e.entry_id).results.get(res.week) == "loss":
+                k -= 1                           # that loss is charged inside the simulation
+        losses = f"at most {k} loss{'es' if k != 1 else ''}" if k > 0 else "no losses"
         if res.horizon:
             return f"Chance of {losses} in {n_weeks} picks, from simulated seasons in which the entry takes the best team still available each later week."
         return f"Chance of {losses} in {n_weeks} picks, from simulated seasons. The score treats later weeks as far less certain; it ranks plans and is not a forecast."

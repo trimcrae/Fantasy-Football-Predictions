@@ -22,7 +22,7 @@ from .data.schedule import regular_season
 from .optimize.single import survival_prob
 from .plan import commit_picks, make_plan
 from .probability import game_home_prob
-from .state import PoolState
+from .state import PoolState, lives
 from .teams import TEAMS
 
 
@@ -66,6 +66,7 @@ def default_scenarios(cfg: dict) -> int:
 
 def run_season(games_all: pd.DataFrame, season: int, cfg: dict, mode: str = "single", strikes: int = 0,
                n_entries: int = 1, scenarios: int | None = None, policy: str = "plan", verbose: bool = False) -> dict:
+    """``strikes`` is the pool's rule: the entry is out on its ``strikes``-th loss (0 or 1: single elimination)."""
     cfg = copy.deepcopy(cfg)
     scenarios = int(scenarios or default_scenarios(cfg))
     games = regular_season(games_all, season)
@@ -74,6 +75,7 @@ def run_season(games_all: pd.DataFrame, season: int, cfg: dict, mode: str = "sin
     state = PoolState(name=f"bt-{season}", mode="strikes" if mode == "strikes" else "multi",
                       n_entries=n_entries, strikes=strikes, season=season)
     sigma = float(cfg["model"]["sigma"])
+    allowed = lives(strikes)                      # losses before the entry is out
     picks_log = []
     for k in range(1, W + 1):
         view = as_of_view(games_all, season, k)
@@ -101,9 +103,9 @@ def run_season(games_all: pd.DataFrame, season: int, cfg: dict, mode: str = "sin
     for eid, g in log.groupby("entry"):
         g = g.sort_values("week")
         losses = (~g["won"].astype(bool)).cumsum()
-        elim_week = int(g["week"][losses > strikes].min()) if (losses > strikes).any() else None
+        elim_week = int(g["week"][losses > allowed].min()) if (losses > allowed).any() else None
         p_close = g["p_close"].astype(float).to_numpy()
-        expected = float(np.prod(p_close)) if strikes == 0 else survival_prob(p_close, strikes)
+        expected = float(np.prod(p_close)) if allowed == 0 else survival_prob(p_close, allowed)
         per_entry.append({"entry": eid, "survived": elim_week is None, "elim_week": elim_week,
                           "expected": expected, "log_expected": float(np.log(max(expected, 1e-12)))})
     pe = pd.DataFrame(per_entry)

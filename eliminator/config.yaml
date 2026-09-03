@@ -9,6 +9,8 @@ season_weeks: 18
 #   spreads widen as real ones do. A pool of entries is re-split every week, so each entry
 #   follows its own pattern later: spread_weights are how often it takes the best, second
 #   and third team available to it. The season survival shown on the site is this number.
+# Pool files (state/*.yaml): strikes is the loss that puts an entry out; strikes: 2 means the
+# second loss eliminates, so the entry can lose once. 0 or 1 is single elimination.
 planning:
   mode: policy
   horizon: 1
