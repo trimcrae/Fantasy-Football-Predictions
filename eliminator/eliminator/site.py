@@ -269,7 +269,16 @@ h3{font-size:14px;font-weight:650;margin:22px 0 4px}.wk-nav{display:flex;gap:8px
 .picks-list .row{display:grid;grid-template-columns:110px 1fr auto;gap:4px 14px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line)}.picks-list .row:last-child{border-bottom:none}
 .picks-list .row .m{grid-column:1/-1}.picks-list .row .r{text-align:right;font-size:15px}.picks-list .row .mid{display:flex;flex-direction:column;gap:2px}
 footer{color:var(--ink3);font-size:12.5px;margin-top:36px;line-height:1.5}
-@media (max-width:640px){main{padding:18px 14px 48px}.top .hero{font-size:32px}.pick .team{font-size:24px}.pick .num{font-size:36px}.card{padding:16px}}
+.wbw .wrow{display:grid;grid-template-columns:96px 1fr 1fr;gap:6px 18px;padding:14px 0;border-bottom:1px solid var(--line);align-items:start}.wbw .wrow:last-child{border-bottom:none}
+.wbw .wrow.now{background:var(--now);margin:0 -22px;padding:14px 22px;border-radius:10px}.wbw .wk{font-weight:650}.wbw .wk .sub{display:block;font-weight:400}
+.wbw .fmt{font-size:11.5px;color:var(--ink3);text-transform:uppercase;letter-spacing:.03em;margin-bottom:2px}.wbw .alive{font-size:12.5px;color:var(--ink2);margin-top:2px}.wbw .chips{margin:4px 0 0}
+@media (max-width:640px){main{padding:16px 12px 44px}.top .hero{font-size:30px}.top{margin-bottom:14px}.grid{gap:12px}.card{padding:16px 14px;border-radius:12px}
+.pick{gap:10px}.pick img{width:48px;height:48px}.pick .team{font-size:24px}.pick .num{font-size:34px}
+.tiles{grid-template-columns:repeat(3,1fr);gap:8px}.tile{padding:8px 9px}.tile .v{font-size:17px}.tile .l{font-size:10px}
+.meter{width:120px;min-width:120px}.picks-list .row{grid-template-columns:88px 1fr auto;gap:2px 10px}
+.mh{display:none}.showall .mh{display:table-cell}th,td{padding:8px 7px}
+.wbw .wrow{grid-template-columns:1fr}.wbw .wrow.now{margin:0 -14px;padding:12px 14px}.wbw .wk{display:flex;gap:8px;align-items:baseline}.wbw .wk .sub{display:inline}
+summary{padding:6px 0}.tog{padding:5px 13px}}
 """
 
 LOGO_DIR = SITE_DIR / "logos"
@@ -432,19 +441,22 @@ def render_season_index(season: int, snaps: list[dict], games: pd.DataFrame | No
         cards.append(f"<div class=\"card\">{head}{body}</div>")
 
     weeks = sorted({s["week"] for s in snaps})
-    ths = "".join(f"<th>{_esc(latest[p]['name'])}</th><th class=\"n\">alive</th>" for p in pools)
-    trs = []
+    rows = []
     for w in weeks:
-        cells = []
+        cols = []
         for p in pools:
             s = next((x for x in snaps if x["pool"] == p and x["week"] == w), None)
             if s is None:
-                cells.append("<td class=\"sub\">&mdash;</td><td></td>")
+                cols.append(f"<div><div class=\"fmt\">{_esc(latest[p]['name'])}</div><span class=\"sub\">&mdash;</span></div>")
                 continue
             wr = rec[p]["by_week"].get(w, {})
-            cells.append(f"<td>{_exposure_chips(s['picks'], wr.get('graded', {})) if s['picks'] else '<span class=sub>no entries alive</span>'}</td><td class=\"n\">{wr.get('alive_after', '')}</td>")
-        trs.append(f"<tr class=\"{'now' if w == latest_week else ''}\"><td><a href=\"{_week_page_name(season, w)}\">Week {w}</a></td>{''.join(cells)}</tr>")
-    table = f"<div class=\"card\"><h2>Week by week</h2><div class=\"sub\">Recommended picks, graded against the final score. A tie counts as a loss.</div><div class=\"tw\"><table><thead><tr><th>week</th>{ths}</tr></thead><tbody>{''.join(trs)}</tbody></table></div></div>"
+            chips = _exposure_chips(s["picks"], wr.get("graded", {})) if s["picks"] else "<span class=\"sub\">no entries alive</span>"
+            alive = f"<div class=\"alive\">{wr.get('alive_after', '')} of {s['entries']} alive after</div>" if s["mode"] != "strikes" else \
+                (f"<div class=\"alive\">{'alive' if wr.get('alive_after') else 'out'}</div>" if wr else "")
+            cols.append(f"<div><div class=\"fmt\">{_esc(latest[p]['name'])}</div>{chips}{alive}</div>")
+        tag = "<span class=\"sub\">this week</span>" if w == latest_week else ""
+        rows.append(f"<div class=\"wrow{' now' if w == latest_week else ''}\"><div class=\"wk\"><a href=\"{_week_page_name(season, w)}\">Week {w}</a>{tag}</div>{''.join(cols)}</div>")
+    table = f"<div class=\"card wbw\"><h2>Week by week</h2><div class=\"sub\">Recommended picks, graded against the final score. A tie counts as a loss.</div>{''.join(rows)}</div>"
 
     nav = " ".join(f"<a href=\"{_season_page_name(y)}\">{y}</a>" if y != season else f"<b>{y}</b>" for y in seasons)
     body = (f"<div class=\"grid\">{''.join(cards)}</div><div style=\"height:18px\"></div>{table}"
@@ -495,9 +507,9 @@ def render_week_page(season: int, week: int, snaps: list[dict], games: pd.DataFr
         if s.get("options"):
             whys = ex.get("options") or []
             rows = "".join(f"<tr><td>{_team(o['team'])}</td><td>{_meter(o['p_now'])}</td><td class=\"n\">{_pct(o['p_season'], 2)}</td><td class=\"n reason\">{_pct(o['score'], 2)}</td>"
-                           f"<td class=\"plan\">{_esc(' '.join(o['plan']))}</td><td class=\"reason\">{_esc(whys[i]) if i < len(whys) else ''}</td></tr>" for i, o in enumerate(s["options"]))
+                           f"<td class=\"plan mh\">{_esc(' '.join(o['plan']))}</td><td class=\"reason\">{_esc(whys[i]) if i < len(whys) else ''}</td></tr>" for i, o in enumerate(s["options"]))
             sec.append(f"<div class=\"card\"><h2>This week's options</h2><div class=\"sub\">Use the team now and play the rest of the season optimally. P(season) is the chance of surviving the season; Details adds the ranking score and the reasoning.</div>"
-                       f"<div class=\"tw\"><table><thead><tr><th>team</th><th>win now</th><th class=\"n\">P(season)</th><th class=\"n reason\">score</th><th>rest of the plan</th><th class=\"reason\">why</th></tr></thead><tbody>{rows}</tbody></table></div></div>")
+                       f"<div class=\"tw\"><table><thead><tr><th>team</th><th>win now</th><th class=\"n\">P(season)</th><th class=\"n reason\">score</th><th class=\"mh\">rest of the plan</th><th class=\"reason\">why</th></tr></thead><tbody>{rows}</tbody></table></div></div>")
 
         more = []
         # board
@@ -505,9 +517,9 @@ def render_week_page(season: int, week: int, snaps: list[dict], games: pd.DataFr
         for r in s["board"]:
             res = grade(games, season, week, r["team"]) if r.get("played") else ("pending" if r.get("locked") else "")
             rows.append(f"<tr><td>{_team(r['team'])}</td><td>{_opp_html(r)}</td><td>{_meter(r['prob'])}</td><td class=\"n\">{_spread(r['spread'])}</td>"
-                        f"<td class=\"sub\">{_esc(_source_label(r['source']))}</td><td class=\"sub\">{_esc(_kick(r['kickoff']))}</td><td>{_badge(res)}</td><td class=\"sub\">{_esc(r.get('qb_note', ''))}</td></tr>")
+                        f"<td class=\"sub mh\">{_esc(_source_label(r['source']))}</td><td class=\"sub mh\">{_esc(_kick(r['kickoff']))}</td><td>{_badge(res)}</td><td class=\"sub mh\">{_esc(r.get('qb_note', ''))}</td></tr>")
         more.append(f"<details><summary>Week {week} board, all {len(s['board'])} teams</summary><div class=\"tw\"><table><thead><tr><th>team</th><th>opponent</th><th>win prob</th>"
-                    f"<th class=\"n\">spread</th><th>source</th><th>kickoff</th><th>result</th><th>QB</th></tr></thead><tbody>{''.join(rows)}</tbody></table></div></details>")
+                    f"<th class=\"n\">spread</th><th class=\"mh\">source</th><th class=\"mh\">kickoff</th><th>result</th><th class=\"mh\">QB</th></tr></thead><tbody>{''.join(rows)}</tbody></table></div></details>")
         # per-entry plans
         pw = s.get("planning_weeks", [])
         if pw and any(pl.get("path") for pl in s["plans"]):
