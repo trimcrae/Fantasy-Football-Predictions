@@ -69,8 +69,18 @@ jobs:
             echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
           else
             git commit -m "eliminator: snapshot $(date -u +'%Y-%m-%d %H:%M UTC')"
-            git pull --rebase origin master
-            git push origin HEAD:master
+            # master may have moved during the run; everything this commit touches is regenerated
+            # every run, so on conflict keep this run's files (the replayed commit is "theirs")
+            for attempt in 1 2 3; do
+              git fetch origin master
+              if ! git rebase origin/master; then
+                git checkout --theirs -- picks eliminator/site/data eliminator/state index.html .nojekyll 2>/dev/null || true
+                git add -A picks eliminator/site/data eliminator/state index.html .nojekyll
+                GIT_EDITOR=true git rebase --continue
+              fi
+              if git push origin HEAD:master; then break; fi
+              echo "push rejected (attempt $attempt), retrying"; sleep 10
+            done
             echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
           fi
 
