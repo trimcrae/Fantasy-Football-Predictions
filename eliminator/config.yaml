@@ -3,12 +3,21 @@
 season: null            # null = latest season present in the schedule feed
 season_weeks: 18
 
+# How the future is valued when choosing this week's pick (see BACKTEST.md).
+#   policy: this week is the commitment (horizon 1); every later week is re-picked from the
+#   best team still available at that scenario's closing line, in simulated seasons whose
+#   spreads widen as real ones do. A pool of entries is re-split every week, so each entry
+#   follows its own pattern later: spread_weights are how often it takes the best, second
+#   and third team available to it. The season survival shown on the site is this number.
+planning:
+  mode: policy
+  horizon: 1
+  spread_weights: [0.6, 0.3, 0.1]
+
 model:
   ratings_source: auto  # auto -> inpredictable when reachable, else market-implied fit
-  # How much to distrust future weeks when choosing a plan. 1 = the calibrated projection
-  # error; the 2015-2025 backtest is best from 16 upward for both pool formats (see
-  # BACKTEST.md), because plans are picked on noisy estimates of the future. Survival odds
-  # in the report are always simulated with the calibrated (undiscounted) uncertainty.
+  # planning.mode = discount only (the previous planner): how much to distrust future weeks
+  # when choosing a fixed 18-week path. Kept for comparison; see BACKTEST.md.
   future_discount: 16
   # Week 18: calibration finds closing lines ~12% flatter and noisier than projections because
   # clinched teams rest starters. 0.8 is deliberately a bit more cautious than the fitted 0.88,

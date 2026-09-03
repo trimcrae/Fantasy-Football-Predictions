@@ -59,9 +59,15 @@ def won(games: pd.DataFrame, week: int, team: str) -> bool | None:
     return bool((r["result"] > 0 and r["home"] == team) or (r["result"] < 0 and r["away"] == team))
 
 
+def default_scenarios(cfg: dict) -> int:
+    """Policy planning chooses by simulation, so it needs more scenarios than fixed-path planning."""
+    return 2000 if str((cfg.get("planning") or {}).get("mode", "policy")) == "policy" else 400
+
+
 def run_season(games_all: pd.DataFrame, season: int, cfg: dict, mode: str = "single", strikes: int = 0,
-               n_entries: int = 1, scenarios: int = 400, policy: str = "plan", verbose: bool = False) -> dict:
+               n_entries: int = 1, scenarios: int | None = None, policy: str = "plan", verbose: bool = False) -> dict:
     cfg = copy.deepcopy(cfg)
+    scenarios = int(scenarios or default_scenarios(cfg))
     games = regular_season(games_all, season)
     W = int(games["week"].max())
     cfg["season_weeks"] = W
@@ -114,7 +120,7 @@ def run_season(games_all: pd.DataFrame, season: int, cfg: dict, mode: str = "sin
 
 
 def run_backtest(games_all: pd.DataFrame, seasons: list[int], cfg: dict, mode: str, strikes: int = 0,
-                 n_entries: int = 1, scenarios: int = 400, policy: str = "plan", verbose: bool = False) -> pd.DataFrame:
+                 n_entries: int = 1, scenarios: int | None = None, policy: str = "plan", verbose: bool = False) -> pd.DataFrame:
     rows = []
     for s in seasons:
         r = run_season(games_all, s, cfg, mode=mode, strikes=strikes, n_entries=n_entries, scenarios=scenarios,
@@ -144,4 +150,27 @@ def discount_sweep(games_all: pd.DataFrame, seasons: list[int], cfg: dict, mode:
                  "seasons_survived": int(bt["any_survived"].sum()), "n_seasons": len(bt)})
     if verbose:
         print(rows[-1])
+    return pd.DataFrame(rows)
+
+
+def horizon_sweep(games_all: pd.DataFrame, seasons: list[int], cfg: dict, mode: str, strikes: int,
+                  horizons: list[int], n_entries: int = 1, scenarios: int | None = None, verbose: bool = True) -> pd.DataFrame:
+    """Policy planning with each horizon, plus the fixed-path discount planner and greedy for reference."""
+    rows = []
+
+    def summarise(label, bt):
+        row = {"planning": label, "seasons_survived": int(bt["any_survived"].sum()), "n_seasons": len(bt),
+               "mean_survivors": float(bt["n_survived"].mean())}
+        if mode != "multi":
+            row["geo_mean_expected"] = float(np.exp(bt["mean_log_expected"].mean()))
+        rows.append(row)
+        if verbose:
+            print(row)
+
+    for h in horizons:
+        c = copy.deepcopy(cfg); c["planning"] = dict(c.get("planning") or {}, mode="policy", horizon=int(h))
+        summarise(f"policy h={h}", run_backtest(games_all, seasons, c, mode=mode, strikes=strikes, n_entries=n_entries, scenarios=scenarios))
+    c = copy.deepcopy(cfg); c["planning"] = dict(c.get("planning") or {}, mode="discount")
+    summarise(f"discount x{c['model'].get('future_discount', 1)}", run_backtest(games_all, seasons, c, mode=mode, strikes=strikes, n_entries=n_entries))
+    summarise("greedy (no lookahead)", run_backtest(games_all, seasons, cfg, mode=mode, strikes=strikes, n_entries=n_entries, policy="greedy"))
     return pd.DataFrame(rows)

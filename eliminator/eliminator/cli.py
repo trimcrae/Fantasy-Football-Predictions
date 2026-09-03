@@ -251,12 +251,19 @@ def cmd_qb(args):
 
 
 def cmd_backtest(args):
-    from .backtest import discount_sweep, run_backtest
+    from .backtest import discount_sweep, horizon_sweep, run_backtest
     cfg = load_config()
     if args.discount is not None:
         cfg["model"]["future_discount"] = args.discount
     if args.allocation:
         cfg["portfolio"]["allocation_view"] = args.allocation
+    cfg.setdefault("planning", {})
+    if args.planning:
+        cfg["planning"]["mode"] = args.planning
+    if args.horizon is not None:
+        cfg["planning"]["horizon"] = args.horizon
+    if args.spread_weights:
+        cfg["planning"]["spread_weights"] = [float(x) for x in args.spread_weights.split(",")]
     df = load_games(refresh=False)
     last_complete = max(s for s in df["season"].unique() if regular_season(df, s)["played"].all())
     seasons = _seasons(args.seasons, list(range(2015, last_complete + 1)))
@@ -264,7 +271,13 @@ def cmd_backtest(args):
     for mode in modes:
         strikes = args.strikes if mode == "strikes" else 0
         n_entries = args.entries if mode == "multi" else 1
+        if args.horizons:
+            print(f"\n=== horizon sweep: {mode} (strikes={strikes}, entries={n_entries}) ===")
+            out = horizon_sweep(df, seasons, cfg, mode, strikes, [int(x) for x in args.horizons.split(",")], n_entries=n_entries, scenarios=args.scenarios)
+            print(out.to_string(index=False))
+            continue
         if args.sweep:
+            cfg["planning"]["mode"] = "discount"
             print(f"\n=== discount sweep: {mode} ===")
             grid = [float(x) for x in args.discounts.split(",")] if args.discounts else [0.5, 1.0, 2.0, 4.0, 8.0]
             out = discount_sweep(df, seasons, cfg, mode, strikes, grid)
@@ -351,7 +364,11 @@ def main(argv=None):
     p.add_argument("--seasons", help="e.g. 2015-2025")
     p.add_argument("--mode", choices=["single", "strikes", "multi", "all"], default="single")
     p.add_argument("--strikes", type=int, default=2); p.add_argument("--entries", type=int, default=25)
-    p.add_argument("--scenarios", type=int, default=400)
+    p.add_argument("--scenarios", type=int, help="default 2000 for policy planning, 400 for discount planning")
+    p.add_argument("--planning", choices=["policy", "discount"], help="override planning.mode")
+    p.add_argument("--horizon", type=int, help="policy planning: weeks that are a commitment (default 1)")
+    p.add_argument("--spread-weights", help="policy planning: how often an entry takes the best, 2nd, 3rd available team later, e.g. 0.6,0.3,0.1")
+    p.add_argument("--horizons", help="comma list of horizons to compare, e.g. 1,2,4; also runs the discount planner and greedy")
     p.add_argument("--discount", type=float); p.add_argument("--sweep", action="store_true")
     p.add_argument("--allocation", choices=["planning", "calibrated"], help="which simulation scores the multi-entry split")
     p.add_argument("--discounts", help="comma list for --sweep, e.g. 8,16,32")
