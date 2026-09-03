@@ -87,3 +87,18 @@ def test_pool_files_skip_non_pool_yaml(tmp_path):
     (tmp_path / "qb_status.yaml").write_text("[]\n")
     (tmp_path / "overrides.yaml").write_text("lines: []\n")
     assert [p.name for p in pool_files(tmp_path)] == ["a.yaml"]
+
+
+def test_snapshot_carries_qb_situations_and_week_page_renders_them(tmp_path, games_all, cfg, before_week1):
+    from eliminator.model.qb import QBSituation
+    data = tmp_path / "data"
+    st = PoolState.load(_pool(tmp_path, "strikes2", "strikes", 1, 2))
+    ledger = [QBSituation(team="KC", player="Patrick Mahomes", penalty=7, status="out", injury="ankle", injured_week=1, note="auto: nflverse injury report")]
+    res = make_plan(st, games_all, cfg, ledger, None, now=before_week1, season=2026, source="market")
+    snap = build_snapshot(res, "strikes2", generated_at=before_week1, ledger=ledger)
+    assert snap["qb_situations"][0]["team"] == "KC" and snap["qb_situations"][0]["source"] == "auto"
+    assert snap["qb_situations"][0]["p_out"][1] == 1.0
+    write_snapshot(snap, data)
+    build_site(games_all, data_dir=data, out_dir=tmp_path / "build", built_at=before_week1)
+    page = (tmp_path / "build" / "s2026-w01.html").read_text()
+    assert "Quarterback situations (1)" in page and "Patrick Mahomes" in page

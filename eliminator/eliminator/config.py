@@ -35,6 +35,7 @@ DEFAULTS: dict[str, Any] = {
         "default_tier": "average",
         "return_week_setback": [1.0, 0.35, 0.15, 0.05],  # P(out) in weeks return-1, return, +1, +2
         "reflect_half_life_games": 2.0,  # how fast a rating absorbs a QB absence
+        "auto_from_injuries": True,      # add starters with a game designation to the ledger automatically
     },
     "simulation": {"scenarios": 20000, "seed": 7, "discount": 1.0},  # discount: drift multiplier, 1 = calibrated
     "portfolio": {"candidates_per_slot": 60, "improve_passes": 2},
