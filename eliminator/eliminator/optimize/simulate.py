@@ -18,15 +18,19 @@ from ..teams import TEAMS
 NT = len(TEAMS)
 
 
-def simulate_wins(proj: Projection, cfg: dict, n: int | None = None, seed: int | None = None) -> np.ndarray:
-    """Boolean array [n, n_weeks, 32]: does the team win its game that week in scenario s."""
+def simulate_wins(proj: Projection, cfg: dict, n: int | None = None, seed: int | None = None,
+                  discount: float | None = None) -> np.ndarray:
+    """Boolean array [n, n_weeks, 32]: does the team win its game that week in scenario s.
+
+    ``discount`` multiplies the calibrated drift variance. The planner selects plans on a
+    heavily discounted view (model.future_discount, tuned by backtest) and reports survival
+    odds on the calibrated view (simulation.discount = 1).
+    """
     sim = cfg["simulation"]
     n = int(n or sim["scenarios"])
     rng = np.random.default_rng(sim["seed"] if seed is None else seed)
     m = cfg["model"]
-    # The plan's future_discount is a policy knob (tuned by backtest); the simulation keeps the
-    # calibrated amount of drift so the survival odds it reports describe reality.
-    disc = float(sim.get("discount", 1.0))
+    disc = float(sim.get("discount", 1.0) if discount is None else discount)
     a, b, c = float(m["horizon_var_a"]), float(m["horizon_var_b"]), float(m.get("horizon_var_c", 0.0))
     k = proj.current_week
     v_est = 0.5 * disc * max(a + c / (1.0 + k), 0.0)       # per-team persistent estimation error

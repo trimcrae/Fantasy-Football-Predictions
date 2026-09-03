@@ -22,7 +22,7 @@ DEFAULTS: dict[str, Any] = {
         "recency_half_life": 5.0,   # weeks; weight of a posted line decays with age
         "horizon_var_a": 4.0,       # projection error variance vs closing line at h=0 (points^2)
         "horizon_var_b": 2.0,       # additional variance per week of horizon
-        "future_discount": 1.0,     # multiplier on horizon variance (tuned by backtest)
+        "future_discount": 16.0,    # multiplier on horizon variance when *choosing* plans (backtest-tuned)
         "line_weight_by_horizon": {"0": 1.0, "1": 0.9, "2": 0.75, "3": 0.6, "default": 0.5},
         "week18_shrink": 0.6,       # week-18 probabilities shrunk toward 0.5 (starters rest)
         "week18_extra_var": 20.0,   # extra spread variance for week 18 projections

@@ -81,7 +81,10 @@ def make_plan(state: PoolState, games_all: pd.DataFrame, cfg: dict, ledger: list
             available[fixed[0]] = True
         entries.append(EntryPlan(entry_id=s.entry_id, available=available, fixed=fixed,
                                  strikes_left=max(state.strikes - s.losses, 0), alive=s.alive or ignore_elimination))
-    wins = simulate_wins(proj, cfg, n=scenarios)
+    plan_disc = float(cfg["model"].get("future_discount", 1.0))
+    real_disc = float(cfg["simulation"].get("discount", 1.0))
+    wins_policy = simulate_wins(proj, cfg, n=scenarios, discount=plan_disc)      # for choosing
+    wins = wins_policy if abs(plan_disc - real_disc) < 1e-9 else simulate_wins(proj, cfg, n=scenarios, discount=real_disc)  # for reporting
     live = [e for e in entries if e.alive]
     options: list[Path] = []
     if greedy:
@@ -115,7 +118,10 @@ def make_plan(state: PoolState, games_all: pd.DataFrame, cfg: dict, ledger: list
             if e0.path is not None:
                 e0.alive_mask = path_alive(wins, e0.path.teams, e0.strikes_left)
     else:
-        build_portfolio(P, pickable_now, entries, wins, cfg, objective=objective)
+        build_portfolio(P, pickable_now, entries, wins_policy, cfg, objective=objective)
+        for e in entries:
+            if e.alive and e.path is not None:
+                e.alive_mask = path_alive(wins, e.path.teams, e.strikes_left)
     summary = portfolio_summary(entries, wins)
     if live and live[0].path is not None:
         summary["p_plugin_first"] = live[0].path.value
@@ -157,7 +163,7 @@ def render(result: PlanResult, show_paths: bool = True, top_options: int = 12) -
             out.append("entry is eliminated.")
             return "\n".join(out)
         out.append(f"strikes left: {e0.strikes_left} of {s.strikes}")
-        out.append(f"P(survive season) if we follow the plan: plug-in {result.summary.get('p_plugin_first', float('nan')):.3f} | simulated {result.summary['p_each'][0]:.3f}")
+        out.append(f"P(survive season) following the plan: {result.summary['p_each'][0]:.3f} (simulated; plan score {result.summary.get('p_plugin_first', float('nan')):.3f})")
     else:
         out.append(f"entries alive: {len(live)} of {len(result.entries)}; eliminated: {len(dead)}")
         out.append(f"P(at least one entry survives the season) = {result.summary['p_any']:.3f}; expected survivors = {result.summary['expected_survivors']:.2f}")
@@ -173,8 +179,8 @@ def render(result: PlanResult, show_paths: bool = True, top_options: int = 12) -
     # options: value of using each team now
     if result.options:
         out.append("")
-        out.append("-- this week's options: season survival if used now, rest of the plan optimal --")
-        out.append("  team  p_now   plug-in  simulated  plan")
+        out.append("-- this week's options: use the team now, play the rest optimally --")
+        out.append("  team  p_now   score    P(season)  plan")
         for o in result.options[:top_options]:
             path = " ".join(TEAMS[t] for t in o.teams[1:])
             out.append(f"  {TEAMS[o.teams[0]]:<4}  {o.detail.get('now_prob', 0):.3f}  {o.value:.4f}   {o.detail.get('sim', float('nan')):.4f}   {path}")
@@ -189,6 +195,14 @@ def render(result: PlanResult, show_paths: bool = True, top_options: int = 12) -
         out.append(f"-- week {result.week} picks by team --")
         for r in result.picks_by_team().itertuples(index=False):
             out.append(f"  {r.team:<4} x{r.entries:<3} {r.opp:<5} p={r.p_win:.3f} spread {r.spread:+5.1f} [{r.source}] {r.kickoff}")
+        status = {st.entry_id: st for st in result.statuses}
+        changes = [(r["entry"], r["team"], status[r["entry"]].provisional_now) for r in tw.to_dict(orient="records") if r["status"] == "change"]
+        locked = [(r["entry"], r["team"]) for r in tw.to_dict(orient="records") if r["status"] == "locked"]
+        if changes:
+            out.append("  changes vs the picks on file: " + ", ".join(f"#{e} {old}->{new}" for e, new, old in changes))
+        if locked:
+            out.append("  locked (already kicked off): " + ", ".join(f"#{e} {t}" for e, t in locked))
+        out.append("  entries: " + " ".join(f"#{r['entry']}:{r['team']}" for r in tw.to_dict(orient="records")))
     if show_paths:
         out.append("")
         out.append("-- per-entry plan (this week first; later weeks are re-optimised every run) --")
@@ -203,5 +217,5 @@ def render(result: PlanResult, show_paths: bool = True, top_options: int = 12) -
             for wi, (t, pr) in enumerate(zip(e.path.teams, e.path.probs)):
                 parts.append(f"w{p.weeks[wi]}:{TEAMS[t]}({pr:.2f})")
             sim = float(e.alive_mask.mean()) if e.alive_mask is not None else float("nan")
-            out.append(f"  #{e.entry_id} [P={e.path.value:.3f} sim={sim:.3f}] " + " ".join(parts))
+            out.append(f"  #{e.entry_id} [P(season)={sim:.3f} score={e.path.value:.3f}] " + " ".join(parts))
     return "\n".join(out)

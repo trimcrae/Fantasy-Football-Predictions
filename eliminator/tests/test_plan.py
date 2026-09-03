@@ -42,7 +42,8 @@ def test_qb_ledger_moves_projection(games_all, cfg, before_week1):
 def test_simulation_marginals_match_projection(games_all, cfg, before_week1):
     st = assemble(games_all, 2026, 1, cfg, [], None, "market")
     proj = build_projection(regular_season(games_all, 2026), 2026, 1, st, cfg, now=before_week1)
-    wins = simulate_wins(proj, cfg, n=20000, seed=3)
+    # simulate with the same discount the projection used: marginals must agree
+    wins = simulate_wins(proj, cfg, n=20000, seed=3, discount=cfg["model"]["future_discount"])
     est = wins.mean(axis=0)
     assert np.abs(est - proj.prob).max() < 0.02
 

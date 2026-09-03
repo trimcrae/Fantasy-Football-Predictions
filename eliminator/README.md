@@ -27,6 +27,8 @@ python -m eliminator plan --pool state/multi25.yaml --commit   # write this week
 python -m eliminator status --pool state/multi25.yaml         # results and who is still alive
 ```
 
+From anywhere else use the launcher: `python eliminator/run.py plan --pool eliminator/state/multi25.yaml`.
+
 Re-run `plan` as often as you like before kickoff. Picks whose game has started are locked
 (and their teams burned); everything else is re-optimised against the latest lines. On a
 Sunday morning after Thursday night football, entries that used the Thursday team keep it and
@@ -52,6 +54,9 @@ Other commands: `calibrate` (refit all model parameters from history, writes
   every posted spread this season, seeded by last season's rating regressed toward zero.
   With lines posted for weeks 1-7 this already reproduces a full preseason power rating.
   `ratings_source: auto | inpredictable | market | blend` in `config.yaml`.
+* **Live moneylines (optional)**: with a free key from the-odds-api.com in `config.yaml`
+  (`data.odds_api_key`) or `ODDS_API_KEY`, `plan` prices this week's games from a de-vigged
+  consensus of US books, which beats the daily feed on game day. Also untested live here.
 * **Injury reports and depth charts**: nflverse weekly injury reports (game status and
   injury type) and depth charts (QB1 per team). Used to *suggest* QB ledger entries.
 
@@ -82,9 +87,27 @@ horizon. Fitted on 2011-2025 (as-of week `k`, `h` weeks ahead):
 
 `var(h, k) = 9.4 + 1.78 h - 2.5 / (1 + k)` points squared
 
-A future win probability is then `Phi(spread / sqrt(sigma^2 + future_discount * var(h, k)))`,
-so a projected 7-point favourite is a 73% pick this week but only about 70% ten weeks out.
-`future_discount` multiplies the fitted variance and is tuned by backtest (below).
+A future win probability is then `Phi(spread / sqrt(sigma^2 + future_discount * var(h, k)))`.
+With the calibrated variance (`future_discount = 1`) a projected 7-point favourite is a 73%
+pick this week and about 70% ten weeks out.
+
+That calibrated view is *not* what the planner optimises on. Backtests (see `BACKTEST.md`)
+show that plans chosen on the calibrated projection save strong teams for future spots
+that, on average, do not pan out as well as projected: the optimiser picks the future
+weeks whose projections are most optimistic, so the realised value of "the rest of the
+plan" is systematically below its estimate. Discounting the future much harder fixes it.
+Season survival at closing prices, geometric mean over 2015-2025:
+
+| future_discount | 1 (calibrated) | 4 | 8 | 16 | 32 | greedy (no lookahead) |
+|---|---|---|---|---|---|---|
+| single elimination | 1.42% | 1.50% | 1.60% | **1.78%** | 1.76% | 1.58% |
+| two strikes | 24.2% | 24.8% | 25.6% | **27.2%** | 27.1% | 25.5% |
+
+So the default is `future_discount: 16`: the plan still respects the *ordering* of future
+spots (it beats a pure "biggest favourite every week" policy) but weighs them lightly
+against a sure thing this week. The report separates the two views: **score** is the
+discounted number the plan is chosen on; **P(season)** is the survival probability under
+the calibrated simulation, which is the number to believe.
 
 The Monte Carlo layer goes further than the point estimate: each simulated season draws a
 persistent estimation error plus a random walk in every team's strength, so a team that
@@ -144,8 +167,20 @@ The plan for later weeks is only there to justify this week's pick; every run re
 whole remaining season with the latest information.
 
 The "this week's options" table is the most useful output when you want to overrule the
-tool: it lists, for each team you could use now, the season survival probability if you
-use it now and play the rest optimally.
+tool: it lists, for each team you could use now, the plan score and the simulated season
+survival probability if you use it now and play the rest optimally.
+
+Example (two-strike pool, 2026 week 1, market-implied ratings):
+
+```
+-- this week's options: use the team now, play the rest optimally --
+  team  p_now   score    P(season)  plan
+  LAC   0.812  0.0300   0.1668   SF DET MIN NE LA DEN DAL SEA IND KC JAX PHI CHI GB BAL BUF CIN
+  JAX   0.766  0.0282   0.1502   LAC SF CHI NE LA DEN DAL SEA IND KC CIN PHI DET GB BAL BUF HOU
+  DET   0.718  0.0267   0.1519   LAC SF MIN NE LA DEN DAL SEA IND KC JAX PHI CHI GB BAL BUF CIN
+
+PICK week 1: LAC ARI p=0.812 (new, kickoff Sun 09/13 16:25)
+```
 
 ## Backtest
 `python -m eliminator backtest --mode single|strikes|multi --seasons 2015-2025` replays past

@@ -5,6 +5,11 @@ season_weeks: 18
 
 model:
   ratings_source: auto  # auto -> inpredictable when reachable, else market-implied fit
+  # How much to distrust future weeks when choosing a plan. 1 = the calibrated projection
+  # error; the 2015-2025 backtest is best from 16 upward for both pool formats (see
+  # BACKTEST.md), because plans are picked on noisy estimates of the future. Survival odds
+  # in the report are always simulated with the calibrated (undiscounted) uncertainty.
+  future_discount: 16
   # Week 18: calibration finds closing lines ~12% flatter and noisier than projections because
   # clinched teams rest starters. 0.8 is deliberately a bit more cautious than the fitted 0.88,
   # since the teams a survivor plan wants in week 18 are exactly the ones likely to rest.
