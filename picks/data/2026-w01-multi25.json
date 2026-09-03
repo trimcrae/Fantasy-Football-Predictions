@@ -27,13 +27,13 @@
   17,
   18
  ],
- "generated_at": "2026-09-03T10:39:40.528709-04:00",
+ "generated_at": "2026-09-03T11:02:46.747102-04:00",
  "ratings_source": "inpredictable",
  "n_lines_posted": 112,
  "n_priced_games": 112,
  "summary": {
-  "p_any": 0.1618,
-  "expected_survivors": 0.2857,
+  "p_any": 0.162,
+  "expected_survivors": 0.2858,
   "n_live": 25,
   "p_each": [
    0.0124,
@@ -53,11 +53,11 @@
    0.008,
    0.0171,
    0.0094,
-   0.0134,
+   0.0135,
    0.0121,
    0.0073,
    0.0058,
-   0.0129,
+   0.013,
    0.0164,
    0.016,
    0.0111
@@ -297,7 +297,7 @@
    "status": "new",
    "on_file": null,
    "score": 0.0008,
-   "p_season": 0.0134
+   "p_season": 0.0135
   },
   {
    "entry": "19",
@@ -349,7 +349,7 @@
    "status": "new",
    "on_file": null,
    "score": 0.0009,
-   "p_season": 0.0129
+   "p_season": 0.013
   },
   {
    "entry": "23",
@@ -2900,7 +2900,7 @@
    "alive": true,
    "strikes_left": 0,
    "score": 0.0008,
-   "p_season": 0.0134,
+   "p_season": 0.0135,
    "path": [
     {
      "week": 1,
@@ -2925,7 +2925,7 @@
     {
      "week": 5,
      "team": "PIT",
-     "p": 0.5818
+     "p": 0.5853
     },
     {
      "week": 6,
@@ -3296,7 +3296,7 @@
    "alive": true,
    "strikes_left": 0,
    "score": 0.0009,
-   "p_season": 0.0129,
+   "p_season": 0.013,
    "path": [
     {
      "week": 1,
@@ -3321,7 +3321,7 @@
     {
      "week": 5,
      "team": "PIT",
-     "p": 0.5818
+     "p": 0.5853
     },
     {
      "week": 6,
@@ -3915,6 +3915,14 @@
   },
   {
    "generated_at": "2026-09-03T10:34:57.477267-04:00",
+   "picks": "LAC x17, JAX x4, CHI, BAL, DET, KC"
+  },
+  {
+   "generated_at": "2026-09-03T10:39:40.528709-04:00",
+   "picks": "LAC x17, JAX x4, CHI, BAL, DET, KC"
+  },
+  {
+   "generated_at": "2026-09-03T10:45:49.550443-04:00",
    "picks": "LAC x17, JAX x4, CHI, BAL, DET, KC"
   }
  ]
