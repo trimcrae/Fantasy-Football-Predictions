@@ -17,7 +17,44 @@ Two numbers per season:
   probabilities over all 18 weeks. This is the pick-quality measure: it does not depend on
   which upsets happened to land, only on how good the chosen spots were.
 
-## Choosing the future discount
+## Valuing the future: re-picking beats discounting
+
+The planner now values a candidate as "use this team now, then every later week take the
+best team still available at that simulated season's closing line" (`planning.mode: policy`,
+see README section 3). Survival given a season's lines is computed exactly, so the ranking is
+not at the mercy of coin flips. `--horizons 1,2,4` compares how many weeks are treated as a
+commitment (1 = only this week) against the previous planner (fixed 18-week paths chosen on a
+simulation with the future variance inflated 16x) and a greedy no-lookahead baseline.
+Geometric mean of the expected season survival over 2015-2025:
+
+| planner | policy h=1 | policy h=2 | policy h=4 | discount x16 (previous) | greedy |
+|---|---|---|---|---|---|
+| single elimination | **1.96%** | 1.94% | 1.81% | 1.78% | 1.58% |
+| two strikes (seasons survived) | **28.2%** (3) | 26.8% (4) | 25.0% (4) | 27.2% (3) | 25.5% (2) |
+
+Reading: committing only this week and treating everything after as "best available then"
+is the best planner in both single-entry formats, 10% better than the discount planner for
+single elimination and 4% better with two strikes; the longer the commitment, the closer it
+gets to the fixed-path planner. The discount planner was a proxy for the same idea (squash
+the far-off weeks so the optimiser stops hoarding teams for spots that do not materialise);
+this does it directly and also lets the later menu widen as real spreads do. `horizon: 1` is
+the default.
+
+For the 25-entry pool the only score available is the realised one (a survivor in the
+season or not), which is one rare event per season and therefore noisy: with a season-level
+chance of roughly 20-25%, 2 and 4 out of 11 are one standard deviation apart.
+
+| planner | policy h=1 | policy h=2 | policy h=4 | discount x16 (previous) | greedy |
+|---|---|---|---|---|---|
+| 25 entries, seasons with a survivor | 2 / 11 | 3 / 11 | 2 / 11 | 4 / 11 | 0 / 11 |
+| mean survivors per season | 0.18 | 0.45 | 0.18 | 0.36 | 0.00 |
+
+This does not confirm the improvement for the pool format, nor contradict it; the pool is
+played with the same valuation the single-entry results validate, plus the weekly re-split
+(`spread_weights`), which cannot be tuned on a metric this noisy. `horizon: 1` is used for
+every format so that the site's season odds mean the same thing everywhere.
+
+## The previous planner: choosing the future discount
 
 `future_discount` multiplies the calibrated projection-error variance when the plan is
 chosen. Geometric mean of the expected season survival over the 11 seasons, plus a greedy
@@ -36,7 +73,7 @@ by 16x keeps the ordering information (it beats greedy by 13% in single eliminat
 with two strikes) without over-committing to it. Beyond 16 the curve is flat within noise.
 16 is the shipped default; the reported survival odds always use the calibrated uncertainty.
 
-## Results with the default (`future_discount = 16`)
+## Results with the previous planner (`future_discount = 16`)
 
 ### One entry, single elimination
 

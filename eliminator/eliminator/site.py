@@ -98,7 +98,7 @@ def build_snapshot(res: PlanResult, pool: str, generated_at: dt.datetime, previo
         row = {"entry": str(e.entry_id), "alive": bool(e.alive), "strikes_left": int(e.strikes_left)}
         if e.alive and e.path is not None:
             row["score"] = _f(e.path.value)
-            row["p_season"] = _f(e.alive_mask.mean()) if e.alive_mask is not None else None
+            row["p_season"] = _f(e.p_season())
             row["path"] = [{"week": int(w), "team": TEAMS[t], "p": _f(pr)} for w, t, pr in zip(p.weeks, e.path.teams, e.path.probs)]
         plans.append(row)
 
@@ -135,6 +135,7 @@ def build_snapshot(res: PlanResult, pool: str, generated_at: dt.datetime, previo
         "summary": summary, "picks": picks, "options": options, "board": board, "plans": plans,
         "statuses": statuses, "ratings": {k: _f(v) for k, v in res.strength.healthy.items()},
         "qb_situations": qb_situations, "explain": explain, "allocation_view": res.allocation_view,
+        "horizon": res.horizon,
         "revisions": revisions,
     }
 
@@ -521,14 +522,23 @@ def render_week_page(season: int, week: int, snaps: list[dict], games: pd.DataFr
                 right = (f"<div class=\"r two\"><span><b>{_surv(o['p_season'])}</b><span class=\"sub\"> alone</span></span>"
                          f"<span><b>{_pct(o.get('p_pool_add'), 2)}</b><span class=\"sub\"> adds</span></span></div>") if multi else \
                         f"<div class=\"r\"><b>{_surv(o['p_season'])}</b><span class=\"sub\"> season</span></div>"
+                policy = s.get("allocation_view") == "policy"
+                lead = "" if policy else f"<span class=\"sub\">score {_pct(o['score'], 2)}</span> &middot; "
                 rows.append(f"<div class=\"row\"><div>{_team(o['team'], 26)}</div><div class=\"mid\">{_meter(o['p_now'])}</div>{right}"
-                            f"<div class=\"m why more\"><span class=\"sub\">score {_pct(o['score'], 2)}</span> &middot; {_esc(why)}<br><span class=\"plan\">{_esc(' '.join(o['plan']))}</span></div></div>")
-            if multi:
+                            f"<div class=\"m why more\">{lead}{_esc(why)}<br><span class=\"plan\">{_esc(' '.join(o['plan']))}</span></div></div>")
+            policy = s.get("allocation_view") == "policy"
+            if multi and policy:
+                intro = (f"One entry uses the team now and from then on takes the best team still available each week, at the line at the time. <b>Alone</b> is that entry's chance of surviving the season. "
+                         f"<b>Adds</b> is what the same team adds to the pool as your {n_live}th entry: it counts only in the seasons where the other {n_live - 1} are all dead, "
+                         f"so a team that survives in the same seasons as the crowd adds little. The split is built on Adds. Details shows the reasoning and a sketch of the later weeks.")
+            elif multi:
                 view = ("on the planning view, which trusts later weeks much less, so these are smaller than the survival numbers"
                         if s.get("allocation_view", "planning") != "calibrated" else "on the same simulation as the survival numbers")
                 intro = (f"One entry uses the team now, then plays the rest of the season optimally. <b>Alone</b> is that one path's chance of surviving the season. "
                          f"<b>Adds</b> is what the best path behind that team adds to the pool as your {n_live}th entry: it counts only in the seasons where the other {n_live - 1} are all dead, "
                          f"so a path that survives in the same seasons as the crowd adds little. The split is built on Adds, scored {view}. Details shows the ranking score, the reasoning and the rest of the plan.")
+            elif policy:
+                intro = "Use the team now and from then on take the best team still available each week, at the line at the time. The right-hand number is the chance of surviving the season; Details adds the reasoning and a sketch of the later weeks."
             else:
                 intro = "Use the team now and play the rest of the season optimally. The right-hand number is the chance of surviving the season; Details adds the ranking score, the reasoning and the rest of the plan."
             sec.append(f"<div class=\"card\"><h2>This week's options</h2><div class=\"sub\">{intro}</div><div class=\"picks-list opts\">{''.join(rows)}</div></div>")
@@ -557,7 +567,9 @@ def render_week_page(season: int, week: int, snaps: list[dict], games: pd.DataFr
                 cells = "".join(f"<td class=\"{'now' if i == 0 else ''}\" title=\"{_pct(step['p'])}\">{_esc(step['team'])}</td>" for i, step in enumerate(pl["path"]))
                 ewhy = (ex.get("entries") or {}).get(pl["entry"], "")
                 trs.append(f"<tr title=\"{_esc(ewhy)}\"><td>#{_esc(pl['entry'])}</td><td class=\"n\">{_surv(pl.get('p_season'))}</td>{cells}</tr>")
-            more.append(f"<details><summary>Per-entry season plans</summary><div class=\"sub\">This week first; later weeks only justify it and re-solve every run. Hover a cell for its probability.</div>"
+            caption = ("This week is the pick. Later weeks are a sketch on today's lines: the entry actually takes the best team still available each week, and P(season) assumes that. Hover a cell for its probability."
+                       if s.get("allocation_view") == "policy" else "This week first; later weeks only justify it and re-solve every run. Hover a cell for its probability.")
+            more.append(f"<details><summary>Per-entry season plans</summary><div class=\"sub\">{caption}</div>"
                         f"<div class=\"tw\"><table class=\"grid-t\"><thead><tr><th>entry</th><th class=\"n\">P(season)</th>{head_cells}</tr></thead><tbody>{''.join(trs)}</tbody></table></div></details>")
         # picks on file
         sts = [x for x in s.get("statuses", []) if x.get("picks")]

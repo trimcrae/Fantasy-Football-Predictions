@@ -22,7 +22,7 @@ DEFAULTS: dict[str, Any] = {
         "recency_half_life": 5.0,   # weeks; weight of a posted line decays with age
         "horizon_var_a": 4.0,       # projection error variance vs closing line at h=0 (points^2)
         "horizon_var_b": 2.0,       # additional variance per week of horizon
-        "future_discount": 16.0,    # multiplier on horizon variance when *choosing* plans (backtest-tuned)
+        "future_discount": 16.0,    # planning.mode = discount only: multiplier on horizon variance when *choosing* plans
         "posted_line_var_a": 1.0,   # variance (points^2) of a posted line vs its close, next week
         "posted_line_var_b": 1.0,   # additional variance per week of horizon: how far a line can move
         "week18_shrink": 0.6,       # week-18 probabilities shrunk toward 0.5 (starters rest)
@@ -41,7 +41,14 @@ DEFAULTS: dict[str, Any] = {
     },
     "simulation": {"scenarios": 20000, "seed": 7, "discount": 1.0},  # discount: drift multiplier, 1 = calibrated
     "portfolio": {"candidates_per_slot": 60, "improve_passes": 2,
-                  "allocation_view": "planning"},   # planning (discounted) | calibrated: which simulation scores the 25-entry split
+                  "allocation_view": "planning"},   # planning.mode = discount only: planning (discounted) | calibrated scores the split
+    # How the future is valued when choosing this week's pick.
+    #   policy   - this week (and the next horizon-1 weeks) are a commitment; every later week is
+    #              re-picked from the best team available at that scenario's closing line. A pool of
+    #              entries is re-split every week: spread_weights are the frequencies with which an
+    #              entry takes the best, second-best, third-best available team in a later week.
+    #   discount - fixed 18-week paths scored on a simulation with model.future_discount x the drift.
+    "planning": {"mode": "policy", "horizon": 1, "spread_weights": [0.6, 0.3, 0.1]},
     "data": {"max_age_hours": 6.0, "odds_api_key": None, "odds_api_region": "us"},
 }
 

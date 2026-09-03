@@ -125,33 +125,43 @@ and have the same log-loss, so either is fine; the moneyline is the direct price
 * A week-18 line posted early is shrunk like a projection (see week 18 below): a line set in
   September cannot know who will rest starters.
 
-### 3. Discounting the future
+### 3. Valuing the future
 The projection error of a rating-based spread against the eventual closing line grows with
 horizon. Fitted on 2011-2025 (as-of week `k`, `h` weeks ahead):
 
 `var(h, k) = 9.4 + 1.78 h - 2.5 / (1 + k)` points squared
 
-A future win probability is then `Phi(spread / sqrt(sigma^2 + future_discount * var(h, k)))`.
-With the calibrated variance (`future_discount = 1`) a projected 7-point favourite is a 73%
-pick this week and about 70% ten weeks out.
+A future win probability is `Phi(spread / sqrt(sigma^2 + var(h, k)))`: a projected 7-point
+favourite is a 73% pick this week and about 70% ten weeks out. That is the honest number for
+a *named* team in a far-off week, and it is not how the season is played. Only this week's
+pick is a commitment; in week 10 the pick will be whoever is best on that week's board, and
+that board is richer than anything visible today: spreads widen as the season goes on (the
+average spread grows from about 4.3 points in week 1 to 6.6 in week 18, and the week's
+biggest favourite from about 9 points to 13-16) because more is known about the teams and
+injuries have happened.
 
-That calibrated view is *not* what the planner optimises on. Backtests (see `BACKTEST.md`)
-show that plans chosen on the calibrated projection save strong teams for future spots
-that, on average, do not pan out as well as projected: the optimiser picks the future
-weeks whose projections are most optimistic, so the realised value of "the rest of the
-plan" is systematically below its estimate. Discounting the future much harder fixes it.
-Season survival at closing prices, geometric mean over 2015-2025:
+So the planner does not score fixed 18-week paths. Each simulated season carries its own
+closing lines (today's line plus per-team drift calibrated to the variance above, so the
+spreads widen as they do in reality), and an entry is valued as: use this team now, then
+every later week take the best team still available at that season's line. Survival given
+the lines is computed exactly (a product of the picks' probabilities, or the two-strike tail),
+so close options can be told apart without millions of coin flips. Using a strong team now is
+charged for the thinner menu the entry faces later, and nothing else. A pool of entries is
+re-split every week, so in the 25-entry format each entry follows its own pattern later
+(`planning.spread_weights`: most weeks the best team available to it, sometimes the second or
+third); an entry's value to the pool is how often it survives while every other entry is dead,
+with its own games forced to win and the shared games handled exactly. Season survival at
+closing prices, geometric mean over 2015-2025 (`BACKTEST.md`):
 
-| future_discount | 1 (calibrated) | 4 | 8 | 16 | 32 | greedy (no lookahead) |
-|---|---|---|---|---|---|---|
-| single elimination | 1.42% | 1.50% | 1.60% | **1.78%** | 1.76% | 1.58% |
-| two strikes | 24.2% | 24.8% | 25.6% | **27.2%** | 27.1% | 25.5% |
+| planner | policy, horizon 1 | policy, horizon 2 | policy, horizon 4 | fixed paths, discount 16 (previous) | greedy (no lookahead) |
+|---|---|---|---|---|---|
+| single elimination | **1.96%** | 1.94% | 1.81% | 1.78% | 1.58% |
+| two strikes | **28.2%** | 26.8% | 25.0% | 27.2% | 25.5% |
 
-So the default is `future_discount: 16`: the plan still respects the *ordering* of future
-spots (it beats a pure "biggest favourite every week" policy) but weighs them lightly
-against a sure thing this week. The report separates the two views: **score** is the
-discounted number the plan is chosen on; **P(season)** is the survival probability under
-the calibrated simulation, which is the number to believe.
+The default is `planning: {mode: policy, horizon: 1}`. The previous planner (fixed paths
+chosen on a simulation with the future variance inflated 16x, `planning.mode: discount`) is
+kept for comparison. **P(season)** on the site is the number the plan is chosen on: the
+chance the entry survives the season played this way, on the calibrated simulation.
 
 The Monte Carlo layer goes further than the point estimate: each simulated season draws a
 persistent estimation error plus a random walk in every team's strength, so a team that
@@ -244,8 +254,9 @@ PICK week 1: LAC ARI p=0.812 (new, kickoff Sun 09/13 16:25)
 seasons with only the information that existed at the time (closing lines through the current
 week, no future lines, no QB ledger), which is strictly less than the live tool has. Two
 scores: realised survival, and the survival probability of the picks *at closing prices*
-(a low-variance measure of pick quality). `--sweep` runs the `future_discount` grid plus a
-no-lookahead greedy baseline. Results are summarised in `BACKTEST.md`.
+(a low-variance measure of pick quality). `--horizons 1,2,4` compares planning horizons with
+the fixed-path discount planner and a no-lookahead greedy baseline; `--sweep` runs the
+`future_discount` grid for the discount planner. Results are summarised in `BACKTEST.md`.
 
 ## Files
 ```

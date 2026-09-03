@@ -112,3 +112,34 @@ def test_tie_is_a_loss_for_both_sides(games_all, cfg, before_week1):
     assert proj.prob[0, TEAMS.index(home)] == 0.0 and proj.prob[0, TEAMS.index(away)] == 0.0
     wins = simulate_wins(proj, cfg, n=50, seed=1)
     assert not wins[:, 0, TEAMS.index(home)].any() and not wins[:, 0, TEAMS.index(away)].any()
+
+
+def test_policy_mode_values_entries_by_best_available_later(games_all, cfg, before_week1):
+    from eliminator.optimize.simulate import policy_alive
+    state = PoolState(name="p", mode="multi", n_entries=5, strikes=0, season=2026, picks={})
+    res = make_plan(state, games_all, cfg, [], None, now=before_week1, season=2026, source="market", scenarios=2000, keep_wins=True)
+    assert res.horizon == 1 and res.allocation_view == "policy" and res.sim is not None
+    # the projection is the calibrated one: no 16x variance on later weeks
+    proj_disc = res.projection.line_var[5].max()
+    assert proj_disc < 200
+    # every entry's reported survival is its own policy mask, following its own later-week rank pattern
+    for e in res.entries:
+        assert abs(e.path.value - e.surv.mean()) < 1e-12 and e.surv.shape == (2000,)
+        assert 0 < e.path.value < 1 and abs(e.surv.mean() - e.alive_mask.mean()) < 0.02
+    from eliminator.optimize.simulate import rank_table
+    R = rank_table(5, len(res.projection.weeks), tuple(res.planning["spread_weights"]), res.planning["seed"])
+    for e in res.entries:
+        m = policy_alive(res.sim, e.path.teams[:1], e.available, 0, ranks=R[e.slot].tolist())
+        assert np.array_equal(m, e.alive_mask)
+    assert sorted(e.slot for e in res.entries) == [0, 1, 2, 3, 4]
+    # options are ranked by simulated season survival and carry a mask
+    assert res.options and all(res.options[i].value >= res.options[i + 1].value for i in range(len(res.options) - 1))
+    assert "mask" in res.options[0].detail
+
+
+def test_discount_mode_still_available(games_all, cfg, before_week1):
+    c = dict(cfg); c["planning"] = {"mode": "discount"}
+    state = PoolState(name="p", mode="strikes", n_entries=1, strikes=2, season=2026, picks={})
+    res = make_plan(state, games_all, c, [], None, now=before_week1, season=2026, source="market", scenarios=1000, keep_wins=True)
+    assert res.horizon is None and res.allocation_view == "planning" and res.wins_policy is not None
+    assert res.projection.line_var[5].max() > 100

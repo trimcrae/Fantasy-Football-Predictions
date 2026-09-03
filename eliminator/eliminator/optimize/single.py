@@ -172,3 +172,37 @@ def current_week_options(P: np.ndarray, available: np.ndarray, pickable_now: np.
         out.append(path)
     out.sort(key=lambda p: p.value, reverse=True)
     return out
+
+
+def policy_options(P: np.ndarray, sim, available: np.ndarray, pickable_now: np.ndarray, strikes: int = 0,
+                   fixed: dict[int, int] | None = None, horizon: int = 1, min_prob: float = 0.0,
+                   rng: np.random.Generator | None = None) -> list[Path]:
+    """Every candidate for this week, valued by simulation the way the season is played.
+
+    The candidate is used now; the next ``horizon - 1`` picks are the max-product path's;
+    every later week takes the best team still available at that scenario's closing line.
+    ``value`` is that survival probability. ``teams`` keeps the full max-product path as a
+    sketch of the later weeks (``detail['plugin']`` is its plug-in value)."""
+    from .simulate import policy_run, survival_given_lines
+    fixed = dict(fixed or {})
+    horizon = max(int(horizon), 1)
+    if 0 in fixed:
+        cands = [int(fixed[0])]
+    else:
+        cands = [t for t in range(P.shape[1]) if available[t] and pickable_now[t] and P[0, t] > max(min_prob, 0.0)]
+    out = []
+    for t in cands:
+        f = dict(fixed); f[0] = int(t)
+        path = best_path_strikes(P, available, strikes, f, restarts=2, rng=rng, pickable_now=pickable_now) if strikes \
+            else best_path(P, available, f, pickable_now=pickable_now)
+        if path is None:
+            continue
+        picks, pwin, won = policy_run(sim, path.teams[:horizon], available)
+        surv = survival_given_lines(pwin, strikes)
+        mask = (~won).sum(axis=1) <= strikes
+        path.detail = {"now_prob": float(P[0, t]), "plugin": float(path.value), "sim": float(surv.mean()),
+                       "mask": mask, "surv": surv, "won": won, "picks": picks, "horizon": horizon}
+        path.value = float(surv.mean())
+        out.append(path)
+    out.sort(key=lambda p: p.value, reverse=True)
+    return out

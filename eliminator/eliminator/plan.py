@@ -1,6 +1,7 @@
 """Weekly planning: project, simulate, optimise, and explain."""
 from __future__ import annotations
 
+import copy
 import datetime as dt
 from dataclasses import dataclass, field
 
@@ -12,8 +13,8 @@ from .model.projection import Projection, build_projection
 from .model.qb import QBSituation
 from .model.strength import Strength, assemble
 from .optimize.portfolio import EntryPlan, build_portfolio, portfolio_summary
-from .optimize.simulate import path_alive, simulate_wins
-from .optimize.single import Path, best_path, best_path_strikes, current_week_options
+from .optimize.simulate import Sim, path_alive, simulate_season, simulate_wins
+from .optimize.single import Path, best_path, best_path_strikes, current_week_options, policy_options
 from .state import EntryStatus, PoolState, evaluate_entries
 from .teams import TEAMS
 
@@ -30,8 +31,11 @@ class PlanResult:
     summary: dict
     options: list[Path] = field(default_factory=list)
     wins: np.ndarray | None = None            # calibrated simulation (reporting)
-    wins_policy: np.ndarray | None = None     # discounted simulation (planning view)
-    allocation_view: str = "planning"
+    wins_policy: np.ndarray | None = None     # discounted simulation (planning view; discount mode only)
+    allocation_view: str = "planning"         # policy | planning | calibrated: what scored the split
+    sim: Sim | None = None                    # calibrated simulation with per-scenario closing probabilities
+    horizon: int | None = None                # policy mode: weeks that are a commitment; later weeks re-pick
+    planning: dict = field(default_factory=dict)  # the planning config the result was built with
 
     # ---- convenience -------------------------------------------------------------
     def this_week(self) -> pd.DataFrame:
@@ -47,7 +51,7 @@ class PlanResult:
                          "p_win": r["prob"], "spread": r["spread"], "source": r["source"],
                          "kickoff": r["kickoff"].strftime("%a %m/%d %H:%M"),
                          "status": "locked" if st.locked_now == t else ("keep" if st.provisional_now == t else ("change" if st.provisional_now else "new")),
-                         "p_season": e.path.value, "p_season_sim": float(e.alive_mask.mean()) if e.alive_mask is not None else np.nan})
+                         "p_season": e.path.value, "p_season_sim": e.p_season() if e.p_season() is not None else np.nan})
         return pd.DataFrame(rows)
 
     def picks_by_team(self) -> pd.DataFrame:
@@ -67,7 +71,13 @@ def make_plan(state: PoolState, games_all: pd.DataFrame, cfg: dict, ledger: list
     games = regular_season(games_all, season)
     now = now or dt.datetime.now(tz=ET)
     week = int(week or _current_week(games, now))
-    cfg = dict(cfg); cfg["season_weeks"] = min(int(cfg.get("season_weeks") or 18), int(games["week"].max()))
+    cfg = copy.deepcopy(cfg); cfg["season_weeks"] = min(int(cfg.get("season_weeks") or 18), int(games["week"].max()))
+    planning = cfg.get("planning") or {}
+    policy = str(planning.get("mode", "policy")) == "policy"
+    horizon = max(int(planning.get("horizon", 1)), 1)
+    if policy:
+        # plug-in probabilities are the calibrated ones; the future is valued by re-picking, not by a variance hack
+        cfg["model"]["future_discount"] = 1.0
     strength = assemble(games_all, season, week, cfg, ledger, inpredictable, source or cfg["model"]["ratings_source"])
     proj = build_projection(games, season, week, strength, cfg, now=now, overrides=overrides)
     statuses = evaluate_entries(state, games, week, now)
@@ -85,8 +95,9 @@ def make_plan(state: PoolState, games_all: pd.DataFrame, cfg: dict, ledger: list
                                  strikes_left=max(state.strikes - s.losses, 0), alive=s.alive or ignore_elimination))
     plan_disc = float(cfg["model"].get("future_discount", 1.0))
     real_disc = float(cfg["simulation"].get("discount", 1.0))
-    wins_policy = simulate_wins(proj, cfg, n=scenarios, discount=plan_disc)      # for choosing
-    wins = wins_policy if abs(plan_disc - real_disc) < 1e-9 else simulate_wins(proj, cfg, n=scenarios, discount=real_disc)  # for reporting
+    sim = simulate_season(proj, cfg, n=scenarios, discount=real_disc)            # calibrated: reporting, and choosing in policy mode
+    wins = sim.wins
+    wins_policy = wins if policy or abs(plan_disc - real_disc) < 1e-9 else simulate_wins(proj, cfg, n=scenarios, discount=plan_disc)
     live = [e for e in entries if e.alive]
     options: list[Path] = []
     if greedy:
@@ -102,7 +113,10 @@ def make_plan(state: PoolState, games_all: pd.DataFrame, cfg: dict, ledger: list
             e.alive_mask = wins[:, 0, t]
     elif live and (compute_options or state.mode == "strikes" or len(live) == 1):
         e0 = live[0]
-        if compute_options:
+        if policy:
+            options = policy_options(P, sim, e0.available, pickable_now, e0.strikes_left, e0.fixed, horizon,
+                                     min_prob=float(cfg["model"].get("min_pick_prob", 0.0)))
+        elif compute_options:
             options = current_week_options(P, e0.available, pickable_now, e0.strikes_left, e0.fixed,
                                            min_prob=float(cfg["model"].get("min_pick_prob", 0.0)))
             for o in options:
@@ -118,7 +132,13 @@ def make_plan(state: PoolState, games_all: pd.DataFrame, cfg: dict, ledger: list
                 e0.path = best_path_strikes(P, e0.available, e0.strikes_left, e0.fixed, pickable_now=pickable_now) if e0.strikes_left \
                     else best_path(P, e0.available, e0.fixed, pickable_now=pickable_now)
             if e0.path is not None:
-                e0.alive_mask = path_alive(wins, e0.path.teams, e0.strikes_left)
+                if policy and "mask" in e0.path.detail:
+                    d = e0.path.detail
+                    e0.alive_mask, e0.surv, e0.won, e0.picks = d["mask"], d["surv"], d["won"], d["picks"]
+                else:
+                    e0.alive_mask = path_alive(wins, e0.path.teams, e0.strikes_left)
+    elif policy:
+        build_portfolio(P, pickable_now, entries, sim, cfg, objective=objective, horizon=horizon)
     else:
         # allocation view: the discounted simulation (planning view, default) or the calibrated one
         alloc = wins if str(cfg.get("portfolio", {}).get("allocation_view", "planning")) == "calibrated" else wins_policy
@@ -131,8 +151,9 @@ def make_plan(state: PoolState, games_all: pd.DataFrame, cfg: dict, ledger: list
         summary["p_plugin_first"] = live[0].path.value
     return PlanResult(season=season, week=week, state=state, projection=proj, strength=strength, entries=entries,
                       statuses=statuses, summary=summary, options=options, wins=wins if keep_wins else None,
-                      wins_policy=wins_policy if keep_wins else None,
-                      allocation_view=str(cfg.get("portfolio", {}).get("allocation_view", "planning")))
+                      wins_policy=wins_policy if keep_wins and not policy else None,
+                      allocation_view="policy" if policy else str(cfg.get("portfolio", {}).get("allocation_view", "planning")),
+                      sim=sim if keep_wins else None, horizon=horizon if policy else None, planning=dict(planning, seed=int(cfg["simulation"]["seed"]) + 2))
 
 
 def commit_picks(result: PlanResult) -> int:
@@ -185,7 +206,8 @@ def render(result: PlanResult, show_paths: bool = True, top_options: int = 12) -
     # options: value of using each team now
     if result.options:
         out.append("")
-        out.append("-- this week's options: use the team now, play the rest optimally --")
+        out.append("-- this week's options: use the team now, then the best available each week --" if result.horizon
+                   else "-- this week's options: use the team now, play the rest optimally --")
         out.append("  team  p_now   score    P(season)  plan")
         for o in result.options[:top_options]:
             path = " ".join(TEAMS[t] for t in o.teams[1:])
@@ -222,6 +244,6 @@ def render(result: PlanResult, show_paths: bool = True, top_options: int = 12) -
             parts = []
             for wi, (t, pr) in enumerate(zip(e.path.teams, e.path.probs)):
                 parts.append(f"w{p.weeks[wi]}:{TEAMS[t]}({pr:.2f})")
-            sim = float(e.alive_mask.mean()) if e.alive_mask is not None else float("nan")
+            sim = e.p_season() if e.p_season() is not None else float("nan")
             out.append(f"  #{e.entry_id} [P(season)={sim:.3f} score={e.path.value:.3f}] " + " ".join(parts))
     return "\n".join(out)
