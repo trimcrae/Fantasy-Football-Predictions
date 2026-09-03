@@ -28,6 +28,7 @@ DEFAULTS: dict[str, Any] = {
         "week18_extra_var": 20.0,   # extra spread variance for week 18 projections
         "ratings_source": "auto",   # auto | inpredictable | market | blend
         "inpredictable_weight": 0.5,  # used when ratings_source == blend
+        "inpredictable_max_rmse": 2.0,  # auto: reject inpredictable when it differs from the market fit by more (points rms)
         "min_pick_prob": 0.0,       # never pick below this probability (0 = no floor)
     },
     "qb": {

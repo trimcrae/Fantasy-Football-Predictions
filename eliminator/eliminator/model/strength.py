@@ -102,8 +102,28 @@ def assemble(games_all: pd.DataFrame, season: int, current_week: int, cfg: dict,
             inp_healthy[r.away] += cur_w * effect[current_week, ih]
         inp_healthy -= inp_healthy.mean()
 
+    inp_check = None
+    if inp_healthy is not None:
+        rmse = float(np.sqrt(((inp_healthy - market) ** 2).mean()))
+        played = inpredictable.attrs.get("games_played")
+        stale = current_week == 1 and played is not None and played > 0
+        max_rmse = float(m.get("inpredictable_max_rmse", 2.0))
+        reason = None
+        if stale:
+            reason = f"page still shows last season ({played} games played before week 1)"
+        elif rmse > max_rmse:
+            reason = f"disagrees with this season's lines (rmse {rmse:.1f} pts vs {max_rmse:.1f} allowed)"
+        inp_check = {"rmse": rmse, "games_played": played, "reason": reason}
     if source == "auto":
-        source = "inpredictable" if inp_healthy is not None else "market"
+        if inp_healthy is None:
+            source = "market"
+        elif inp_check["reason"]:
+            print(f"[strength] inpredictable ratings rejected: {inp_check['reason']}; using market-implied ratings")
+            source = "market"
+        else:
+            source = "inpredictable"
+    elif source in ("inpredictable", "blend") and inp_check and inp_check["reason"]:
+        print(f"[strength] warning: inpredictable ratings {inp_check['reason']} (used anyway: ratings_source={source})")
     if source == "inpredictable" and inp_healthy is None:
         print("[strength] inpredictable ratings unavailable; using market-implied ratings")
         source = "market"
@@ -120,4 +140,5 @@ def assemble(games_all: pd.DataFrame, season: int, current_week: int, cfg: dict,
     return Strength(healthy=healthy, source=source, market=market, inpredictable=inp_healthy,
                     qb_effect=effect, p_out=p_out, penalty=penalty,
                     detail={"n_lines": fit.n_lines, "fit_resid_sd": fit.residual_sd,
-                            "prior_from": season - 1 if prev_final is not None else None})
+                            "prior_from": season - 1 if prev_final is not None else None,
+                            "inpredictable_check": inp_check})

@@ -70,6 +70,7 @@ class _TableParser(HTMLParser):
 _RATING_PATTERNS = [r"^gpf$", r"^gpf\b", r"generic points", r"^rating$", r"^power$", r"^rtg$"]
 _NUM = re.compile(r"[-+]?\d+(?:\.\d+)?")
 _DECIMAL = re.compile(r"^[-+]?\d+\.\d+$")   # a visible rating cell: exactly one number with a decimal point
+_RECORD = re.compile(r"^(\d+)-(\d+)(?:-(\d+))?$")  # W-L(-T) record cell
 
 
 def _values_positional(row: list[str], team_col: int) -> dict | None:
@@ -82,6 +83,9 @@ def _values_positional(row: list[str], team_col: int) -> dict | None:
     if not decs:
         return None
     rec = {"gpf": decs[0]}
+    m = next((_RECORD.match(c.strip()) for c in row[team_col + 1:] if _RECORD.match(c.strip())), None)
+    if m:
+        rec["games"] = int(m.group(1)) + int(m.group(2)) + int(m.group(3) or 0)
     if len(decs) >= 3:
         rec["ogpf"], rec["dgpf"] = decs[1], decs[2]
         if abs(decs[1] + decs[2] - decs[0]) > 0.15:  # not the o/d split we expected; keep GPF only
@@ -141,7 +145,10 @@ def parse_ratings_html(html: str) -> pd.DataFrame:
     if missing:
         raise ValueError(f"inpredictable table missing teams: {missing}")
     best["gpf"] = best["gpf"] - best["gpf"].mean()  # centre: an average team is 0
-    return best.sort_values("gpf", ascending=False).reset_index(drop=True)
+    out = best.sort_values("gpf", ascending=False).reset_index(drop=True)
+    # games played per the page's records: > 0 before week 1 means it still shows last season
+    out.attrs["games_played"] = int(out["games"].fillna(0).sum()) if "games" in out.columns else None
+    return out
 
 
 def fetch_ratings(season: int | None = None, timeout: int = 30) -> pd.DataFrame:
@@ -155,7 +162,8 @@ def fetch_ratings(season: int | None = None, timeout: int = 30) -> pd.DataFrame:
 
 def save_ratings(df: pd.DataFrame, path: Path | None = None) -> Path:
     path = path or cache_dir() / "inpredictable.json"
-    payload = {"fetched_at": df.attrs.get("fetched_at"), "ratings": df.to_dict(orient="records")}
+    payload = {"fetched_at": df.attrs.get("fetched_at"), "games_played": df.attrs.get("games_played"),
+               "ratings": df.to_dict(orient="records")}
     path.write_text(json.dumps(payload, indent=1))
     return path
 
@@ -167,6 +175,7 @@ def load_cached(path: Path | None = None, max_age_hours: float | None = None) ->
     payload = json.loads(path.read_text())
     df = pd.DataFrame(payload["ratings"])
     df.attrs["fetched_at"] = payload.get("fetched_at")
+    df.attrs["games_played"] = payload.get("games_played")
     if max_age_hours is not None and payload.get("fetched_at"):
         age = dt.datetime.now(dt.timezone.utc) - dt.datetime.fromisoformat(payload["fetched_at"])
         if age.total_seconds() > max_age_hours * 3600:
