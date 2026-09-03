@@ -104,6 +104,33 @@ def explain_not_used(res: PlanResult, entry, team: str) -> str:
     return "Passed: " + "; ".join(bits) + "."
 
 
+def explain_hedge(res: PlanResult, entry, team: str) -> str:
+    """Why this team for an entry that is not on the crowd: its value when every other entry is dead."""
+    from .optimize.simulate import path_alive
+    if res.wins is None or entry.path is None or res.state.mode == "strikes":
+        return ""
+    others = [e.alive_mask for e in res.entries if e is not entry and e.alive and e.alive_mask is not None]
+    if not others:
+        return ""
+    dead = ~np.vstack(others).any(axis=0)
+    chosen = float((path_alive(res.wins, entry.path.teams, entry.strikes_left) & dead).mean())
+    alts = []
+    for o in res.options[:12]:
+        t = TEAMS[o.teams[0]]
+        if t == team or not entry.available[o.teams[0]]:
+            continue
+        alts.append((t, float((path_alive(res.wins, o.teams, entry.strikes_left) & dead).mean())))
+    alts.sort(key=lambda x: -x[1])
+    n_others = len(others)
+    alone_rank = 1 + sum(1 for o in res.options if TEAMS[o.teams[0]] != team and (o.detail.get("sim") or 0) > (entry.alive_mask.mean() if entry.alive_mask is not None else 0))
+    head = f"As a hedge it survives {_pct(chosen, 2)} of the seasons where all {n_others} other entries are dead"
+    if not alts:
+        return head + "."
+    if chosen >= alts[0][1]:
+        return f"{head}, the most of any team ({alts[0][0]} {_pct(alts[0][1], 2)}, {alts[1][0]} {_pct(alts[1][1], 2)}). On its own it would rank {_ordinal(alone_rank)}." if len(alts) > 1 else f"{head}, the most of any team ({alts[0][0]} {_pct(alts[0][1], 2)})."
+    return f"{head}; {alts[0][0]} would survive {_pct(alts[0][1], 2)} of them."
+
+
 def explain_exposure(res: PlanResult) -> str:
     """Multi-entry: why the entries are spread the way they are."""
     tw = res.this_week()
@@ -213,10 +240,12 @@ def explain_all(res: PlanResult, cfg: dict | None = None) -> dict:
     for r in tw.to_dict(orient="records"):
         entries_by_team.setdefault(r["team"], []).append(r["entry"])
     ent = {e.entry_id: e for e in res.entries}
+    top = max(entries_by_team, key=lambda t: len(entries_by_team[t])) if entries_by_team else None
     for team, eids in entries_by_team.items():
         e0 = ent[str(eids[0])]
         picks[team] = {"probability": explain_probability(res, team, cfg), "timing": explain_timing(res, team),
-                       "not_used": explain_not_used(res, e0, team)}
+                       "not_used": explain_not_used(res, e0, team),
+                       "hedge": explain_hedge(res, e0, team) if team != top and len(eids) <= 2 else ""}
     best = res.options[0] if res.options else None
     return {
         "summary": explain_summary(res, cfg),

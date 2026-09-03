@@ -20,8 +20,14 @@ def test_snapshot_roundtrip_and_site(tmp_path, games_all, cfg, before_week1):
     multi = PoolState.load(_pool(tmp_path, "multi25", "multi", 4, 0))
     snaps = []
     for st in (multi, strikes):
-        res = make_plan(st, games_all, cfg, [], None, now=before_week1, season=2026, source="market")
+        res = make_plan(st, games_all, cfg, [], None, now=before_week1, season=2026, source="market", keep_wins=True)
         snap = build_snapshot(res, st.path.stem, generated_at=before_week1)
+        if st.mode == "multi":
+            # every team other than the most-used one carries a hedge sentence
+            teams = {r["team"] for r in snap["picks"]}
+            top = max(teams, key=lambda t: sum(r["team"] == t for r in snap["picks"]))
+            lone = [t for t in teams if t != top and sum(r["team"] == t for r in snap["picks"]) <= 2]
+            assert all(snap["explain"]["picks"][t]["hedge"].startswith("As a hedge") for t in lone)
         path = write_snapshot(snap, data)
         assert path == snapshot_path(2026, 1, st.path.stem, data)
         back = json.loads(path.read_text())
