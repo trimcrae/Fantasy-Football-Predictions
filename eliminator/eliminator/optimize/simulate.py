@@ -32,6 +32,7 @@ def simulate_wins(proj: Projection, cfg: dict, n: int | None = None, seed: int |
     m = cfg["model"]
     disc = float(sim.get("discount", 1.0) if discount is None else discount)
     a, b, c = float(m["horizon_var_a"]), float(m["horizon_var_b"]), float(m.get("horizon_var_c", 0.0))
+    la, lb = float(m.get("posted_line_var_a", 1.0)), float(m.get("posted_line_var_b", 1.0))
     k = proj.current_week
     v_est = 0.5 * disc * max(a + c / (1.0 + k), 0.0)       # per-team persistent estimation error
     v_step = 0.5 * disc * max(b, 0.0)                        # per-team per-week drift
@@ -57,9 +58,18 @@ def simulate_wins(proj: Projection, cfg: dict, n: int | None = None, seed: int |
             p = np.full(n, float(r.prob))
         else:
             plan_disc = float(m.get("future_discount", 1.0))
-            extra = max(float(r.line_var) - plan_disc * max(a + b * h + c / (1.0 + k), 0.0), 0.0)  # week-18 noise
+            A = max(a + b * h + c / (1.0 + k), 0.0)                 # rating-projection variance at this horizon
+            if str(r.source).startswith("posted"):
+                # a posted line moves far less than a projection: shrink the team drift so this
+                # game's variance is the posted-line variance, keeping the cross-week correlation
+                L = max(la + lb * h, 0.0)
+                scale = np.sqrt(L / A) if A > 0 else 0.0
+                extra = 0.0
+            else:
+                scale = 1.0
+                extra = max(float(r.line_var) - plan_disc * A, 0.0)      # week-18 noise
             game_noise = rng.standard_normal(n) * np.sqrt(extra) if extra > 1e-9 else 0.0
-            line = float(r.spread) + drift[:, h, ih] - drift[:, h, ia] + game_noise
+            line = float(r.spread) + scale * (drift[:, h, ih] - drift[:, h, ia]) + game_noise
             p = norm.cdf(line / sigma)
         u = rng.random(n)
         hw = u < p
