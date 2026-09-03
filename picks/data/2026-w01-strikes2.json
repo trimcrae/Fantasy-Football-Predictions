@@ -27,16 +27,16 @@
   17,
   18
  ],
- "generated_at": "2026-09-03T12:22:10.347337-04:00",
+ "generated_at": "2026-09-03T12:43:03.223407-04:00",
  "ratings_source": "market",
  "n_lines_posted": 112,
  "n_priced_games": 112,
  "summary": {
-  "p_any": 0.1678,
-  "expected_survivors": 0.1678,
+  "p_any": 0.1709,
+  "expected_survivors": 0.1709,
   "n_live": 1,
   "p_each": [
-   0.1678
+   0.1709
   ],
   "p_plugin_first": 0.0405
  },
@@ -52,7 +52,7 @@
    "status": "new",
    "on_file": null,
    "score": 0.0405,
-   "p_season": 0.1678
+   "p_season": 0.1709
   }
  ],
  "options": [
@@ -60,7 +60,7 @@
    "team": "LAC",
    "p_now": 0.8119,
    "score": 0.0405,
-   "p_season": 0.1678,
+   "p_season": 0.1709,
    "plan": [
     "SF",
     "DET",
@@ -85,7 +85,7 @@
    "team": "JAX",
    "p_now": 0.7659,
    "score": 0.0377,
-   "p_season": 0.1613,
+   "p_season": 0.1653,
    "plan": [
     "LAC",
     "SF",
@@ -110,7 +110,7 @@
    "team": "DET",
    "p_now": 0.718,
    "score": 0.0361,
-   "p_season": 0.1524,
+   "p_season": 0.1564,
    "plan": [
     "LAC",
     "SF",
@@ -135,7 +135,7 @@
    "team": "PHI",
    "p_now": 0.6575,
    "score": 0.0353,
-   "p_season": 0.1461,
+   "p_season": 0.1551,
    "plan": [
     "LAC",
     "SF",
@@ -160,7 +160,7 @@
    "team": "LV",
    "p_now": 0.6369,
    "score": 0.0346,
-   "p_season": 0.1441,
+   "p_season": 0.1497,
    "plan": [
     "LAC",
     "SF",
@@ -185,7 +185,7 @@
    "team": "PIT",
    "p_now": 0.6225,
    "score": 0.034,
-   "p_season": 0.1426,
+   "p_season": 0.1479,
    "plan": [
     "LAC",
     "SF",
@@ -210,7 +210,7 @@
    "team": "CIN",
    "p_now": 0.6369,
    "score": 0.0336,
-   "p_season": 0.1489,
+   "p_season": 0.1506,
    "plan": [
     "LAC",
     "SF",
@@ -235,7 +235,7 @@
    "team": "CHI",
    "p_now": 0.583,
    "score": 0.0324,
-   "p_season": 0.1412,
+   "p_season": 0.1419,
    "plan": [
     "LAC",
     "SF",
@@ -260,7 +260,7 @@
    "team": "BAL",
    "p_now": 0.6092,
    "score": 0.0316,
-   "p_season": 0.1388,
+   "p_season": 0.142,
    "plan": [
     "SF",
     "DET",
@@ -285,7 +285,7 @@
    "team": "LA",
    "p_now": 0.6369,
    "score": 0.0312,
-   "p_season": 0.1348,
+   "p_season": 0.1323,
    "plan": [
     "LAC",
     "SF",
@@ -310,7 +310,7 @@
    "team": "TEN",
    "p_now": 0.5427,
    "score": 0.031,
-   "p_season": 0.1338,
+   "p_season": 0.1386,
    "plan": [
     "LAC",
     "SF",
@@ -335,7 +335,7 @@
    "team": "KC",
    "p_now": 0.5721,
    "score": 0.0305,
-   "p_season": 0.1321,
+   "p_season": 0.1335,
    "plan": [
     "SF",
     "DET",
@@ -360,7 +360,7 @@
    "team": "SEA",
    "p_now": 0.6092,
    "score": 0.0305,
-   "p_season": 0.1293,
+   "p_season": 0.1289,
    "plan": [
     "SF",
     "DET",
@@ -385,7 +385,7 @@
    "team": "DAL",
    "p_now": 0.5721,
    "score": 0.0301,
-   "p_season": 0.1251,
+   "p_season": 0.1339,
    "plan": [
     "LAC",
     "SF",
@@ -410,7 +410,7 @@
    "team": "MIN",
    "p_now": 0.5174,
    "score": 0.0301,
-   "p_season": 0.1289,
+   "p_season": 0.1359,
    "plan": [
     "LAC",
     "SF",
@@ -435,7 +435,7 @@
    "team": "HOU",
    "p_now": 0.4826,
    "score": 0.0281,
-   "p_season": 0.1288,
+   "p_season": 0.1311,
    "plan": [
     "LAC",
     "SF",
@@ -881,7 +881,7 @@
    "alive": true,
    "strikes_left": 2,
    "score": 0.0405,
-   "p_season": 0.1678,
+   "p_season": 0.1709,
    "path": [
     {
      "week": 1,
@@ -1052,7 +1052,7 @@
    "1": "Avg 68% per pick; weakest wk 14 CHI 59%."
   },
   "notes": [
-   "Games with no line yet use team ratings backed out of the posted Vegas spreads; inpredictable's ratings were not used because the page still shows last season (516 games played before week 1).",
+   "Posted lines are used as-is at any horizon. Games with no line yet use team ratings backed out of the 112 Vegas spreads posted so far.",
    "Week 18 spots are shrunk 20% toward 50% for resting starters.",
    "How much a posted line can still move is a default (about 1.4 pts one week out) until enough archived lines have closed to fit it.",
    "Percentages for later weeks are deliberately pulled toward 50% because far-off games are trusted much less; the season survival percentages are not.",
@@ -1118,6 +1118,10 @@
   },
   {
    "generated_at": "2026-09-03T12:21:08.506868-04:00",
+   "picks": "LAC"
+  },
+  {
+   "generated_at": "2026-09-03T12:22:10.347337-04:00",
    "picks": "LAC"
   }
  ]

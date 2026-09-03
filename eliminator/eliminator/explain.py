@@ -177,26 +177,6 @@ def notes(res: PlanResult, cfg: dict | None = None) -> list[str]:
         out.append(f"Posted lines are used as-is at any horizon. Games with no line yet use team ratings backed out of the {st.detail.get('n_lines')} Vegas spreads posted so far.")
     tw = res.this_week()
     if not tw.empty:
-        board_all = p.table[(p.table["week"] == res.week) & (p.table["prob"] > 0)].sort_values("prob", ascending=False)
-        top_team, top_p = board_all.iloc[0]["team"], float(board_all.iloc[0]["prob"])
-        ent = {e.entry_id: e for e in res.entries}
-        for team, g in tw.groupby("team"):
-            if team == top_team:
-                continue
-            later, n_none = [], 0
-            for eid in g["entry"]:
-                e = ent[str(eid)]
-                weeks = [int(p.weeks[i]) for i, t in enumerate(e.path.teams) if i > 0 and TEAMS[t] == top_team] if e.path else []
-                if weeks:
-                    later.append(weeks[0])
-                else:
-                    n_none += 1
-            bits = []
-            if later:
-                bits.append(f"{len(later)} save{'s' if len(later) == 1 else ''} {top_team} for wk {', '.join(map(str, sorted(set(later))))}")
-            if n_none:
-                bits.append(f"{n_none} leave{'s' if n_none == 1 else ''} {top_team} to other entries")
-            out.append(f"{len(g)} on {team} ({_pct(g['p_win'].iloc[0])}) not {top_team} ({_pct(top_p)}): " + "; ".join(bits) + ".")
         road = sorted({r["team"] for r in tw.to_dict(orient="records") if str(r["opp"]).startswith("@")})
         if road:
             out.append(f"Road pick{'s' if len(road) != 1 else ''} {', '.join(road)}: the line already includes home field.")

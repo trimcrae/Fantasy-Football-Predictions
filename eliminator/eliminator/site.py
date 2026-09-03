@@ -223,62 +223,85 @@ def week_record(snaps: list[dict], games: pd.DataFrame | None) -> dict[str, dict
 # ---------------------------------------------------------------------------------
 
 CSS = """
-:root{--bg:#f7f7f5;--fg:#1c1c1a;--muted:#6b6b66;--card:#ffffff;--line:#e2e2dd;--accent:#1f5fbf;--win:#1b7f3b;--loss:#b3261e;--pend:#8a6d00;--lock:#555}
-@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#141412;--fg:#ecece8;--muted:#a0a099;--card:#1e1e1b;--line:#333330;--accent:#7fb0ff;--win:#5fcf7f;--loss:#ff7b72;--pend:#e0b84d;--lock:#aaa}}
-:root[data-theme="dark"]{--bg:#141412;--fg:#ecece8;--muted:#a0a099;--card:#1e1e1b;--line:#333330;--accent:#7fb0ff;--win:#5fcf7f;--loss:#ff7b72;--pend:#e0b84d;--lock:#aaa}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
-main{max-width:1100px;margin:0 auto;padding:20px 16px 48px}a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}
-h1{font-size:26px;margin:0 0 4px}h2{font-size:20px;margin:28px 0 10px}h3{font-size:16px;margin:18px 0 8px}
-.sub{color:var(--muted);font-size:13px}.nav{font-size:14px;margin:6px 0 18px;color:var(--muted)}.nav a{margin-right:12px}
-.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px 18px}
-.card h2{margin:0 0 4px;font-size:18px}.big{font-size:30px;font-weight:700;letter-spacing:.5px;margin:8px 0 2px}
-.stat{display:inline-block;margin:6px 18px 0 0;font-size:13px;color:var(--muted)}.stat b{color:var(--fg);font-size:15px}
-.tw{overflow-x:auto;margin:8px 0}table{border-collapse:collapse;width:100%;font-size:13.5px;font-variant-numeric:tabular-nums}
-th,td{padding:5px 8px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap;vertical-align:top}th{color:var(--muted);font-weight:600;font-size:12.5px}
-td.n,th.n{text-align:right}.win{color:var(--win);font-weight:600}.loss{color:var(--loss);font-weight:600}.pending{color:var(--pend)}.lock{color:var(--lock)}
-.tag{display:inline-block;font-size:11px;padding:1px 6px;border:1px solid var(--line);border-radius:10px;color:var(--muted);margin-left:6px}
-.grid td{font-size:12px;padding:3px 5px}.grid td.now{font-weight:700}.muted{color:var(--muted)}details{margin:10px 0}summary{cursor:pointer;color:var(--accent)}
-.path{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12.5px;white-space:normal}
-.logo{vertical-align:middle;margin-right:5px;border-radius:3px}td .logo{margin-right:6px}.big .logo{width:40px;height:40px;margin-right:8px}
-.why{font-size:13px;color:var(--muted);margin:6px 0 10px;line-height:1.45;white-space:normal;max-width:900px}
-tr.whyrow td{padding:0 8px 8px;border-bottom:1px solid var(--line)}tr.whyrow .why{margin:0}
-td.whycell{white-space:normal;font-size:12.5px;color:var(--muted);min-width:260px;max-width:460px}
-ul.notes{font-size:13.5px;line-height:1.5;padding-left:20px;max-width:900px}ul.notes li{margin:4px 0}
+:root{color-scheme:light;--bg:#f6f6f4;--card:#ffffff;--line:#e6e5e1;--ink:#0b0b0b;--ink2:#52514e;--ink3:#8a8985;
+--accent:#2a78d6;--track:#cde2fb;--good:#0ca30c;--bad:#d03b3b;--good-bg:#e8f6e8;--bad-bg:#fbe9e9;--chip:#f1f1ee;--now:#eef4fc}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){color-scheme:dark;--bg:#151514;--card:#1f1f1d;--line:#33332f;--ink:#f4f4f1;--ink2:#c3c2b7;--ink3:#8f8e88;
+--accent:#3987e5;--track:#213a5c;--good:#3fbf3f;--bad:#e66767;--good-bg:#1c2e1c;--bad-bg:#3a2020;--chip:#2a2a27;--now:#1d2a3c}}
+:root[data-theme="dark"]{color-scheme:dark;--bg:#151514;--card:#1f1f1d;--line:#33332f;--ink:#f4f4f1;--ink2:#c3c2b7;--ink3:#8f8e88;
+--accent:#3987e5;--track:#213a5c;--good:#3fbf3f;--bad:#e66767;--good-bg:#1c2e1c;--bad-bg:#3a2020;--chip:#2a2a27;--now:#1d2a3c}
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}
+main{max-width:1040px;margin:0 auto;padding:28px 20px 64px}
+.top{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px 18px;margin-bottom:22px}
+.top h1{font-size:15px;font-weight:600;letter-spacing:.02em;text-transform:uppercase;color:var(--ink2);margin:0}
+.top .hero{font-size:40px;font-weight:700;letter-spacing:-.02em;line-height:1.05;margin:0;width:100%}
+.top .meta{color:var(--ink3);font-size:13px}.top nav a{margin-right:10px;font-size:13px}.top nav b{margin-right:10px;font-size:13px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:18px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px 22px}
+.card h2{font-size:17px;font-weight:650;margin:0 0 2px}.sub{color:var(--ink3);font-size:12.5px}.tag{display:inline-block;font-size:11px;padding:1px 8px;border:1px solid var(--line);border-radius:999px;color:var(--ink2);margin-left:6px;vertical-align:middle}
+.pick{display:flex;align-items:center;gap:14px;margin:16px 0 8px}
+.pick img{width:56px;height:56px;border-radius:10px;flex:none}
+.pick .who{flex:1;min-width:0}.pick .team{font-size:30px;font-weight:700;letter-spacing:-.01em;line-height:1.05}.pick .vs{color:var(--ink2);font-size:14px;margin-top:2px}
+.pick .num{font-size:44px;font-weight:700;letter-spacing:-.03em;line-height:1;text-align:right}.pick .num small{display:block;font-size:11.5px;font-weight:500;color:var(--ink3);letter-spacing:.02em;text-transform:uppercase;margin-top:4px}
+.why{color:var(--ink2);font-size:13.5px;line-height:1.45;margin:6px 0 0}.why.more{display:none}.showall .why.more{display:inline}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin:16px 0 6px}
+.tile{background:var(--chip);border-radius:10px;padding:10px 12px}.tile .l{font-size:11.5px;color:var(--ink3);text-transform:uppercase;letter-spacing:.03em}.tile .v{font-size:22px;font-weight:650;letter-spacing:-.01em;margin-top:2px}.tile .v small{font-size:13px;font-weight:500;color:var(--ink3)}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 4px}
+.chip{display:inline-flex;align-items:center;gap:7px;background:var(--chip);border-radius:999px;padding:5px 12px 5px 6px;font-size:13.5px;font-weight:600}
+.chip img{width:22px;height:22px;border-radius:50%}.chip .c{font-weight:500;color:var(--ink2)}.chip .p{font-weight:500;color:var(--ink3)}
+.badge{display:inline-flex;align-items:center;gap:4px;font-size:11.5px;font-weight:650;padding:1px 7px;border-radius:999px}
+.badge.win{color:var(--good);background:var(--good-bg)}.badge.loss{color:var(--bad);background:var(--bad-bg)}.badge.pending{color:var(--ink3);background:var(--chip)}
+.meter{display:inline-flex;align-items:center;gap:8px;min-width:150px;width:150px}.meter .bar{display:block;flex:1;height:6px;border-radius:3px;background:var(--track);overflow:hidden}.meter .fill{display:block;height:100%;background:var(--accent);border-radius:0 3px 3px 0}.meter .mv{display:block;font-variant-numeric:tabular-nums;width:40px;text-align:right;font-size:13px;font-weight:600}
+details{margin:14px 0 0}summary{cursor:pointer;color:var(--accent);font-size:13.5px;font-weight:500;list-style:none;display:inline-block}summary::-webkit-details-marker{display:none}summary::before{content:"\\25B8";margin-right:6px;font-size:11px}details[open]>summary::before{content:"\\25BE"}
+.tw{overflow-x:auto;margin:10px 0 0}table{border-collapse:collapse;width:100%;font-size:13.5px}
+th,td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap;vertical-align:middle}th{color:var(--ink3);font-weight:600;font-size:11.5px;text-transform:uppercase;letter-spacing:.03em}
+td.n,th.n{text-align:right;font-variant-numeric:tabular-nums}tr.now td{background:var(--now)}tbody tr:last-child td{border-bottom:none}
+.tm{display:inline-flex;align-items:center;gap:7px;font-weight:600;vertical-align:middle}.tm img{width:22px;height:22px;border-radius:5px}.tm.s img{width:18px;height:18px}.opp{display:inline-flex;align-items:center;gap:5px;color:var(--ink2)}
+.plan{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;color:var(--ink2);white-space:normal;letter-spacing:.01em}
+.ent{color:var(--ink3);font-size:12px;white-space:normal}
+.reason{display:none;white-space:normal;color:var(--ink2);font-size:12.5px;max-width:420px}.showall .reason{display:table-cell}
+.grid-t td{padding:4px 6px;font-size:12px;text-align:center}.grid-t td.now{font-weight:700;background:var(--now)}.grid-t td:first-child{text-align:left}
+.notes{margin:14px 0 0;padding:0 0 0 18px;color:var(--ink2);font-size:13.5px;line-height:1.5}.notes li{margin:5px 0}
+section.pool{margin:26px 0 0}section.pool>.card{margin-bottom:12px}
+.tog{font:inherit;font-size:12.5px;color:var(--accent);background:none;border:1px solid var(--line);border-radius:999px;padding:3px 11px;cursor:pointer;margin-left:10px}
+h3{font-size:14px;font-weight:650;margin:22px 0 4px}.wk-nav{display:flex;gap:8px;margin:6px 0 0}.wk-nav a{border:1px solid var(--line);border-radius:999px;padding:3px 12px;font-size:13px;background:var(--card)}
+.picks-list .row{display:grid;grid-template-columns:110px 1fr auto;gap:4px 14px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line)}.picks-list .row:last-child{border-bottom:none}
+.picks-list .row .m{grid-column:1/-1}.picks-list .row .r{text-align:right;font-size:15px}.picks-list .row .mid{display:flex;flex-direction:column;gap:2px}
+footer{color:var(--ink3);font-size:12.5px;margin-top:36px;line-height:1.5}
+@media (max-width:640px){main{padding:18px 14px 48px}.top .hero{font-size:32px}.pick .team{font-size:24px}.pick .num{font-size:36px}.card{padding:16px}}
 """
-
 
 LOGO_DIR = SITE_DIR / "logos"
 
 
-def _team(code, size: int = 20) -> str:
-    """Team code with its logo in front (the code stays for accessibility and copy/paste)."""
+def _esc(x) -> str:
+    return html.escape("" if x is None else str(x))
+
+
+def _team(code, size: int = 22, cls: str = "tm") -> str:
+    """Team code with its logo (the code stays for accessibility and copy/paste)."""
     c = _esc(code)
-    return f"<img class=\"logo\" src=\"logos/{c}.png\" alt=\"\" width=\"{size}\" height=\"{size}\" loading=\"lazy\"><b>{c}</b>"
+    return f"<span class=\"{cls}\"><img src=\"logos/{c}.png\" alt=\"\" width=\"{size}\" height=\"{size}\" loading=\"lazy\">{c}</span>"
 
 
-def _opp_html(r: dict) -> str:
+def _opp_text(r: dict) -> tuple[str, str]:
+    """('vs'|'@', code) from either a board row (home flag) or a pick row ('@IND')."""
     if "home" in r:
-        return ("vs " if r.get("home") else "@ ") + _team(r["opp"], 16)
+        return ("vs" if r.get("home") else "@"), str(r["opp"])
     opp = str(r["opp"])
-    return ("@ " + _team(opp[1:], 16)) if opp.startswith("@") else ("vs " + _team(opp, 16))
+    return ("@", opp[1:]) if opp.startswith("@") else ("vs", opp)
+
+
+def _opp_html(r: dict, size: int = 18) -> str:
+    pre, code = _opp_text(r)
+    return f"<span class=\"opp\">{pre} {_team(code, size, 'tm s')}</span>"
 
 
 def _source_label(src) -> str:
     s = str(src)
-    if s == "moneyline":
-        return "odds"
-    if s == "posted-moneyline":
-        return "odds (posted)"
-    if s == "posted-spread":
-        return "spread (posted)"
-    if s == "model+wk18":
-        return "model, wk 18"
-    return s
-
-
-def _esc(x) -> str:
-    return html.escape("" if x is None else str(x))
+    return {"moneyline": "odds", "spread": "spread", "posted-moneyline": "odds (posted)", "posted-spread": "spread (posted)",
+            "model+wk18": "model, wk 18", "result": "final"}.get(s, s)
 
 
 def _pct(x, digits: int = 1) -> str:
@@ -291,8 +314,7 @@ def _spread(x) -> str:
 
 def _dt(iso: str) -> str:
     try:
-        t = dt.datetime.fromisoformat(iso).astimezone(ET)
-        return t.strftime("%a %b %d, %H:%M ET")
+        return dt.datetime.fromisoformat(iso).astimezone(ET).strftime("%a %b %d, %H:%M ET")
     except (TypeError, ValueError):
         return iso
 
@@ -304,22 +326,30 @@ def _kick(iso: str) -> str:
         return iso
 
 
-def _res_cls(res: str) -> str:
-    return {"win": "win", "loss": "loss", "pending": "pending"}.get(res, "muted")
+def _badge(res: str) -> str:
+    if res == "win":
+        return "<span class=\"badge win\">✓ W</span>"
+    if res == "loss":
+        return "<span class=\"badge loss\">✗ L</span>"
+    if res == "pending":
+        return "<span class=\"badge pending\">…</span>"
+    return ""
 
 
-def _res_mark(res: str) -> str:
-    return {"win": "W", "loss": "L", "pending": "…"}.get(res, "")
+def _meter(p, digits: int = 0) -> str:
+    v = 0.0 if p is None else max(0.0, min(1.0, float(p)))
+    return f"<span class=\"meter\"><span class=\"bar\"><span class=\"fill\" style=\"width:{100 * v:.1f}%\"></span></span><span class=\"mv\">{_pct(p, digits)}</span></span>"
 
 
-def _page(title: str, body: str, subtitle: str = "", nav: str = "") -> str:
+def _tile(label: str, value: str, small: str = "") -> str:
+    return f"<div class=\"tile\"><div class=\"l\">{_esc(label)}</div><div class=\"v\">{value}{(' <small>' + _esc(small) + '</small>') if small else ''}</div></div>"
+
+
+def _page(title: str, body: str, hero: str, meta: str = "", nav: str = "") -> str:
     return (f"<!doctype html><html lang=\"en\"><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">"
             f"<title>{_esc(title)}</title><style>{CSS}</style></head><body><main>"
-            f"<h1>{_esc(title)}</h1><div class=\"sub\">{subtitle}</div><div class=\"nav\">{nav}</div>{body}</main></body></html>")
-
-
-def _opp(r: dict) -> str:
-    return ("vs " if r.get("home") else "@ ") + r["opp"] if "home" in r else r["opp"]
+            f"<header class=\"top\"><h1>Eliminator picks</h1><nav>{nav}</nav><p class=\"hero\">{hero}</p><span class=\"meta\">{meta}</span></header>"
+            f"{body}</main></body></html>")
 
 
 def _week_page_name(season: int, week: int) -> str:
@@ -330,23 +360,46 @@ def _season_page_name(season: int) -> str:
     return f"s{season}.html"
 
 
-def _picks_cell(snap: dict, graded: dict[str, str]) -> str:
-    """Compact description of a week's picks with results, e.g. 'LAC x12 W, JAX x11 L'."""
-    if snap["mode"] == "strikes":
-        if not snap["picks"]:
-            return "<span class=\"muted\">eliminated</span>"
-        r = snap["picks"][0]
-        res = graded.get(r["entry"], "unknown")
-        return f"{_team(r['team'], 18)} <span class=\"muted\">{_esc(_opp(r))} {_pct(r['p_win'])}</span> <span class=\"{_res_cls(res)}\">{_res_mark(res)}</span>"
-    if not snap["picks"]:
-        return "<span class=\"muted\">no entries alive</span>"
+def _hero_pick(r: dict, res: str = "") -> str:
+    pre, opp = _opp_text(r)
+    lock = " <span class=\"tag\">locked</span>" if r.get("status") == "locked" else ""
+    return (f"<div class=\"pick\"><img src=\"logos/{_esc(r['team'])}.png\" alt=\"\"><div class=\"who\"><div class=\"team\">{_esc(r['team'])}{lock} {_badge(res)}</div>"
+            f"<div class=\"vs\">{pre} {_esc(opp)} &middot; {_esc(r['kickoff'])} &middot; {_spread(r['spread'])}</div></div>"
+            f"<div class=\"num\">{_pct(r['p_win'], 0)}<small>to win</small></div></div>")
+
+
+def _exposure_chips(picks: list[dict], graded: dict[str, str] | None = None) -> str:
     counts: dict[str, list] = {}
-    for r in snap["picks"]:
-        counts.setdefault(r["team"], [0, r, graded.get(r["entry"], "unknown")])[0] += 1
-    parts = []
-    for team, (n, r, res) in sorted(counts.items(), key=lambda kv: (-kv[1][0], -(kv[1][1]["p_win"] or 0))):
-        parts.append(f"{_team(team, 18)}&thinsp;x{n} <span class=\"muted\">{_pct(r['p_win'])}</span> <span class=\"{_res_cls(res)}\">{_res_mark(res)}</span>")
-    return "<br>".join(parts)
+    for r in picks:
+        c = counts.setdefault(r["team"], [0, r])
+        c[0] += 1
+    chips = []
+    for team, (n, r) in sorted(counts.items(), key=lambda kv: (-kv[1][0], -(kv[1][1]["p_win"] or 0))):
+        pre, opp = _opp_text(r)
+        res = (graded or {}).get(r["entry"], "")
+        chips.append(f"<span class=\"chip\"><img src=\"logos/{_esc(team)}.png\" alt=\"\">{_esc(team)} <span class=\"c\">&times;{n}</span> "
+                     f"<span class=\"p\">{pre} {_esc(opp)} &middot; {_pct(r['p_win'], 0)}</span> {_badge(res)}</span>")
+    return f"<div class=\"chips\">{''.join(chips)}</div>"
+
+
+def _pool_summary_tiles(s: dict) -> str:
+    if s["mode"] == "strikes":
+        sl = next((pl["strikes_left"] for pl in s["plans"] if pl["alive"]), None)
+        p = s["summary"]["p_each"][0] if s["summary"].get("p_each") else None
+        return "<div class=\"tiles\">" + _tile("Season survival", _pct(p)) + _tile("Strikes left", str(sl if sl is not None else 0), "of %d" % s["strikes"]) + "</div>"
+    exp = "%.2f" % float(s["summary"].get("expected_survivors", 0) or 0)
+    return ("<div class=\"tiles\">" + _tile("Entries alive", str(s["summary"].get("n_live", 0)), "of %d" % s["entries"])
+            + _tile("Any entry survives", _pct(s["summary"].get("p_any"))) + _tile("Expected survivors", exp) + "</div>")
+
+
+def _pick_why(s: dict, team: str, full: bool = False) -> str:
+    """Timing sentence always; the price and the passed-over favourites only in details mode."""
+    pk = ((s.get("explain") or {}).get("picks") or {}).get(team) or {}
+    base = _esc(pk.get("timing", ""))
+    if not full:
+        return base
+    more = " ".join(pk.get(k, "") for k in ("probability", "not_used") if pk.get(k))
+    return base + (f" <span class=\"why more\">{_esc(more)}</span>" if more else "")
 
 
 def render_season_index(season: int, snaps: list[dict], games: pd.DataFrame | None, seasons: list[int],
@@ -355,58 +408,29 @@ def render_season_index(season: int, snaps: list[dict], games: pd.DataFrame | No
     rec = week_record(snaps, games)
     latest_week = max(s["week"] for s in snaps)
     latest = {p: next(s for s in snaps if s["pool"] == p and s["week"] == max(x["week"] for x in snaps if x["pool"] == p)) for p in pools}
+    updated = max(s["generated_at"] for s in latest.values())
 
     cards = []
     for pool in pools:
         s = latest[pool]
-        gen = _dt(s["generated_at"])
-        head = f"<h2>{_esc(s['name'])}</h2><div class=\"sub\">week {s['week']} &middot; {FORMAT_LABEL.get(s['mode'], s['mode'])} &middot; updated {_esc(gen)}</div>"
-        if s["mode"] == "strikes":
-            if s["picks"]:
-                r = s["picks"][0]
-                body = (f"<div class=\"big\">{_team(r['team'], 40)} <span class=\"muted\" style=\"font-size:18px;font-weight:400\">{_opp_html(r)}</span></div>"
-                        f"<div class=\"sub\">win probability {_pct(r['p_win'])} &middot; spread {_spread(r['spread'])} &middot; kickoff {_esc(r['kickoff'])}"
-                        + (f" &middot; <span class=\"lock\">locked</span>" if r['status'] == 'locked' else "") + "</div>")
-                sl = next((pl["strikes_left"] for pl in s["plans"] if pl["alive"]), None)
-                ex = s.get("explain") or {}
-                pk = (ex.get("picks") or {}).get(r["team"]) or {}
-                if pk.get("probability"):
-                    body += f"<div class=\"why\">{_esc(pk['probability'])} {_esc(pk.get('timing', ''))}</div>"
-                body += (f"<div><span class=\"stat\">P(survive season) <b>{_pct(s['summary'].get('p_each', [None])[0] if s['summary'].get('p_each') else None)}</b></span>"
-                         f"<span class=\"stat\">strikes left <b>{sl if sl is not None else ''} of {s['strikes']}</b></span></div>")
-                if ex.get("summary"):
-                    body += f"<div class=\"why\">{_esc(ex['summary'])}</div>"
-            else:
-                body = "<div class=\"big muted\">eliminated</div>"
+        ex = s.get("explain") or {}
+        head = f"<h2>{_esc(s['name'])}<span class=\"tag\">{_esc(FORMAT_LABEL.get(s['mode'], s['mode']))}</span></h2><div class=\"sub\">week {s['week']}</div>"
+        if not s["picks"]:
+            body = "<div class=\"pick\"><div class=\"who\"><div class=\"team\">Eliminated</div></div></div>"
+        elif s["mode"] == "strikes":
+            r = s["picks"][0]
+            body = _hero_pick(r) + f"<p class=\"why\">{_pick_why(s, r['team'])}</p>"
         else:
-            rows = []
-            counts: dict[str, list] = {}
-            for r in s["picks"]:
-                c = counts.setdefault(r["team"], [0, r, 0])
-                c[0] += 1
-                c[2] += 1 if r["status"] == "locked" else 0
-            for team, (n, r, nlock) in sorted(counts.items(), key=lambda kv: (-kv[1][0], -(kv[1][1]["p_win"] or 0))):
-                lock = f" <span class=\"lock\">({nlock} locked)</span>" if nlock else ""
-                rows.append(f"<tr><td>{_team(team)}</td><td class=\"n\">{n}{lock}</td><td>{_opp_html(r)}</td><td class=\"n\">{_pct(r['p_win'])}</td>"
-                            f"<td class=\"n\">{_spread(r['spread'])}</td><td>{_esc(r['kickoff'])}</td></tr>")
-            n_alive = s["summary"].get("n_live", 0)
-            body = (f"<div class=\"tw\"><table><tr><th>team</th><th class=\"n\">entries</th><th>opponent</th><th class=\"n\">win prob</th><th class=\"n\">spread</th><th>kickoff</th></tr>{''.join(rows)}</table></div>"
-                    if rows else "<div class=\"big muted\">no entries alive</div>")
-            ex = s.get("explain") or {}
+            top = max(s["picks"], key=lambda r: r["p_win"] or 0)
+            body = _hero_pick(top) + f"<p class=\"why\">{_pick_why(s, top['team'])}</p>" + _exposure_chips(s["picks"])
             if ex.get("exposure"):
-                body += f"<div class=\"why\">{_esc(ex['exposure'])}</div>"
-            body += (f"<div><span class=\"stat\">entries alive <b>{n_alive} of {s['entries']}</b></span>"
-                     f"<span class=\"stat\">P(at least one survives) <b>{_pct(s['summary'].get('p_any'))}</b></span>"
-                     f"<span class=\"stat\">expected survivors <b>{s['summary'].get('expected_survivors', 0):.2f}</b></span></div>")
-            if ex.get("summary"):
-                body += f"<div class=\"why\">{_esc(ex['summary'])}</div>"
-            changes = [r for r in s["picks"] if r["status"] == "change"]
-            if changes:
-                body += f"<div class=\"sub\" style=\"margin-top:6px\">changes vs picks on file: " + ", ".join(f"#{_esc(r['entry'])} {_esc(r['on_file'])}&rarr;{_esc(r['team'])}" for r in changes) + "</div>"
-        body += f"<div class=\"sub\" style=\"margin-top:10px\"><a href=\"{_week_page_name(season, s['week'])}\">full week {s['week']} report &rarr;</a></div>"
+                body += f"<p class=\"why\">{_esc(ex['exposure'])}</p>"
+        body += _pool_summary_tiles(s)
+        if ex.get("summary"):
+            body += f"<details><summary>What the survival number means</summary><p class=\"why\">{_esc(ex['summary'])}</p></details>"
+        body += f"<p class=\"sub\" style=\"margin-top:14px\"><a href=\"{_week_page_name(season, s['week'])}\">Full week {s['week']} report &rarr;</a></p>"
         cards.append(f"<div class=\"card\">{head}{body}</div>")
 
-    # week-by-week table
     weeks = sorted({s["week"] for s in snaps})
     ths = "".join(f"<th>{_esc(latest[p]['name'])}</th><th class=\"n\">alive</th>" for p in pools)
     trs = []
@@ -415,23 +439,19 @@ def render_season_index(season: int, snaps: list[dict], games: pd.DataFrame | No
         for p in pools:
             s = next((x for x in snaps if x["pool"] == p and x["week"] == w), None)
             if s is None:
-                cells.append("<td class=\"muted\">&mdash;</td><td></td>")
+                cells.append("<td class=\"sub\">&mdash;</td><td></td>")
                 continue
             wr = rec[p]["by_week"].get(w, {})
-            cells.append(f"<td>{_picks_cell(s, wr.get('graded', {}))}</td><td class=\"n\">{wr.get('alive_after', '')}</td>")
-        tag = " <span class=\"tag\">current</span>" if w == latest_week else ""
-        trs.append(f"<tr><td><a href=\"{_week_page_name(season, w)}\">week {w}</a>{tag}</td>{''.join(cells)}</tr>")
-    table = f"<div class=\"tw\"><table><tr><th>week</th>{ths}</tr>{''.join(trs)}</table></div>"
-    legend = "<div class=\"sub\">W / L grade the recommended pick against the final score (a tie counts as a loss); &hellip; means the game has not been played. \"alive\" is the number of entries still in after that week, following the recommendations.</div>"
+            cells.append(f"<td>{_exposure_chips(s['picks'], wr.get('graded', {})) if s['picks'] else '<span class=sub>no entries alive</span>'}</td><td class=\"n\">{wr.get('alive_after', '')}</td>")
+        trs.append(f"<tr class=\"{'now' if w == latest_week else ''}\"><td><a href=\"{_week_page_name(season, w)}\">Week {w}</a></td>{''.join(cells)}</tr>")
+    table = f"<div class=\"card\"><h2>Week by week</h2><div class=\"sub\">Recommended picks, graded against the final score. A tie counts as a loss.</div><div class=\"tw\"><table><thead><tr><th>week</th>{ths}</tr></thead><tbody>{''.join(trs)}</tbody></table></div></div>"
 
     nav = " ".join(f"<a href=\"{_season_page_name(y)}\">{y}</a>" if y != season else f"<b>{y}</b>" for y in seasons)
-    body = (f"<div class=\"cards\">{''.join(cards)}</div><h2>Week by week</h2>{legend}{table}"
-            f"<h2>About</h2><div class=\"sub\">Picks come from the <code>eliminator</code> planner: Vegas prices where they exist, market-implied ratings "
-            f"projected forward with home field, rest and QB availability everywhere else, and a season-long optimisation per format. "
-            f"Later weeks in a plan are re-optimised on every run; only this week's pick is a recommendation. "
-            f"Raw snapshots: <a href=\"data/\">data/</a>. Built {_esc(built_at.astimezone(ET).strftime('%a %b %d %Y, %H:%M ET'))}.</div>")
-    return _page(f"Eliminator picks {season}", body, subtitle="NFL survivor pool recommendations, week to week, for each pool format",
-                 nav=f"seasons: {nav}")
+    body = (f"<div class=\"grid\">{''.join(cards)}</div><div style=\"height:18px\"></div>{table}"
+            f"<footer>Vegas lines where they exist, market-implied ratings only for games without a line, and a season-long optimisation per format. "
+            f"Later weeks of every plan re-solve on each run; only this week's pick is a recommendation. "
+            f"<a href=\"data/\">Raw snapshots</a> &middot; built {_esc(built_at.astimezone(ET).strftime('%a %b %d %Y, %H:%M ET'))}.</footer>")
+    return _page(f"Eliminator picks {season}", body, hero=f"Week {latest_week}", meta=f"{season} season &middot; updated {_esc(_dt(updated))}", nav=nav)
 
 
 def render_week_page(season: int, week: int, snaps: list[dict], games: pd.DataFrame | None, all_weeks: list[int]) -> str:
@@ -440,146 +460,116 @@ def render_week_page(season: int, week: int, snaps: list[dict], games: pd.DataFr
     for s in snaps:
         ex = s.get("explain") or {}
         graded = {r["entry"]: grade(games, season, week, r["team"]) for r in s["picks"]}
-        sec = [f"<h2>{_esc(s['name'])} <span class=\"tag\">{FORMAT_LABEL.get(s['mode'], s['mode'])}</span></h2>",
-               f"<div class=\"sub\">generated {_esc(_dt(s['generated_at']))} &middot; ratings: {_esc(s['ratings_source'])} "
-               f"({_esc(s.get('n_lines_posted'))} posted lines) &middot; priced games from here on: {_esc(s.get('n_priced_games'))}</div>"]
-        if s["mode"] == "strikes":
-            if s["picks"]:
-                r = s["picks"][0]
-                res = graded.get(r["entry"], "unknown")
-                sl = next((pl["strikes_left"] for pl in s["plans"] if pl["alive"]), None)
-                sec.append(f"<div class=\"big\">{_team(r['team'], 40)} <span class=\"muted\" style=\"font-size:18px;font-weight:400\">{_opp_html(r)}</span> "
-                           f"<span class=\"{_res_cls(res)}\" style=\"font-size:20px\">{_res_mark(res)}</span></div>"
-                           f"<div class=\"sub\">win probability {_pct(r['p_win'])} &middot; spread {_spread(r['spread'])} &middot; kickoff {_esc(r['kickoff'])} &middot; {_esc(r['status'])}</div>"
-                           f"<div><span class=\"stat\">P(survive season) <b>{_pct(s['summary']['p_each'][0] if s['summary'].get('p_each') else None)}</b></span>"
-                           f"<span class=\"stat\">plan score <b>{_pct(s['summary'].get('p_plugin_first'), 2)}</b></span>"
-                           f"<span class=\"stat\">strikes left <b>{sl if sl is not None else ''} of {s['strikes']}</b></span></div>")
-                pk = (ex.get("picks") or {}).get(r["team"]) or {}
-                for key in ("probability", "timing", "not_used"):
-                    if pk.get(key):
-                        sec.append(f"<div class=\"why\">{_esc(pk[key])}</div>")
-                if ex.get("summary"):
-                    sec.append(f"<div class=\"why\">{_esc(ex['summary'])}</div>")
-            else:
-                sec.append("<div class=\"big muted\">eliminated</div>")
+        sid = f"pool-{_esc(s['pool'])}"
+        head = (f"<h2>{_esc(s['name'])}<span class=\"tag\">{_esc(FORMAT_LABEL.get(s['mode'], s['mode']))}</span>"
+                f"<button class=\"tog\" onclick=\"document.getElementById('{sid}').classList.toggle('showall')\">Details</button></h2>"
+                f"<div class=\"sub\">generated {_esc(_dt(s['generated_at']))} &middot; {_esc(s.get('n_priced_games'))} games priced by Vegas from here on</div>")
+        card = [head]
+        if not s["picks"]:
+            card.append("<div class=\"pick\"><div class=\"who\"><div class=\"team\">Eliminated</div></div></div>")
+        elif s["mode"] == "strikes":
+            r = s["picks"][0]
+            card.append(_hero_pick(r, graded.get(r["entry"], "")))
+            card.append(f"<p class=\"why\">{_pick_why(s, r['team'], full=True)}</p>")
         else:
-            sec.append(f"<div><span class=\"stat\">entries alive <b>{s['summary'].get('n_live', 0)} of {s['entries']}</b></span>"
-                       f"<span class=\"stat\">P(at least one survives) <b>{_pct(s['summary'].get('p_any'))}</b></span>"
-                       f"<span class=\"stat\">expected survivors <b>{s['summary'].get('expected_survivors', 0):.2f}</b></span></div>")
-            if ex.get("summary"):
-                sec.append(f"<div class=\"why\">{_esc(ex['summary'])}</div>")
-            rows = []
             counts: dict[str, list] = {}
             for r in s["picks"]:
-                c = counts.setdefault(r["team"], [[], r])
-                c[0].append(r["entry"])
+                counts.setdefault(r["team"], [[], r])[0].append(r["entry"])
+            rows = []
             for team, (ents, r) in sorted(counts.items(), key=lambda kv: (-len(kv[1][0]), -(kv[1][1]["p_win"] or 0))):
-                res = graded.get(ents[0], "unknown")
-                rows.append(f"<tr><td>{_team(team)}</td><td class=\"n\">{len(ents)}</td><td>{_opp_html(r)}</td><td class=\"n\">{_pct(r['p_win'])}</td>"
-                            f"<td class=\"n\">{_spread(r['spread'])}</td><td>{_esc(_source_label(r['source']))}</td><td>{_esc(r['kickoff'])}</td>"
-                            f"<td class=\"{_res_cls(res)}\">{_res_mark(res)}</td><td class=\"muted\">{_esc(' '.join('#' + e for e in ents))}</td></tr>")
-                pk = (ex.get("picks") or {}).get(team) or {}
-                why = " ".join(pk.get(k, "") for k in ("probability", "timing", "not_used") if pk.get(k))
-                if why:
-                    rows.append(f"<tr class=\"whyrow\"><td colspan=\"9\"><div class=\"why\">{_esc(why)}</div></td></tr>")
-            sec.append("<h3>Picks by team</h3><div class=\"tw\"><table><tr><th>team</th><th class=\"n\">entries</th><th>opponent</th><th class=\"n\">win prob</th>"
-                       f"<th class=\"n\">spread</th><th>source</th><th>kickoff</th><th>result</th><th>entries</th></tr>{''.join(rows)}</table></div>")
+                pre, opp = _opp_text(r)
+                res = graded.get(ents[0], "")
+                lock = " <span class=\"tag\">locked</span>" if r["status"] == "locked" else ""
+                rows.append(f"<div class=\"row\"><div>{_team(team, 30)}{lock}</div><div class=\"mid\">{_meter(r['p_win'])}<span class=\"sub\">{pre} {_esc(opp)} &middot; {_esc(r['kickoff'])}</span></div>"
+                            f"<div class=\"r\"><b>&times;{len(ents)}</b> {_badge(res)}</div>"
+                            f"<div class=\"m\"><span class=\"why\">{_pick_why(s, team, full=True)}</span> <span class=\"ent why more\">{_esc(' '.join('#' + e for e in ents))}</span></div></div>")
+            card.append(f"<div class=\"picks-list\">{''.join(rows)}</div>")
             if ex.get("exposure"):
-                sec.append(f"<div class=\"why\">{_esc(ex['exposure'])}</div>")
-            changes = [r for r in s["picks"] if r["status"] == "change"]
-            locked = [r for r in s["picks"] if r["status"] == "locked"]
-            notes = []
-            if changes:
-                notes.append("changes vs picks on file: " + ", ".join(f"#{_esc(r['entry'])} {_esc(r['on_file'])}&rarr;{_esc(r['team'])}" for r in changes))
-            if locked:
-                notes.append("locked (kicked off): " + ", ".join(f"#{_esc(r['entry'])} {_esc(r['team'])}" for r in locked))
-            if notes:
-                sec.append("<div class=\"sub\">" + "<br>".join(notes) + "</div>")
+                card.append(f"<p class=\"why\">{_esc(ex['exposure'])}</p>")
+        card.append(_pool_summary_tiles(s))
+        if ex.get("summary"):
+            card.append(f"<details><summary>What the survival number means</summary><p class=\"why\">{_esc(ex['summary'])}</p></details>")
+        sec = [f"<div class=\"card\">{''.join(card)}</div>"]
 
         # options
         if s.get("options"):
             whys = ex.get("options") or []
-            rows = "".join(f"<tr><td>{_team(o['team'])}</td><td class=\"n\">{_pct(o['p_now'])}</td><td class=\"n\">{_pct(o['score'], 2)}</td>"
-                           f"<td class=\"n\">{_pct(o['p_season'], 2)}</td><td class=\"path\">{_esc(' '.join(o['plan']))}</td>"
-                           f"<td class=\"whycell\">{_esc(whys[i]) if i < len(whys) else ''}</td></tr>" for i, o in enumerate(s["options"]))
-            sec.append("<h3>This week's options</h3><div class=\"sub\">Use the team now and play the rest of the season optimally. "
-                       "Score is what plans are ranked on (it trusts later weeks much less); P(season) is the chance of surviving the season, the number to believe.</div>"
-                       f"<div class=\"tw\"><table><tr><th>team</th><th class=\"n\">win prob now</th><th class=\"n\">score</th><th class=\"n\">P(season)</th><th>rest of the plan</th><th>why</th></tr>{rows}</table></div>")
+            rows = "".join(f"<tr><td>{_team(o['team'])}</td><td>{_meter(o['p_now'])}</td><td class=\"n\">{_pct(o['p_season'], 2)}</td><td class=\"n reason\">{_pct(o['score'], 2)}</td>"
+                           f"<td class=\"plan\">{_esc(' '.join(o['plan']))}</td><td class=\"reason\">{_esc(whys[i]) if i < len(whys) else ''}</td></tr>" for i, o in enumerate(s["options"]))
+            sec.append(f"<div class=\"card\"><h2>This week's options</h2><div class=\"sub\">Use the team now and play the rest of the season optimally. P(season) is the chance of surviving the season; Details adds the ranking score and the reasoning.</div>"
+                       f"<div class=\"tw\"><table><thead><tr><th>team</th><th>win now</th><th class=\"n\">P(season)</th><th class=\"n reason\">score</th><th>rest of the plan</th><th class=\"reason\">why</th></tr></thead><tbody>{rows}</tbody></table></div></div>")
 
+        more = []
         # board
         rows = []
         for r in s["board"]:
             res = grade(games, season, week, r["team"]) if r.get("played") else ("pending" if r.get("locked") else "")
-            flag = " <span class=\"lock\">kicked off</span>" if r.get("locked") and not r.get("played") else ""
-            rows.append(f"<tr><td>{_team(r['team'])}</td><td>{_opp_html(r)}</td><td class=\"n\">{_pct(r['prob'])}</td><td class=\"n\">{_spread(r['spread'])}</td>"
-                        f"<td>{_esc(_source_label(r['source']))}{flag}</td><td>{_esc(_kick(r['kickoff']))}</td><td class=\"{_res_cls(res)}\">{_res_mark(res)}</td><td class=\"muted\">{_esc(r.get('qb_note', ''))}</td></tr>")
-        sec.append(f"<details><summary>Week {week} board ({len(s['board'])} teams)</summary><div class=\"tw\"><table><tr><th>team</th><th>opponent</th><th class=\"n\">win prob</th>"
-                   f"<th class=\"n\">spread</th><th>source</th><th>kickoff</th><th>result</th><th>QB note</th></tr>{''.join(rows)}</table></div></details>")
-
+            rows.append(f"<tr><td>{_team(r['team'])}</td><td>{_opp_html(r)}</td><td>{_meter(r['prob'])}</td><td class=\"n\">{_spread(r['spread'])}</td>"
+                        f"<td class=\"sub\">{_esc(_source_label(r['source']))}</td><td class=\"sub\">{_esc(_kick(r['kickoff']))}</td><td>{_badge(res)}</td><td class=\"sub\">{_esc(r.get('qb_note', ''))}</td></tr>")
+        more.append(f"<details><summary>Week {week} board, all {len(s['board'])} teams</summary><div class=\"tw\"><table><thead><tr><th>team</th><th>opponent</th><th>win prob</th>"
+                    f"<th class=\"n\">spread</th><th>source</th><th>kickoff</th><th>result</th><th>QB</th></tr></thead><tbody>{''.join(rows)}</tbody></table></div></details>")
         # per-entry plans
         pw = s.get("planning_weeks", [])
         if pw and any(pl.get("path") for pl in s["plans"]):
-            head = "".join(f"<th class=\"n\">w{w}</th>" for w in pw)
+            head_cells = "".join(f"<th>w{w}</th>" for w in pw)
             trs = []
             for pl in s["plans"]:
                 if not pl["alive"]:
-                    trs.append(f"<tr><td>#{_esc(pl['entry'])}</td><td class=\"muted\" colspan=\"{len(pw) + 2}\">eliminated</td></tr>")
+                    trs.append(f"<tr><td>#{_esc(pl['entry'])}</td><td class=\"sub\" colspan=\"{len(pw) + 1}\">eliminated</td></tr>")
                     continue
                 if not pl.get("path"):
-                    trs.append(f"<tr><td>#{_esc(pl['entry'])}</td><td class=\"muted\" colspan=\"{len(pw) + 2}\">no feasible path</td></tr>")
+                    trs.append(f"<tr><td>#{_esc(pl['entry'])}</td><td class=\"sub\" colspan=\"{len(pw) + 1}\">no feasible path</td></tr>")
                     continue
-                cells = "".join(f"<td class=\"n{' now' if i == 0 else ''}\" title=\"{_pct(step['p'])}\">{_esc(step['team'])}</td>" for i, step in enumerate(pl["path"]))
+                cells = "".join(f"<td class=\"{'now' if i == 0 else ''}\" title=\"{_pct(step['p'])}\">{_esc(step['team'])}</td>" for i, step in enumerate(pl["path"]))
                 ewhy = (ex.get("entries") or {}).get(pl["entry"], "")
-                trs.append(f"<tr title=\"{_esc(ewhy)}\"><td>#{_esc(pl['entry'])}</td><td class=\"n\">{_pct(pl.get('p_season'), 2)}</td><td class=\"n\">{_pct(pl.get('score'), 2)}</td>{cells}</tr>")
-            sec.append(f"<details><summary>Per-entry season plans ({sum(1 for pl in s['plans'] if pl['alive'])} alive)</summary>"
-                       "<div class=\"sub\">This week's pick first. Later weeks only justify this week's pick and are re-optimised on every run. Hover a cell for the projected win probability, a row for its weakest and strongest links.</div>"
-                       f"<div class=\"tw\"><table class=\"grid\"><tr><th>entry</th><th class=\"n\">P(season)</th><th class=\"n\">score</th>{head}</tr>{''.join(trs)}</table></div></details>")
-
-        # entry status history
+                trs.append(f"<tr title=\"{_esc(ewhy)}\"><td>#{_esc(pl['entry'])}</td><td class=\"n\">{_pct(pl.get('p_season'), 2)}</td>{cells}</tr>")
+            more.append(f"<details><summary>Per-entry season plans</summary><div class=\"sub\">This week first; later weeks only justify it and re-solve every run. Hover a cell for its probability.</div>"
+                        f"<div class=\"tw\"><table class=\"grid-t\"><thead><tr><th>entry</th><th class=\"n\">P(season)</th>{head_cells}</tr></thead><tbody>{''.join(trs)}</tbody></table></div></details>")
+        # picks on file
         sts = [x for x in s.get("statuses", []) if x.get("picks")]
         if sts:
             hist_weeks = sorted({int(w) for x in sts for w in x["picks"]})
-            head = "".join(f"<th>w{w}</th>" for w in hist_weeks)
+            head_cells = "".join(f"<th>w{w}</th>" for w in hist_weeks)
             trs = []
             for x in sts:
                 cells = []
                 for w in hist_weeks:
                     t = x["picks"].get(str(w), x["picks"].get(w))
                     r = x["results"].get(str(w), x["results"].get(w, ""))
-                    cells.append(f"<td class=\"{_res_cls(r)}\">{_esc(t or '')}{(' ' + _res_mark(r)) if r else ''}</td>")
-                trs.append(f"<tr><td>#{_esc(x['entry'])}</td><td>{'alive' if x['alive'] else '<span class=loss>out</span>'}</td><td class=\"n\">{x['losses']}</td>{''.join(cells)}</tr>")
-            sec.append(f"<details><summary>Picks on file and results</summary><div class=\"tw\"><table class=\"grid\"><tr><th>entry</th><th>status</th><th class=\"n\">losses</th>{head}</tr>{''.join(trs)}</table></div></details>")
-
-        if ex.get("notes"):
-            items = "".join(f"<li>{_esc(n)}</li>" for n in ex["notes"])
-            sec.append(f"<h3>Why these numbers</h3><ul class=\"notes\">{items}</ul>")
+                    cells.append(f"<td>{_esc(t or '')} {_badge(r)}</td>")
+                trs.append(f"<tr><td>#{_esc(x['entry'])}</td><td>{'alive' if x['alive'] else '<span class=badge.loss>out</span>'}</td><td class=\"n\">{x['losses']}</td>{''.join(cells)}</tr>")
+            more.append(f"<details><summary>Picks on file and results</summary><div class=\"tw\"><table class=\"grid-t\"><thead><tr><th>entry</th><th>status</th><th class=\"n\">losses</th>{head_cells}</tr></thead><tbody>{''.join(trs)}</tbody></table></div></details>")
         if s.get("revisions"):
             items = "".join(f"<li>{_esc(_dt(r['generated_at']))}: {_esc(r['picks'])}</li>" for r in s["revisions"])
-            sec.append(f"<details><summary>Earlier recommendations this week ({len(s['revisions'])})</summary><ul class=\"sub\">{items}</ul></details>")
-        sections.append("".join(sec))
+            more.append(f"<details><summary>Earlier recommendations this week ({len(s['revisions'])})</summary><ul class=\"notes\">{items}</ul></details>")
+        notes = ""
+        if ex.get("notes"):
+            notes = f"<h3>Good to know</h3><ul class=\"notes\">{''.join(f'<li>{_esc(n)}</li>' for n in ex['notes'])}</ul>"
+        sec.append(f"<div class=\"card\">{notes}{''.join(more)}</div>")
+        sections.append(f"<section class=\"pool\" id=\"{sid}\">{''.join(sec)}</section>")
 
-    # QB situations (shared)
+    # shared: QB situations and ratings
+    shared = []
     qbs = snaps[0].get("qb_situations") or []
     if qbs:
         rows = "".join(f"<tr><td>{_team(q['team'])}</td><td>{_esc(q['player'])}</td><td>{_esc(q['status'])}</td><td>{_esc(q['injury'])}</td>"
                        f"<td class=\"n\">{q['penalty']:.1f}</td><td class=\"n\">{_esc(q.get('injured_week') or '')}</td><td class=\"n\">{_esc(q.get('return_week') or '')}</td>"
-                       f"<td>{_esc(q['source'])}</td><td class=\"path\">{_esc(' '.join(f'w{w}:{int(round(100 * v))}%' for w, v in sorted(q['p_out'].items(), key=lambda kv: int(kv[0]))))}</td></tr>" for q in qbs)
-        sections.append(f"<details open><summary>Quarterback situations ({len(qbs)})</summary>"
-                        "<div class=\"sub\">Penalty is points off the team's rating while the starter is out; P(out) by week drives the projection. "
-                        "\"auto\" entries come from the nflverse injury report at the default tier; an entry in state/qb_status.yaml replaces them.</div>"
-                        f"<div class=\"tw\"><table><tr><th>team</th><th>player</th><th>status</th><th>injury</th><th class=\"n\">penalty</th><th class=\"n\">since</th><th class=\"n\">return</th><th>source</th><th>P(out) by week</th></tr>{rows}</table></div></details>")
-
-    # ratings (shared)
+                       f"<td class=\"sub\">{_esc(q['source'])}</td><td class=\"plan\">{_esc(' '.join(f'w{w}:{int(round(100 * v))}%' for w, v in sorted(q['p_out'].items(), key=lambda kv: int(kv[0]))))}</td></tr>" for q in qbs)
+        shared.append(f"<details open><summary>Quarterback situations ({len(qbs)})</summary><div class=\"sub\">Penalty is points off the team while the starter is out. Automatic entries come from the injury report; an entry in qb_status.yaml replaces them.</div>"
+                      f"<div class=\"tw\"><table><thead><tr><th>team</th><th>player</th><th>status</th><th>injury</th><th class=\"n\">penalty</th><th class=\"n\">since</th><th class=\"n\">return</th><th>source</th><th>P(out) by week</th></tr></thead><tbody>{rows}</tbody></table></div></details>")
     ratings = snaps[0].get("ratings") or {}
     if ratings:
         rows = "".join(f"<tr><td>{_team(t)}</td><td class=\"n\">{float(v):+.1f}</td></tr>" for t, v in sorted(ratings.items(), key=lambda kv: -(kv[1] or 0)))
-        sections.append(f"<details><summary>Team ratings (points vs average, healthy starter, neutral field)</summary><div class=\"tw\" style=\"max-width:320px\"><table><tr><th>team</th><th class=\"n\">rating</th></tr>{rows}</table></div></details>")
+        shared.append(f"<details><summary>Team ratings used for games without a line</summary><div class=\"tw\" style=\"max-width:320px\"><table><thead><tr><th>team</th><th class=\"n\">points vs avg</th></tr></thead><tbody>{rows}</tbody></table></div></details>")
+    if shared:
+        sections.append(f"<section class=\"pool\"><div class=\"card\">{''.join(shared)}</div></section>")
 
     idx = all_weeks.index(week)
-    prev_link = f"<a href=\"{_week_page_name(season, all_weeks[idx - 1])}\">&larr; week {all_weeks[idx - 1]}</a>" if idx > 0 else ""
-    next_link = f"<a href=\"{_week_page_name(season, all_weeks[idx + 1])}\">week {all_weeks[idx + 1]} &rarr;</a>" if idx + 1 < len(all_weeks) else ""
-    nav = f"<a href=\"{_season_page_name(season)}\">&uarr; season {season}</a> {prev_link} {next_link}"
-    return _page(f"Week {week}, {season}", "".join(sections), subtitle="recommendations for each pool format", nav=nav)
+    prev_link = f"<a href=\"{_week_page_name(season, all_weeks[idx - 1])}\">&larr; Week {all_weeks[idx - 1]}</a>" if idx > 0 else ""
+    next_link = f"<a href=\"{_week_page_name(season, all_weeks[idx + 1])}\">Week {all_weeks[idx + 1]} &rarr;</a>" if idx + 1 < len(all_weeks) else ""
+    nav = f"<a href=\"{_season_page_name(season)}\">&uarr; Season {season}</a>"
+    body = f"<div class=\"wk-nav\">{prev_link}{next_link}</div>" + "".join(sections)
+    return _page(f"Week {week}, {season}", body, hero=f"Week {week}", meta=f"{season} season", nav=nav)
 
 
 def load_snapshots(data_dir: Path = DATA_DIR) -> list[dict]:
@@ -605,7 +595,7 @@ def build_site(games: pd.DataFrame | None, data_dir: Path = DATA_DIR, out_dir: P
             (out_dir / "logos" / f.name).write_bytes(f.read_bytes())
     if not snaps:
         p = out_dir / "index.html"
-        p.write_text(_page("Eliminator picks", "<p class=\"sub\">No snapshots yet. Run <code>python -m eliminator snapshot</code> and rebuild.</p>"))
+        p.write_text(_page("Eliminator picks", "<p class=\"sub\">No snapshots yet. Run <code>python -m eliminator snapshot</code> and rebuild.</p>", hero="No picks yet"))
         return [p]
     seasons = sorted({s["season"] for s in snaps}, reverse=True)
     for season in seasons:
@@ -632,7 +622,7 @@ def build_site(games: pd.DataFrame | None, data_dir: Path = DATA_DIR, out_dir: P
         dst.write_text(src.read_text())
         links.append(f"<li><a href=\"{dst.name}\">{dst.name}</a></li>")
         written.append(dst)
-    (dd / "index.html").write_text(_page("Snapshots", f"<ul>{''.join(links)}</ul>", nav="<a href=\"../index.html\">&larr; picks</a>"))
+    (dd / "index.html").write_text(_page("Snapshots", f"<ul class=\"notes\">{''.join(links)}</ul>", hero="Raw snapshots", nav="<a href=\"../index.html\">&larr; picks</a>"))
     written.append(dd / "index.html")
     return written
 
