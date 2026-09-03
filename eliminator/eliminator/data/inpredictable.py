@@ -1,12 +1,16 @@
 """Vegas-derived team strength from inpredictable.com.
 
-``stats.inpredictable.com/nfl/ssnPower.php`` publishes power ratings backed out of the
-betting market: GPF (generic points favoured) is how many points a team would be favoured
-by against an average opponent on a neutral field. That is exactly the rating scale the
-projection model uses, so it plugs straight in.
+``stats.inpredictable.com/rankings/nfl.php`` ("NFL Betting Market Rankings") publishes power
+ratings backed out of the betting market: GPF (generic points favoured) is how many points a
+team would be favoured by against an average opponent on a neutral field. That is exactly the
+rating scale the projection model uses, so it plugs straight in.
 
 The parser is deliberately loose about layout: it scans every table for a header row that
 mentions GPF (or Rating/Power) and a team column, and resolves team labels by name or code.
+The live page's data rows carry more cells than the header (hidden sparkline series such as
+``26,28,65,...`` and per-column ranks sit between the visible values), so when a row is
+wider than the header the values are read positionally instead: the first three one-decimal
+numbers after the team cell are GPF, oGPF and dGPF, and GPF = oGPF + dGPF is checked.
 Use ``load_ratings(from_file=...)`` with a saved HTML page or a CSV (team,gpf[,ogpf,dgpf])
 when the site is not reachable from where you run this.
 """
@@ -24,7 +28,7 @@ import requests
 from ..teams import TEAMS, resolve
 from .schedule import cache_dir
 
-URL = "https://stats.inpredictable.com/nfl/ssnPower.php"
+URL = "https://stats.inpredictable.com/rankings/nfl.php"
 HEADERS = {"User-Agent": "Mozilla/5.0 (eliminator strategy tool; +https://github.com/trimcrae)"}
 
 
@@ -65,6 +69,24 @@ class _TableParser(HTMLParser):
 
 _RATING_PATTERNS = [r"^gpf$", r"^gpf\b", r"generic points", r"^rating$", r"^power$", r"^rtg$"]
 _NUM = re.compile(r"[-+]?\d+(?:\.\d+)?")
+_DECIMAL = re.compile(r"^[-+]?\d+\.\d+$")   # a visible rating cell: exactly one number with a decimal point
+
+
+def _values_positional(row: list[str], team_col: int) -> dict | None:
+    """GPF/oGPF/dGPF from a row whose cell count does not match the header (hidden cells).
+
+    Sparkline cells hold comma-separated series, rank cells are bare integers and records
+    look like ``13-3``; the ratings are the only cells that are a single decimal number.
+    """
+    decs = [float(c) for c in row[team_col + 1:] if _DECIMAL.match(c.strip())]
+    if not decs:
+        return None
+    rec = {"gpf": decs[0]}
+    if len(decs) >= 3:
+        rec["ogpf"], rec["dgpf"] = decs[1], decs[2]
+        if abs(decs[1] + decs[2] - decs[0]) > 0.15:  # not the o/d split we expected; keep GPF only
+            rec.pop("ogpf"); rec.pop("dgpf")
+    return rec
 
 
 def _find_col(header: list[str], patterns: list[str]) -> int | None:
@@ -93,8 +115,16 @@ def parse_ratings_html(html: str) -> pd.DataFrame:
                 if len(row) <= max(rating_col, team_col):
                     continue
                 team = resolve(row[team_col])
+                if team is None:
+                    continue
+                if len(row) != len(header):
+                    vals = _values_positional(row, team_col)
+                    if vals is None:
+                        continue
+                    rows.append({"team": team, **vals})
+                    continue
                 m = _NUM.search(row[rating_col])
-                if team is None or not m:
+                if not m:
                     continue
                 rec = {"team": team, "gpf": float(m.group())}
                 for name, col in (("ogpf", off_col), ("dgpf", def_col)):
@@ -115,8 +145,8 @@ def parse_ratings_html(html: str) -> pd.DataFrame:
 
 
 def fetch_ratings(season: int | None = None, timeout: int = 30) -> pd.DataFrame:
-    params = {"season": season} if season else None
-    r = requests.get(URL, params=params, headers=HEADERS, timeout=timeout)
+    """Current ratings. The page shows the season in progress; ``season`` is accepted but not sent."""
+    r = requests.get(URL, headers=HEADERS, timeout=timeout)
     r.raise_for_status()
     df = parse_ratings_html(r.text)
     df.attrs["fetched_at"] = dt.datetime.now(dt.timezone.utc).isoformat()

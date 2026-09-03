@@ -95,15 +95,38 @@ def _plan_inputs(args, cfg, state: PoolState, df):
     now = _now(args)
     ledger = load_ledger(STATE_DIR / "qb_status.yaml", cfg["qb"])
     overrides = load_overrides(STATE_DIR / "overrides.yaml")
+    games = regular_season(df, season)
+    wk = getattr(args, "week", None) or current_week(games, now)
+    if cfg["qb"].get("auto_from_injuries", True):
+        ledger = ledger + _auto_qb(cfg, season, wk, ledger, refresh=not args.offline)
     if not args.offline:
         from .data.odds_api import live_overrides
-        games = regular_season(df, season)
-        wk = getattr(args, "week", None) or current_week(games, now)
         live = live_overrides(cfg, games, wk)
         if live:
             manual = overrides.get("lines") or []
             overrides["lines"] = manual + [r for r in live if not any(m.get("home") == r["home"] and int(m.get("week", 0)) == r["week"] for m in manual)]
     return season, now, ledger, overrides
+
+
+def _auto_qb(cfg, season: int, week: int, manual, refresh: bool):
+    """Roll state/qb_auto.yaml forward from the nflverse injury report and return its situations."""
+    from .data.injuries import report_weeks
+    from .model.qb import load_auto, save_auto, update_auto
+    path = STATE_DIR / "qb_auto.yaml"
+    previous = load_auto(path, cfg["qb"])
+    try:
+        watch = qb_watch(season, week, refresh=refresh)
+    except Exception as exc:  # feed trouble: keep what we had
+        print(f"[qb-auto] injury report unavailable ({exc}); keeping {len(previous)} automatic situation(s)")
+        return previous
+    auto = update_auto(previous, watch, manual, week, cfg["qb"], report_published=week in report_weeks(season))
+    before = {(s.team, s.player, s.status) for s in previous}
+    after = {(s.team, s.player, s.status) for s in auto}
+    if before != after or not path.exists():
+        save_auto(auto, path)
+    if auto:
+        print("[qb-auto] " + ", ".join(f"{s.team} {s.player} {s.status} ({s.injury}, since w{s.injured_week})" for s in auto))
+    return auto
 
 
 def cmd_plan(args):
@@ -160,7 +183,7 @@ def cmd_snapshot(args):
         res = make_plan(state, df, cfg, ledger, ratings, now=now, season=season, week=week,
                         source=args.source, overrides=overrides)
         previous = load_snapshot(snapshot_path(res.season, res.week, pool.stem, data_dir))
-        snap = build_snapshot(res, pool.stem, generated_at=now, previous=previous)
+        snap = build_snapshot(res, pool.stem, generated_at=now, previous=previous, ledger=ledger)
         path = write_snapshot(snap, data_dir)
         print(render(res, show_paths=False))
         print(f"written {path}\n")

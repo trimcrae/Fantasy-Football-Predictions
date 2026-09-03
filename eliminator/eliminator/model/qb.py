@@ -115,6 +115,68 @@ def load_ledger(path: Path, cfg_qb: dict) -> list[QBSituation]:
     return out
 
 
+AUTO_STATUSES = {"out": "out", "doubtful": "doubtful", "questionable": "questionable",
+                 "injured reserve": "ir", "ir": "ir", "pup": "ir", "nfi": "ir"}
+
+
+def load_auto(path: Path, cfg_qb: dict) -> list[QBSituation]:
+    """Situations the pipeline added itself (state/qb_auto.yaml); same format as the ledger."""
+    return load_ledger(path, cfg_qb)
+
+
+def save_auto(sits: list[QBSituation], path: Path) -> Path:
+    rows = [{"team": s.team, "player": s.player, "penalty": float(s.penalty), "status": s.status,
+             "injury": s.injury, "injured_week": s.injured_week, "note": s.note} for s in sits]
+    header = ("# Written by `eliminator snapshot` from the nflverse injury report: starters with a game\n"
+              "# designation and no entry in qb_status.yaml. Do not edit; put your own view of a QB in\n"
+              "# qb_status.yaml and it replaces the automatic entry for that team.\n")
+    path.write_text(header + yaml.safe_dump(rows, sort_keys=False))
+    return path
+
+
+def update_auto(previous: list[QBSituation], watch, manual: list[QBSituation], current_week: int,
+                cfg_qb: dict, report_published: bool) -> list[QBSituation]:
+    """Roll the automatic situations forward one run.
+
+    * a QB1 on this week's report with Out / Doubtful / Questionable and no manual entry for
+      the team gets a new situation starting this week, at the default tier;
+    * an automatic situation carries over while its player is still on the report with a
+      designation (even after the depth chart promotes the backup), keeping its first missed
+      week so the duration prior keeps counting;
+    * it is dropped when the player is off the report (healthy, or a long absence the ratings
+      have absorbed), unless no report for the week has been published yet;
+    * a manual entry for the team always wins.
+    """
+    manual_teams = {s.team for s in manual}
+    rows = [] if watch is None or watch.empty else watch.to_dict(orient="records")
+    on_report = {}
+    for r in rows:
+        st = AUTO_STATUSES.get(str(r.get("status", "")).strip().lower())
+        if st:
+            on_report[(r["team"], str(r.get("player", "")))] = (st, str(r.get("injury") or "unknown").lower(), bool(r.get("is_qb1")))
+    out: list[QBSituation] = []
+    seen = set()
+    for s in previous:
+        if s.team in manual_teams:
+            continue
+        key = (s.team, s.player)
+        if key in on_report:
+            st, inj, _ = on_report[key]
+            out.append(QBSituation(team=s.team, player=s.player, penalty=s.penalty, status=st, injury=inj or s.injury,
+                                   injured_week=s.injured_week, note=s.note))
+            seen.add(key)
+        elif not report_published:
+            out.append(s); seen.add(key)
+    tier = cfg_qb["default_tier"]
+    pen = float(cfg_qb["penalty_by_tier"][tier])
+    for (team, player), (st, inj, is_qb1) in on_report.items():
+        if (team, player) in seen or team in manual_teams or not is_qb1 or team in {o.team for o in out}:
+            continue
+        out.append(QBSituation(team=team, player=player, penalty=pen, status=st, injury=inj,
+                               injured_week=current_week, note=f"auto: nflverse injury report, {tier} tier"))
+    return sorted(out, key=lambda s: s.team)
+
+
 def p_out_by_week(sit: QBSituation, current_week: int, season_weeks: int, cfg_qb: dict,
                   game_weeks: list[int] | None = None) -> np.ndarray:
     """P(starter unavailable) for weeks 1..season_weeks (index 0 unused)."""

@@ -27,7 +27,7 @@
   17,
   18
  ],
- "generated_at": "2026-09-03T10:23:49.657350-04:00",
+ "generated_at": "2026-09-03T10:33:02.072316-04:00",
  "ratings_source": "market",
  "n_lines_posted": 112,
  "n_priced_games": 112,
@@ -3899,9 +3899,14 @@
   "TEN": -3.7917,
   "WAS": -1.1107
  },
+ "qb_situations": [],
  "revisions": [
   {
    "generated_at": "2026-09-03T10:20:12.285747-04:00",
+   "picks": "LAC x12, JAX x11, BAL, CIN"
+  },
+  {
+   "generated_at": "2026-09-03T10:23:49.657350-04:00",
    "picks": "LAC x12, JAX x11, BAL, CIN"
   }
  ]

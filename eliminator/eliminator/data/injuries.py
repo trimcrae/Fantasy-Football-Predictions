@@ -69,6 +69,14 @@ def load_depth_qb1(season: int, refresh: bool = False, max_age_hours: float = 24
     return df[["team", "player_name", "gsis_id", "dt"]].rename(columns={"player_name": "qb1", "dt": "snapshot"})
 
 
+def report_weeks(season: int) -> set[int]:
+    """Weeks for which nflverse has published any injury report rows (cache only, no fetch)."""
+    inj = load_injuries(season, refresh=False, max_age_hours=float("inf"))
+    if inj is None or inj.empty:
+        return set()
+    return {int(w) for w in inj["week"].dropna().unique()}
+
+
 def qb_watch(season: int, week: int, refresh: bool = False) -> pd.DataFrame:
     """QBs with a game-status designation this week, flagged when they are the team's QB1.
 

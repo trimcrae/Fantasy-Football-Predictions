@@ -64,7 +64,8 @@ def _f(x) -> float | None:
     return None if np.isnan(v) else round(v, 4)
 
 
-def build_snapshot(res: PlanResult, pool: str, generated_at: dt.datetime, previous: dict | None = None) -> dict:
+def build_snapshot(res: PlanResult, pool: str, generated_at: dt.datetime, previous: dict | None = None,
+                   ledger: list | None = None) -> dict:
     """Serialise a plan result. ``previous`` is the snapshot this one replaces (same week)."""
     p = res.projection
     st = res.strength
@@ -106,6 +107,15 @@ def build_snapshot(res: PlanResult, pool: str, generated_at: dt.datetime, previo
     summary = {k: (v if isinstance(v, (int, list)) else _f(v)) for k, v in res.summary.items()}
     summary["p_each"] = [_f(v) for v in summary.get("p_each", [])]
 
+    qb_situations = []
+    if ledger and st.p_out is not None:
+        for sit in ledger:
+            ti = TEAMS.index(sit.team)
+            pw = {int(w): _f(st.p_out[w, ti]) for w in p.weeks if w < st.p_out.shape[0] and st.p_out[w, ti] > 0.005}
+            qb_situations.append({"team": sit.team, "player": sit.player, "status": sit.status, "injury": sit.injury,
+                                  "penalty": _f(sit.penalty), "injured_week": sit.injured_week, "return_week": sit.return_week,
+                                  "source": "auto" if str(sit.note).startswith("auto") else "manual", "p_out": pw})
+
     revisions = list((previous or {}).get("revisions") or [])
     if previous and previous.get("generated_at"):
         revisions.append({"generated_at": previous["generated_at"], "picks": _pick_summary(previous.get("picks", []))})
@@ -119,6 +129,7 @@ def build_snapshot(res: PlanResult, pool: str, generated_at: dt.datetime, previo
         "ratings_source": st.source, "n_lines_posted": st.detail.get("n_lines"), "n_priced_games": n_lines,
         "summary": summary, "picks": picks, "options": options, "board": board, "plans": plans,
         "statuses": statuses, "ratings": {k: _f(v) for k, v in res.strength.healthy.items()},
+        "qb_situations": qb_situations,
         "revisions": revisions,
     }
 
@@ -477,6 +488,17 @@ def render_week_page(season: int, week: int, snaps: list[dict], games: pd.DataFr
             items = "".join(f"<li>{_esc(_dt(r['generated_at']))}: {_esc(r['picks'])}</li>" for r in s["revisions"])
             sec.append(f"<details><summary>Earlier recommendations this week ({len(s['revisions'])})</summary><ul class=\"sub\">{items}</ul></details>")
         sections.append("".join(sec))
+
+    # QB situations (shared)
+    qbs = snaps[0].get("qb_situations") or []
+    if qbs:
+        rows = "".join(f"<tr><td><b>{_esc(q['team'])}</b></td><td>{_esc(q['player'])}</td><td>{_esc(q['status'])}</td><td>{_esc(q['injury'])}</td>"
+                       f"<td class=\"n\">{q['penalty']:.1f}</td><td class=\"n\">{_esc(q.get('injured_week') or '')}</td><td class=\"n\">{_esc(q.get('return_week') or '')}</td>"
+                       f"<td>{_esc(q['source'])}</td><td class=\"path\">{_esc(' '.join(f'w{w}:{int(round(100 * v))}%' for w, v in sorted(q['p_out'].items(), key=lambda kv: int(kv[0]))))}</td></tr>" for q in qbs)
+        sections.append(f"<details open><summary>Quarterback situations ({len(qbs)})</summary>"
+                        "<div class=\"sub\">Penalty is points off the team's rating while the starter is out; P(out) by week drives the projection. "
+                        "\"auto\" entries come from the nflverse injury report at the default tier; an entry in state/qb_status.yaml replaces them.</div>"
+                        f"<div class=\"tw\"><table><tr><th>team</th><th>player</th><th>status</th><th>injury</th><th class=\"n\">penalty</th><th class=\"n\">since</th><th class=\"n\">return</th><th>source</th><th>P(out) by week</th></tr>{rows}</table></div></details>")
 
     # ratings (shared)
     ratings = snaps[0].get("ratings") or {}

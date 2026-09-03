@@ -72,12 +72,14 @@ in the repository settings with **Source: GitHub Actions**. Put a The Odds API k
 * **Schedule, lines, rest days, results, starting QBs**: nflverse `games.csv`
   (1999-present, refreshed in season). Moneylines and spreads for the coming several weeks,
   plus scattered prime-time games, are posted well in advance.
-* **inpredictable power ratings** (`stats.inpredictable.com/nfl/ssnPower.php`): GPF
-  (generic points favoured) is a rating on the point-spread scale derived from the betting
-  market, exactly what the projection needs. The fetcher/parser is written defensively but
-  the site was not reachable from the environment this was built in, so it is untested
-  against the live page. If the fetch fails the tool says so and falls back to the market
-  fit below; you can also feed a saved page or a CSV with `--inpredictable-file`.
+* **inpredictable power ratings** (`stats.inpredictable.com/rankings/nfl.php`, "NFL Betting
+  Market Rankings"): GPF (generic points favoured) is a rating on the point-spread scale
+  derived from the betting market, exactly what the projection needs. Verified against the
+  live page from GitHub Actions (the page's rows carry hidden sparkline cells, which the
+  parser handles). If the fetch fails the tool says so and falls back to the market fit
+  below; you can also feed a saved page or a CSV with `--inpredictable-file`. The Actions
+  workflow **Eliminator source probe** (run it from the Actions tab) prints what the live
+  page and The Odds API return, for when either changes shape.
 * **Market-implied ratings** (built in): a recency-weighted ridge fit of team strengths to
   every posted spread this season, seeded by last season's rating regressed toward zero.
   With lines posted for weeks 1-7 this already reproduces a full preseason power rating.
@@ -86,7 +88,8 @@ in the repository settings with **Source: GitHub Actions**. Put a The Odds API k
   (`data.odds_api_key`) or `ODDS_API_KEY`, `plan` prices this week's games from a de-vigged
   consensus of US books, which beats the daily feed on game day. Also untested live here.
 * **Injury reports and depth charts**: nflverse weekly injury reports (game status and
-  injury type) and depth charts (QB1 per team). Used to *suggest* QB ledger entries.
+  injury type) and depth charts (QB1 per team). With `qb.auto_from_injuries: true` (the
+  default) `plan` and `snapshot` turn them into ledger entries automatically, see below.
 
 ## How the model works
 
@@ -177,6 +180,19 @@ spots you called out are handled explicitly:
 `update` prints the nflverse injury report for the week and warns about any starter with a
 game designation who is not in the ledger.
 
+**Automatic entries.** Nobody has to watch the injury report: on every `plan` or `snapshot`,
+each team's QB1 who carries Out / Doubtful / Questionable on this week's nflverse report and
+has no entry in `qb_status.yaml` gets an automatic situation at the default tier
+(`qb.default_tier`, average = 3.5 points), starting this week, with the injury type from the
+report driving the duration prior. These live in `state/qb_auto.yaml` (written by the tool,
+committed by the CI workflow) and roll forward week to week: the entry keeps its first missed
+week while the player stays on the report with a designation, and it is dropped once he is
+off a published report (back, or a long absence the ratings have absorbed). A manual entry
+for the team in `qb_status.yaml` always replaces the automatic one, which is where to put a
+tier (elite / good) or an expected return week when you know more than the report. Set
+`qb.auto_from_injuries: false` in `config.yaml` to turn this off. The week pages on the site
+list every situation in play with its source.
+
 ### 6. Optimisation
 * **One entry, single elimination**: with independent games the season survival probability
   is the product of the picks' win probabilities, so the best plan is a minimum-cost
@@ -225,7 +241,8 @@ eliminator/
   calibration.json       fitted parameters (regenerate with `calibrate`)
   state/multi25.yaml     25-entry pool picks
   state/strikes2.yaml    two-strike pool picks
-  state/qb_status.yaml   QB availability ledger
+  state/qb_status.yaml   QB availability ledger (yours)
+  state/qb_auto.yaml     QB situations added automatically from the injury report (tool-written)
   state/overrides.yaml   manual line overrides and week-18 rest risks
   site/data/             weekly recommendation snapshots (written by `snapshot`, committed by CI)
   site/build/            rendered site (ignored by git)
