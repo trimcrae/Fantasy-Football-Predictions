@@ -1,0 +1,103 @@
+# Manual diagnostics for the external data sources the eliminator uses. Run from the
+# Actions tab; everything of interest is printed to the job log and the fetched pages are
+# attached as an artifact.
+name: Eliminator source probe
+
+on:
+  workflow_dispatch:
+    inputs:
+      urls:
+        description: "Extra inpredictable URLs to try (space separated)"
+        required: false
+        default: ""
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r eliminator/requirements.txt
+
+      - name: Probe inpredictable
+        working-directory: eliminator
+        env:
+          EXTRA_URLS: ${{ github.event.inputs.urls }}
+        run: |
+          mkdir -p ../probe
+          python - <<'PY'
+          import os, re, sys, base64, gzip
+          from pathlib import Path
+          import requests
+          sys.path.insert(0, ".")
+          from eliminator.data import inpredictable as inp
+          urls = [
+              "https://stats.inpredictable.com/rankings/nfl.php",
+              "https://stats.inpredictable.com/nfl/ssnPower.php",
+              "https://stats.inpredictable.com/nfl/ssnPower.php?season=2025",
+              "https://stats.inpredictable.com/nfl/",
+              "https://stats.inpredictable.com/",
+          ] + [u for u in os.environ.get("EXTRA_URLS", "").split() if u]
+          for i, url in enumerate(urls):
+              print(f"\n===== {url}")
+              try:
+                  r = requests.get(url, headers=inp.HEADERS, timeout=30, allow_redirects=True)
+              except Exception as exc:
+                  print("request failed:", exc); continue
+              print("status", r.status_code, "final url", r.url, "bytes", len(r.content), "type", r.headers.get("content-type"))
+              if r.status_code != 200:
+                  continue
+              html = r.text
+              Path(f"../probe/page{i}.html").write_text(html)
+              m = re.search(r"<title>(.*?)</title>", html, re.S | re.I)
+              print("title:", (m.group(1).strip() if m else "?")[:200])
+              p = inp._TableParser(); p.feed(html)
+              print(f"{len(p.tables)} tables")
+              for ti, t in enumerate(p.tables):
+                  print(f"  table {ti}: {len(t)} rows; first rows:")
+                  for row in t[:3]:
+                      print("    ", [c[:24] for c in row[:14]])
+              try:
+                  df = inp.parse_ratings_html(html)
+                  print("PARSED OK:", len(df), "teams")
+                  print(df.to_string(index=False))
+              except Exception as exc:
+                  print("parser:", exc)
+          PY
+
+      - name: Probe The Odds API
+        working-directory: eliminator
+        env:
+          ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
+        run: |
+          python - <<'PY'
+          import os, sys, json
+          sys.path.insert(0, ".")
+          key = os.environ.get("ODDS_API_KEY")
+          if not key:
+              print("ODDS_API_KEY secret not set; skipping"); sys.exit(0)
+          from eliminator.data.odds_api import fetch_moneylines, consensus_overrides
+          from eliminator.data.schedule import load_games, regular_season, current_week, latest_season
+          from eliminator.config import load_config
+          cfg = load_config()
+          ev = fetch_moneylines(key)
+          print(len(ev), "events; first:", json.dumps(ev[0], indent=1)[:1500] if ev else None)
+          df = load_games(refresh=True); season = latest_season(df); games = regular_season(df, season)
+          recs = consensus_overrides(ev, games, current_week(games), float(cfg["model"]["sigma"]))
+          print(len(recs), "games mapped"); [print(r) for r in recs]
+          PY
+
+      - name: Run update
+        working-directory: eliminator
+        run: python -m eliminator update
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: probe-pages
+          path: probe/
+          if-no-files-found: ignore
