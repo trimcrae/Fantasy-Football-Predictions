@@ -19,5 +19,7 @@ qb:
   default_tier: average
 
 simulation:
-  scenarios: 20000
+  # 100k seasons: the standard error on a ~1% survival probability is about 0.03 points, so
+  # entries and options can be told apart; 20k was visibly noisy (about 0.07 points).
+  scenarios: 100000
   seed: 7

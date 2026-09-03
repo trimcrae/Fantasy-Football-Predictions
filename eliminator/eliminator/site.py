@@ -317,6 +317,11 @@ def _pct(x, digits: int = 1) -> str:
     return "" if x is None else f"{100 * float(x):.{digits}f}%"
 
 
+def _surv(x) -> str:
+    """Season survival to a precision the simulation supports: 0.9%, 1.2%, 17.1%."""
+    return _pct(x, 1)
+
+
 def _spread(x) -> str:
     return "" if x is None else f"{float(x):+.1f}"
 
@@ -506,7 +511,7 @@ def render_week_page(season: int, week: int, snaps: list[dict], games: pd.DataFr
         # options
         if s.get("options"):
             whys = ex.get("options") or []
-            rows = "".join(f"<tr><td>{_team(o['team'])}</td><td>{_meter(o['p_now'])}</td><td class=\"n\">{_pct(o['p_season'], 2)}</td><td class=\"n reason\">{_pct(o['score'], 2)}</td>"
+            rows = "".join(f"<tr><td>{_team(o['team'])}</td><td>{_meter(o['p_now'])}</td><td class=\"n\">{_surv(o['p_season'])}</td><td class=\"n reason\">{_pct(o['score'], 2)}</td>"
                            f"<td class=\"plan mh\">{_esc(' '.join(o['plan']))}</td><td class=\"reason\">{_esc(whys[i]) if i < len(whys) else ''}</td></tr>" for i, o in enumerate(s["options"]))
             sec.append(f"<div class=\"card\"><h2>This week's options</h2><div class=\"sub\">Use the team now and play the rest of the season optimally. P(season) is the chance of surviving the season; Details adds the ranking score and the reasoning.</div>"
                        f"<div class=\"tw\"><table><thead><tr><th>team</th><th>win now</th><th class=\"n\">P(season)</th><th class=\"n reason\">score</th><th class=\"mh\">rest of the plan</th><th class=\"reason\">why</th></tr></thead><tbody>{rows}</tbody></table></div></div>")
@@ -534,7 +539,7 @@ def render_week_page(season: int, week: int, snaps: list[dict], games: pd.DataFr
                     continue
                 cells = "".join(f"<td class=\"{'now' if i == 0 else ''}\" title=\"{_pct(step['p'])}\">{_esc(step['team'])}</td>" for i, step in enumerate(pl["path"]))
                 ewhy = (ex.get("entries") or {}).get(pl["entry"], "")
-                trs.append(f"<tr title=\"{_esc(ewhy)}\"><td>#{_esc(pl['entry'])}</td><td class=\"n\">{_pct(pl.get('p_season'), 2)}</td>{cells}</tr>")
+                trs.append(f"<tr title=\"{_esc(ewhy)}\"><td>#{_esc(pl['entry'])}</td><td class=\"n\">{_surv(pl.get('p_season'))}</td>{cells}</tr>")
             more.append(f"<details><summary>Per-entry season plans</summary><div class=\"sub\">This week first; later weeks only justify it and re-solve every run. Hover a cell for its probability.</div>"
                         f"<div class=\"tw\"><table class=\"grid-t\"><thead><tr><th>entry</th><th class=\"n\">P(season)</th>{head_cells}</tr></thead><tbody>{''.join(trs)}</tbody></table></div></details>")
         # picks on file

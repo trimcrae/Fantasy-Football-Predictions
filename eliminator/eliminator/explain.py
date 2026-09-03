@@ -136,7 +136,7 @@ def explain_summary(res: PlanResult, cfg: dict | None = None) -> str:
             f"if they were independent that would be {_pct(indep, 1)}, but they share teams, so {_pct(res.summary['p_any'], 1)}.")
 
 
-def explain_option(res: PlanResult, option, best) -> str:
+def explain_option(res: PlanResult, option, best, cfg: dict | None = None) -> str:
     """Why an alternative ranks where it does."""
     p = res.projection
     if option is best:
@@ -150,8 +150,13 @@ def explain_option(res: PlanResult, option, best) -> str:
     else:
         out += " Same plan after."
     sim, bsim = option.detail.get("sim"), best.detail.get("sim")
-    if sim is not None and bsim is not None and sim > bsim:
-        out += " Higher P(season) yet ranked lower: the score trusts this week's line more than later projections."
+    if sim is not None and bsim is not None:
+        n = float(((cfg or {}).get("simulation") or {}).get("scenarios", 20000))
+        se = np.sqrt(max(sim * (1 - sim), 1e-12) / n + max(bsim * (1 - bsim), 1e-12) / n)
+        if abs(sim - bsim) < 2 * se:
+            out += " P(season) is within simulation noise of the top row."
+        elif sim > bsim:
+            out += " Higher P(season) yet ranked lower: the score trusts this week's line more than later projections."
     return out
 
 
@@ -193,6 +198,9 @@ def notes(res: PlanResult, cfg: dict | None = None) -> list[str]:
     else:
         out.append(f"How much a posted line can still move is a default (about {np.sqrt(float(m.get('posted_line_var_a', 1.0)) + float(m.get('posted_line_var_b', 1.0))):.1f} pts one week out) until enough archived lines have closed to fit it.")
     out.append("Percentages for later weeks are deliberately pulled toward 50% because far-off games are trusted much less; the season survival percentages are not.")
+    n = int(((cfg or {}).get("simulation") or {}).get("scenarios", 20000))
+    se = 2 * 100 * np.sqrt(0.01 * 0.99 / n)
+    out.append(f"Survival percentages come from {n:,} simulated seasons; differences under about {se:.2f} points are noise.")
     out.append("A tie is a loss. Only this week's pick is a recommendation; later weeks re-solve every run.")
     return out
 
@@ -214,7 +222,7 @@ def explain_all(res: PlanResult, cfg: dict | None = None) -> dict:
         "summary": explain_summary(res, cfg),
         "exposure": explain_exposure(res) if res.state.mode != "strikes" else "",
         "picks": picks,
-        "options": [explain_option(res, o, best) for o in res.options[:16]] if best else [],
+        "options": [explain_option(res, o, best, cfg) for o in res.options[:16]] if best else [],
         "entries": {e.entry_id: explain_entry(res, e) for e in res.entries},
         "notes": notes(res, cfg),
     }
