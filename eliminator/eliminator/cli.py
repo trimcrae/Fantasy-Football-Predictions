@@ -255,6 +255,8 @@ def cmd_backtest(args):
     cfg = load_config()
     if args.discount is not None:
         cfg["model"]["future_discount"] = args.discount
+    if args.allocation:
+        cfg["portfolio"]["allocation_view"] = args.allocation
     df = load_games(refresh=False)
     last_complete = max(s for s in df["season"].unique() if regular_season(df, s)["played"].all())
     seasons = _seasons(args.seasons, list(range(2015, last_complete + 1)))
@@ -351,6 +353,7 @@ def main(argv=None):
     p.add_argument("--strikes", type=int, default=2); p.add_argument("--entries", type=int, default=25)
     p.add_argument("--scenarios", type=int, default=400)
     p.add_argument("--discount", type=float); p.add_argument("--sweep", action="store_true")
+    p.add_argument("--allocation", choices=["planning", "calibrated"], help="which simulation scores the multi-entry split")
     p.add_argument("--discounts", help="comma list for --sweep, e.g. 8,16,32")
     p.add_argument("--verbose", action="store_true"); p.add_argument("--out")
     p.set_defaults(fn=cmd_backtest)

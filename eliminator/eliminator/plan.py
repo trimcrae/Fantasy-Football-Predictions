@@ -29,7 +29,9 @@ class PlanResult:
     statuses: list[EntryStatus]
     summary: dict
     options: list[Path] = field(default_factory=list)
-    wins: np.ndarray | None = None
+    wins: np.ndarray | None = None            # calibrated simulation (reporting)
+    wins_policy: np.ndarray | None = None     # discounted simulation (planning view)
+    allocation_view: str = "planning"
 
     # ---- convenience -------------------------------------------------------------
     def this_week(self) -> pd.DataFrame:
@@ -118,7 +120,9 @@ def make_plan(state: PoolState, games_all: pd.DataFrame, cfg: dict, ledger: list
             if e0.path is not None:
                 e0.alive_mask = path_alive(wins, e0.path.teams, e0.strikes_left)
     else:
-        build_portfolio(P, pickable_now, entries, wins_policy, cfg, objective=objective)
+        # allocation view: the discounted simulation (planning view, default) or the calibrated one
+        alloc = wins if str(cfg.get("portfolio", {}).get("allocation_view", "planning")) == "calibrated" else wins_policy
+        build_portfolio(P, pickable_now, entries, alloc, cfg, objective=objective)
         for e in entries:
             if e.alive and e.path is not None:
                 e.alive_mask = path_alive(wins, e.path.teams, e.strikes_left)
@@ -126,7 +130,9 @@ def make_plan(state: PoolState, games_all: pd.DataFrame, cfg: dict, ledger: list
     if live and live[0].path is not None:
         summary["p_plugin_first"] = live[0].path.value
     return PlanResult(season=season, week=week, state=state, projection=proj, strength=strength, entries=entries,
-                      statuses=statuses, summary=summary, options=options, wins=wins if keep_wins else None)
+                      statuses=statuses, summary=summary, options=options, wins=wins if keep_wins else None,
+                      wins_policy=wins_policy if keep_wins else None,
+                      allocation_view=str(cfg.get("portfolio", {}).get("allocation_view", "planning")))
 
 
 def commit_picks(result: PlanResult) -> int:

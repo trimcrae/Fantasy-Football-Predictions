@@ -27,7 +27,7 @@
   17,
   18
  ],
- "generated_at": "2026-09-03T13:57:05.799208-04:00",
+ "generated_at": "2026-09-03T14:11:34.563536-04:00",
  "ratings_source": "market",
  "n_lines_posted": 112,
  "n_priced_games": 112,
@@ -1077,23 +1077,8 @@
    "A tie is a loss. Only this week's pick is a recommendation; later weeks re-solve every run."
   ]
  },
+ "allocation_view": "planning",
  "revisions": [
-  {
-   "generated_at": "2026-09-03T10:39:46.852271-04:00",
-   "picks": "LAC"
-  },
-  {
-   "generated_at": "2026-09-03T10:45:55.447148-04:00",
-   "picks": "LAC"
-  },
-  {
-   "generated_at": "2026-09-03T11:02:52.526854-04:00",
-   "picks": "LAC"
-  },
-  {
-   "generated_at": "2026-09-03T11:38:12.558749-04:00",
-   "picks": "LAC"
-  },
   {
    "generated_at": "2026-09-03T11:39:27.596344-04:00",
    "picks": "LAC"
@@ -1156,6 +1141,22 @@
   },
   {
    "generated_at": "2026-09-03T13:44:48.370856-04:00",
+   "picks": "LAC"
+  },
+  {
+   "generated_at": "2026-09-03T13:57:05.799208-04:00",
+   "picks": "LAC"
+  },
+  {
+   "generated_at": "2026-09-03T14:01:05.301388-04:00",
+   "picks": "LAC"
+  },
+  {
+   "generated_at": "2026-09-03T14:03:15.717960-04:00",
+   "picks": "LAC"
+  },
+  {
+   "generated_at": "2026-09-03T14:09:11.390571-04:00",
    "picks": "LAC"
   }
  ]

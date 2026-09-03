@@ -27,7 +27,7 @@
   17,
   18
  ],
- "generated_at": "2026-09-03T13:56:04.500935-04:00",
+ "generated_at": "2026-09-03T14:10:34.670888-04:00",
  "ratings_source": "market",
  "n_lines_posted": 112,
  "n_priced_games": 112,
@@ -397,7 +397,7 @@
    "p_now": 0.8119,
    "score": 0.0009,
    "p_season": 0.0087,
-   "p_pool_add": 0.0022,
+   "p_pool_add": 0.0014,
    "plan": [
     "SF",
     "DET",
@@ -423,7 +423,7 @@
    "p_now": 0.7659,
    "score": 0.0008,
    "p_season": 0.0088,
-   "p_pool_add": 0.0,
+   "p_pool_add": 0.0011,
    "plan": [
     "LAC",
     "SF",
@@ -449,7 +449,7 @@
    "p_now": 0.718,
    "score": 0.0008,
    "p_season": 0.0076,
-   "p_pool_add": 0.0021,
+   "p_pool_add": 0.0009,
    "plan": [
     "LAC",
     "SF",
@@ -475,7 +475,7 @@
    "p_now": 0.6575,
    "score": 0.0007,
    "p_season": 0.0071,
-   "p_pool_add": 0.002,
+   "p_pool_add": 0.0009,
    "plan": [
     "LAC",
     "SF",
@@ -501,7 +501,7 @@
    "p_now": 0.6369,
    "score": 0.0007,
    "p_season": 0.0067,
-   "p_pool_add": 0.002,
+   "p_pool_add": 0.0009,
    "plan": [
     "LAC",
     "SF",
@@ -527,7 +527,7 @@
    "p_now": 0.6225,
    "score": 0.0007,
    "p_season": 0.0068,
-   "p_pool_add": 0.0021,
+   "p_pool_add": 0.0014,
    "plan": [
     "LAC",
     "SF",
@@ -553,7 +553,7 @@
    "p_now": 0.6369,
    "score": 0.0007,
    "p_season": 0.0073,
-   "p_pool_add": 0.001,
+   "p_pool_add": 0.0007,
    "plan": [
     "LAC",
     "SF",
@@ -579,7 +579,7 @@
    "p_now": 0.583,
    "score": 0.0007,
    "p_season": 0.0061,
-   "p_pool_add": 0.0019,
+   "p_pool_add": 0.0011,
    "plan": [
     "LAC",
     "SF",
@@ -605,7 +605,7 @@
    "p_now": 0.6092,
    "score": 0.0006,
    "p_season": 0.006,
-   "p_pool_add": 0.0023,
+   "p_pool_add": 0.0013,
    "plan": [
     "SF",
     "DET",
@@ -631,7 +631,7 @@
    "p_now": 0.6369,
    "score": 0.0006,
    "p_season": 0.0061,
-   "p_pool_add": 0.0015,
+   "p_pool_add": 0.0006,
    "plan": [
     "LAC",
     "SF",
@@ -657,7 +657,7 @@
    "p_now": 0.5427,
    "score": 0.0006,
    "p_season": 0.0057,
-   "p_pool_add": 0.0018,
+   "p_pool_add": 0.0009,
    "plan": [
     "LAC",
     "SF",
@@ -683,7 +683,7 @@
    "p_now": 0.6092,
    "score": 0.0006,
    "p_season": 0.0059,
-   "p_pool_add": 0.0021,
+   "p_pool_add": 0.0007,
    "plan": [
     "SF",
     "DET",
@@ -709,7 +709,7 @@
    "p_now": 0.5721,
    "score": 0.0006,
    "p_season": 0.0054,
-   "p_pool_add": 0.0019,
+   "p_pool_add": 0.0008,
    "plan": [
     "SF",
     "DET",
@@ -735,7 +735,7 @@
    "p_now": 0.5721,
    "score": 0.0006,
    "p_season": 0.0055,
-   "p_pool_add": 0.0017,
+   "p_pool_add": 0.001,
    "plan": [
     "LAC",
     "SF",
@@ -761,7 +761,7 @@
    "p_now": 0.5174,
    "score": 0.0006,
    "p_season": 0.0055,
-   "p_pool_add": 0.0015,
+   "p_pool_add": 0.0005,
    "plan": [
     "LAC",
     "SF",
@@ -787,7 +787,7 @@
    "p_now": 0.4826,
    "score": 0.0005,
    "p_season": 0.0055,
-   "p_pool_add": 0.002,
+   "p_pool_add": 0.0007,
    "plan": [
     "LAC",
     "SF",
@@ -3936,7 +3936,7 @@
     "probability": "From the betting odds: BAL favoured by 3.2 on the road.",
     "timing": "BAL's 6th-best spot of 17; best is 72% in wk 4 vs TEN, but far-off games are deliberately trusted less.",
     "not_used": "Passed: LAC 81% saved for wk 16; JAX 77% saved for wk 12; DET 72% saved for wk 3.",
-    "hedge": "Its path overlaps the other 24 entries least: it survives 0.23% of the seasons where they are all dead, about level with LAC 0.22%, SEA 0.21%, DET 0.21%; a coin flip between them. On its own it would rank 10th."
+    "hedge": "As the pool's last entry it adds 0.13%: how often its best path survives while the other 24 entries are all dead, about level with LAC 0.14%, PIT 0.14%, CHI 0.11%; a coin flip between them. On its own it would rank 10th."
    }
   },
   "options": [
@@ -3994,23 +3994,8 @@
    "A tie is a loss. Only this week's pick is a recommendation; later weeks re-solve every run."
   ]
  },
+ "allocation_view": "planning",
  "revisions": [
-  {
-   "generated_at": "2026-09-03T10:39:40.528709-04:00",
-   "picks": "LAC x17, JAX x4, CHI, BAL, DET, KC"
-  },
-  {
-   "generated_at": "2026-09-03T10:45:49.550443-04:00",
-   "picks": "LAC x17, JAX x4, CHI, BAL, DET, KC"
-  },
-  {
-   "generated_at": "2026-09-03T11:02:46.747102-04:00",
-   "picks": "LAC x17, JAX x4, CHI, BAL, DET, KC"
-  },
-  {
-   "generated_at": "2026-09-03T11:38:09.406628-04:00",
-   "picks": "LAC x12, JAX x10, LA, BAL, DET"
-  },
   {
    "generated_at": "2026-09-03T11:39:24.416026-04:00",
    "picks": "LAC x12, JAX x10, LA, BAL, DET"
@@ -4073,6 +4058,22 @@
   },
   {
    "generated_at": "2026-09-03T13:43:58.905429-04:00",
+   "picks": "LAC x15, JAX x9, BAL"
+  },
+  {
+   "generated_at": "2026-09-03T13:56:04.500935-04:00",
+   "picks": "LAC x15, JAX x9, BAL"
+  },
+  {
+   "generated_at": "2026-09-03T14:00:10.092826-04:00",
+   "picks": "LAC x15, JAX x9, BAL"
+  },
+  {
+   "generated_at": "2026-09-03T14:02:15.426110-04:00",
+   "picks": "LAC x13, JAX x6, CHI, CIN, BAL, DET, SEA, DAL"
+  },
+  {
+   "generated_at": "2026-09-03T14:08:14.402640-04:00",
    "picks": "LAC x15, JAX x9, BAL"
   }
  ]
