@@ -67,6 +67,19 @@ jobs:
         working-directory: eliminator
         run: python -m eliminator site --offline --out ../_site
 
+      - name: Make sure Pages deploys from this workflow, not from the branch
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          api="https://api.github.com/repos/${{ github.repository }}/pages"
+          hdr=(-H "Authorization: Bearer $GH_TOKEN" -H "Accept: application/vnd.github+json")
+          cur=$(curl -sS "${hdr[@]}" "$api" || true)
+          echo "current: $cur"
+          if ! echo "$cur" | grep -q '"build_type": *"workflow"'; then
+            echo "switching Pages source to GitHub Actions"
+            curl -sS -X PUT "${hdr[@]}" "$api" -d '{"build_type":"workflow"}' -o /dev/null -w 'PUT status %{http_code}\n' || true
+          fi
+
       - uses: actions/configure-pages@v5
         with:
           enablement: true
@@ -84,3 +97,17 @@ jobs:
     steps:
       - id: deployment
         uses: actions/deploy-pages@v4
+
+      - name: Check the live page is this site
+        run: |
+          url="${{ steps.deployment.outputs.page_url }}"
+          for i in 1 2 3 4 5 6; do
+            body=$(curl -sSL "$url" || true)
+            if echo "$body" | grep -q "<title>Eliminator picks"; then
+              echo "ok: $url serves the eliminator site"; exit 0
+            fi
+            echo "attempt $i: not there yet"; sleep 20
+          done
+          echo "$body" | head -c 600; echo
+          echo "::error::$url is not serving the eliminator site (Pages source is probably still the branch; set it to GitHub Actions in Settings > Pages)"
+          exit 1
