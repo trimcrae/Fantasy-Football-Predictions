@@ -40,7 +40,8 @@ DEFAULTS: dict[str, Any] = {
         "auto_from_injuries": True,      # add starters with a game designation to the ledger automatically
     },
     "simulation": {"scenarios": 20000, "seed": 7, "discount": 1.0},  # discount: drift multiplier, 1 = calibrated
-    "portfolio": {"candidates_per_slot": 60, "improve_passes": 2},
+    "portfolio": {"candidates_per_slot": 60, "improve_passes": 2,
+                  "allocation_view": "planning"},   # planning (discounted) | calibrated: which simulation scores the 25-entry split
     "data": {"max_age_hours": 6.0, "odds_api_key": None, "odds_api_region": "us"},
 }
 

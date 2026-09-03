@@ -104,36 +104,73 @@ def explain_not_used(res: PlanResult, entry, team: str) -> str:
     return "Passed: " + "; ".join(bits) + "."
 
 
-def explain_hedge(res: PlanResult, entry, team: str) -> str:
-    """Why this team for an entry that is not on the crowd: its value when every other entry is dead."""
+def pool_add_values(res: PlanResult) -> dict[int, float]:
+    """What each option's team would add to the pool as its last entry.
+
+    For the entry in the smallest group this week, and for each team on the options list,
+    the portfolio's own candidate generator proposes diversified paths that start with that
+    team; the value is the best candidate's survival in the seasons where every other entry
+    is dead. (The single-entry-optimal path is not used on its own: it can coincide with a
+    path an existing entry already follows, which would score zero by construction.)
+    """
+    from .optimize.portfolio import EntryPlan, _candidates
     from .optimize.simulate import path_alive
-    if res.wins is None or entry.path is None or res.state.mode == "strikes":
-        return ""
-    others = [e.alive_mask for e in res.entries if e is not entry and e.alive and e.alive_mask is not None]
-    if not others:
-        return ""
-    dead = ~np.vstack(others).any(axis=0)
-    chosen = float((path_alive(res.wins, entry.path.teams, entry.strikes_left) & dead).mean())
-    alts = []
-    for o in res.options[:12]:
-        t = TEAMS[o.teams[0]]
-        if t == team or not entry.available[o.teams[0]]:
+    # score on the same simulation the portfolio was built on, so the column agrees with the split
+    W = res.wins if res.allocation_view == "calibrated" or res.wins_policy is None else res.wins_policy
+    if W is None:
+        return {}
+    live = [e for e in res.entries if e.alive and e.path is not None]
+    if len(live) < 2:
+        return {}
+    counts: dict[int, int] = {}
+    for e in live:
+        counts[e.path.teams[0]] = counts.get(e.path.teams[0], 0) + 1
+    star = min(live, key=lambda e: counts[e.path.teams[0]])
+    others = [e for e in live if e is not star]
+    dead = ~np.vstack([path_alive(W, e.path.teams, e.strikes_left) for e in others]).any(axis=0)
+    P = res.projection.prob
+    usage = np.zeros(P.shape)
+    for e in others:
+        for w, t in enumerate(e.path.teams):
+            usage[w, t] += 1.0
+    rng = np.random.default_rng(11)
+    out: dict[int, float] = {}
+    for i, o in enumerate(res.options[:16]):
+        t = o.teams[0]
+        if not star.available[t]:
             continue
-        alts.append((t, float((path_alive(res.wins, o.teams, entry.strikes_left) & dead).mean())))
-    alts.sort(key=lambda x: -x[1])
-    n_others = len(others)
-    n = res.wins.shape[0]
-    se = float(np.sqrt(2 * max(chosen * (1 - chosen), 1e-12) / n))   # error on a difference of two such rates
+        fixed = dict(star.fixed); fixed[0] = int(t)
+        probe = EntryPlan(entry_id="probe", available=star.available, fixed=fixed, strikes_left=star.strikes_left)
+        cands = _candidates(P, res.projection.pickable[0], probe, usage, 40, rng)
+        if not cands:
+            continue
+        out[i] = max(float((path_alive(W, c.teams, star.strikes_left) & dead).mean()) for c in cands)
+    return out
+
+
+def explain_hedge(res: PlanResult, entry, team: str, adds: dict[int, float] | None = None) -> str:
+    """Why this team for an entry on its own: what its best path adds when every other entry is dead."""
+    if res.state.mode == "strikes" or entry.path is None:
+        return ""
+    adds = pool_add_values(res) if adds is None else adds
+    if not adds:
+        return ""
+    by_team = {TEAMS[res.options[i].teams[0]]: v for i, v in adds.items()}
+    if team not in by_team:
+        return ""
+    mine = by_team[team]
+    n = (res.wins_policy if res.allocation_view != "calibrated" and res.wins_policy is not None else res.wins).shape[0]
+    se = float(np.sqrt(2 * max(mine * (1 - mine), 1e-12) / n))
+    others = sorted(((t, v) for t, v in by_team.items() if t != team), key=lambda x: -x[1])
+    n_others = sum(1 for x in res.entries if x.alive and x is not entry)
     alone_rank = 1 + sum(1 for o in res.options if TEAMS[o.teams[0]] != team and (o.detail.get("sim") or 0) > (entry.alive_mask.mean() if entry.alive_mask is not None else 0))
-    head = f"Its path overlaps the other {n_others} entries least: it survives {_pct(chosen, 2)} of the seasons where they are all dead"
-    if not alts:
-        return head + "."
-    close = [f"{t} {_pct(v, 2)}" for t, v in alts[:3] if abs(chosen - v) < 2 * se]
+    head = f"As the pool's last entry it adds {_pct(mine, 2)}: how often its best path survives while the other {n_others} entries are all dead"
+    close = [f"{t} {_pct(v, 2)}" for t, v in others[:3] if abs(mine - v) < 2 * se]
     if close:
         return f"{head}, about level with {', '.join(close)}; a coin flip between them. On its own it would rank {_ordinal(alone_rank)}."
-    if chosen >= alts[0][1]:
-        return f"{head}, the most of any team ({alts[0][0]} {_pct(alts[0][1], 2)}). On its own it would rank {_ordinal(alone_rank)}."
-    return f"{head}; {alts[0][0]} would survive {_pct(alts[0][1], 2)} of them."
+    if others and mine >= others[0][1]:
+        return f"{head}, the most of any team ({others[0][0]} {_pct(others[0][1], 2)}). On its own it would rank {_ordinal(alone_rank)}."
+    return f"{head}; {others[0][0]} would add {_pct(others[0][1], 2)}." if others else head + "."
 
 
 def explain_exposure(res: PlanResult) -> str:
@@ -246,11 +283,12 @@ def explain_all(res: PlanResult, cfg: dict | None = None) -> dict:
         entries_by_team.setdefault(r["team"], []).append(r["entry"])
     ent = {e.entry_id: e for e in res.entries}
     top = max(entries_by_team, key=lambda t: len(entries_by_team[t])) if entries_by_team else None
+    adds = pool_add_values(res) if res.state.mode != "strikes" and any(len(v) <= 2 for v in entries_by_team.values()) else {}
     for team, eids in entries_by_team.items():
         e0 = ent[str(eids[0])]
         picks[team] = {"probability": explain_probability(res, team, cfg), "timing": explain_timing(res, team),
                        "not_used": explain_not_used(res, e0, team),
-                       "hedge": explain_hedge(res, e0, team) if team != top and len(eids) <= 2 else ""}
+                       "hedge": explain_hedge(res, e0, team, adds) if team != top and len(eids) <= 2 else ""}
     best = res.options[0] if res.options else None
     return {
         "summary": explain_summary(res, cfg),

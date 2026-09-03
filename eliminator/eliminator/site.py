@@ -80,7 +80,8 @@ def build_snapshot(res: PlanResult, pool: str, generated_at: dt.datetime, previo
                       "qb_note": str(r.qb_note or "")})
 
     options = []
-    pool_add = _pool_add_values(res) if s.mode != "strikes" else {}
+    from .explain import pool_add_values
+    pool_add = pool_add_values(res) if s.mode != "strikes" else {}
     for i, o in enumerate(res.options[:16]):
         options.append({"team": TEAMS[o.teams[0]], "p_now": _f(o.detail.get("now_prob", 0.0)), "score": _f(o.value),
                         "p_season": _f(o.detail.get("sim")), "p_pool_add": _f(pool_add.get(i)), "plan": [TEAMS[t] for t in o.teams[1:]]})
@@ -133,26 +134,9 @@ def build_snapshot(res: PlanResult, pool: str, generated_at: dt.datetime, previo
         "ratings_source": st.source, "n_lines_posted": st.detail.get("n_lines"), "n_priced_games": n_lines,
         "summary": summary, "picks": picks, "options": options, "board": board, "plans": plans,
         "statuses": statuses, "ratings": {k: _f(v) for k, v in res.strength.healthy.items()},
-        "qb_situations": qb_situations, "explain": explain,
+        "qb_situations": qb_situations, "explain": explain, "allocation_view": res.allocation_view,
         "revisions": revisions,
     }
-
-
-def _pool_add_values(res: PlanResult) -> dict[int, float]:
-    """For each option path: how often it survives while every other entry is dead, taking the
-    entry in the smallest group this week as the one it would replace."""
-    from .optimize.simulate import path_alive
-    if res.wins is None:
-        return {}
-    live = [e for e in res.entries if e.alive and e.path is not None and e.alive_mask is not None]
-    if len(live) < 2:
-        return {}
-    counts: dict[int, int] = {}
-    for e in live:
-        counts[e.path.teams[0]] = counts.get(e.path.teams[0], 0) + 1
-    star = min(live, key=lambda e: counts[e.path.teams[0]])
-    dead = ~np.vstack([e.alive_mask for e in live if e is not star]).any(axis=0)
-    return {i: float((path_alive(res.wins, o.teams, star.strikes_left) & dead).mean()) for i, o in enumerate(res.options[:16])}
 
 
 def _pick_summary(picks: list[dict]) -> str:
@@ -540,9 +524,11 @@ def render_week_page(season: int, week: int, snaps: list[dict], games: pd.DataFr
                 rows.append(f"<div class=\"row\"><div>{_team(o['team'], 26)}</div><div class=\"mid\">{_meter(o['p_now'])}</div>{right}"
                             f"<div class=\"m why more\"><span class=\"sub\">score {_pct(o['score'], 2)}</span> &middot; {_esc(why)}<br><span class=\"plan\">{_esc(' '.join(o['plan']))}</span></div></div>")
             if multi:
+                view = ("on the planning view, which trusts later weeks much less, so these are smaller than the survival numbers"
+                        if s.get("allocation_view", "planning") != "calibrated" else "on the same simulation as the survival numbers")
                 intro = (f"One entry uses the team now, then plays the rest of the season optimally. <b>Alone</b> is that one path's chance of surviving the season. "
-                         f"<b>Adds</b> is what the path adds to the pool as your {n_live}th entry: it counts only in the seasons where the other {n_live - 1} are all dead, "
-                         f"so a path that survives in the same seasons as the crowd adds little. The pool is built on Adds. Details shows the ranking score, the reasoning and the rest of the plan.")
+                         f"<b>Adds</b> is what the best path behind that team adds to the pool as your {n_live}th entry: it counts only in the seasons where the other {n_live - 1} are all dead, "
+                         f"so a path that survives in the same seasons as the crowd adds little. The split is built on Adds, scored {view}. Details shows the ranking score, the reasoning and the rest of the plan.")
             else:
                 intro = "Use the team now and play the rest of the season optimally. The right-hand number is the chance of surviving the season; Details adds the ranking score, the reasoning and the rest of the plan."
             sec.append(f"<div class=\"card\"><h2>This week's options</h2><div class=\"sub\">{intro}</div><div class=\"picks-list opts\">{''.join(rows)}</div></div>")
