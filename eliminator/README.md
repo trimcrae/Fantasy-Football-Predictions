@@ -39,6 +39,34 @@ Other commands: `calibrate` (refit all model parameters from history, writes
 `calibration.json`), `backtest` (replay past seasons with as-of information),
 `qb` (print the week's QB injury report), `record` (enter a pick by hand).
 
+## Picks site (GitHub Pages)
+
+`.github/workflows/eliminator-pages.yml` publishes the recommendations for every pool format
+to GitHub Pages at `https://<user>.github.io/Fantasy-Football-Predictions/`. It runs every
+morning, Thursday evening and Sunday late morning during the season (and on any push that
+touches `eliminator/`), and it can be started by hand from the Actions tab.
+
+Each run does three things:
+
+1. `python -m eliminator snapshot` refreshes the feeds, plans every pool in `state/` and
+   writes `site/data/<season>/w<NN>-<pool>.json`. The current week's file is overwritten on
+   every run (earlier recommendations that week are kept inside it as revisions); once the
+   season moves on, the file is frozen and becomes the record of what was recommended.
+2. The snapshot and the pool files are committed back to `master`. Before planning, any pick a
+   pool file is missing for a game that has already kicked off is filled in from that week's
+   snapshot, so the entries stay alive from week to week without anyone running
+   `plan --commit`. A pick you enter yourself (`record`, or editing the YAML) is never touched,
+   and if you enter it before kickoff the planner locks it exactly as it would your own.
+3. `python -m eliminator site` renders the snapshots: a landing page with this week's picks
+   per format and a week-by-week table graded against final scores, plus one page per week
+   with the board, the options table and every entry's season plan. Raw JSON is served under
+   `data/`.
+
+To view locally: `python -m eliminator site --offline` writes `site/build/`; open
+`site/build/index.html`. If the Pages site does not appear after the first run, enable Pages
+in the repository settings with **Source: GitHub Actions**. Put a The Odds API key in the
+`ODDS_API_KEY` repository secret to price game-day lines from live books.
+
 ## Data sources (all free, no keys)
 
 * **Schedule, lines, rest days, results, starting QBs**: nflverse `games.csv`
@@ -199,6 +227,8 @@ eliminator/
   state/strikes2.yaml    two-strike pool picks
   state/qb_status.yaml   QB availability ledger
   state/overrides.yaml   manual line overrides and week-18 rest risks
+  site/data/             weekly recommendation snapshots (written by `snapshot`, committed by CI)
+  site/build/            rendered site (ignored by git)
   data/cache/            downloaded feeds (ignored by git)
   eliminator/            the package
     data/                schedule (nflverse), inpredictable scraper, injuries
