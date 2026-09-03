@@ -1,8 +1,10 @@
 # Weekly survivor-pool recommendations, published to GitHub Pages.
 #
-# Every run: refresh the nflverse feed, plan both pools, save the week's snapshot under
-# eliminator/site/data/, commit that (plus any picks the pipeline filled in for games that
-# have kicked off) back to master, then render the site and deploy it.
+# Pages serves the master branch (root). Every run: refresh the nflverse feed, plan both
+# pools, save the week's snapshot under eliminator/site/data/, render the site into picks/
+# at the repository root, and commit all of that (plus any picks the pipeline filled in for
+# games that have kicked off) back to master. GitHub's own Pages build then publishes it at
+# https://<owner>.github.io/<repo>/picks/ ; the root index.html forwards there.
 name: Eliminator picks site
 
 on:
@@ -20,8 +22,6 @@ on:
 
 permissions:
   contents: write
-  pages: write
-  id-token: write
 
 concurrency:
   group: eliminator-pages
@@ -30,8 +30,6 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
-    outputs:
-      legacy: ${{ steps.pages_source.outputs.legacy }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -52,79 +50,50 @@ jobs:
           ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
         run: python -m eliminator snapshot
 
-      - name: Commit snapshot and filled-in picks
+      - name: Render site into picks/
+        working-directory: eliminator
+        run: |
+          rm -rf ../picks
+          python -m eliminator site --offline --out ../picks
+          printf '<!doctype html><meta charset="utf-8"><meta http-equiv="refresh" content="0; url=picks/"><title>Eliminator picks</title><p><a href="picks/">Eliminator picks</a></p>\n' > ../index.html
+          touch ../.nojekyll
+
+      - name: Commit snapshot, filled-in picks and the rendered site
+        id: commit
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add eliminator/site/data eliminator/state
+          git add eliminator/site/data eliminator/state picks index.html .nojekyll
           if git diff --cached --quiet; then
             echo "nothing to commit"
+            echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
           else
             git commit -m "eliminator: snapshot $(date -u +'%Y-%m-%d %H:%M UTC')"
             git pull --rebase origin master
             git push origin HEAD:master
+            echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Render site
-        working-directory: eliminator
-        run: python -m eliminator site --offline --out ../_site
-
-      - name: Check the Pages source (must be GitHub Actions, not the branch)
-        id: pages_source
+      - name: Wait for the Pages build of that commit and check the live page
         env:
           GH_TOKEN: ${{ github.token }}
+          SHA: ${{ steps.commit.outputs.sha }}
         run: |
           api="https://api.github.com/repos/${{ github.repository }}/pages"
           hdr=(-H "Authorization: Bearer $GH_TOKEN" -H "Accept: application/vnd.github+json")
-          get() { curl -sS "${hdr[@]}" "$api" | python3 -c 'import sys,json; d=json.load(sys.stdin); print(d.get("build_type",""), d.get("source",{}).get("branch",""), d.get("source",{}).get("path",""))' 2>/dev/null || echo "unknown"; }
-          read -r kind branch path <<< "$(get)"
-          echo "Pages source: build_type=$kind branch=$branch path=$path"
-          if [ "$kind" != "workflow" ]; then
-            # The workflow token usually may not change this (403); try anyway, then re-read.
-            curl -sS -X PUT "${hdr[@]}" "$api" -d '{"build_type":"workflow"}' -o /dev/null -w 'PUT status %{http_code}\n' || true
-            read -r kind branch path <<< "$(get)"
-          fi
-          if [ "$kind" = "workflow" ]; then
-            echo "legacy=false" >> "$GITHUB_OUTPUT"
-          else
-            echo "legacy=true" >> "$GITHUB_OUTPUT"
-            echo "::warning::GitHub Pages is deploying from branch '$branch' ($path), which overwrites the site this workflow publishes. One-time fix: repository Settings > Pages > Build and deployment > Source: GitHub Actions."
-          fi
-
-      - uses: actions/configure-pages@v5
-        with:
-          enablement: true
-
-      - uses: actions/upload-pages-artifact@v3
-        with:
-          path: _site
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - id: deployment
-        uses: actions/deploy-pages@v4
-
-      - name: Check the live page is this site
-        env:
-          LEGACY: ${{ needs.build.outputs.legacy }}
-        run: |
-          url="${{ steps.deployment.outputs.page_url }}"
-          if [ "$LEGACY" = "true" ]; then
-            # the branch build triggered by this run's commit lands a minute or two later and replaces our deployment
-            echo "Pages source is the branch; waiting for that build to finish before checking"; sleep 150
-          fi
+          url="https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/picks/"
+          for i in $(seq 1 30); do
+            latest=$(curl -sS "${hdr[@]}" "$api/builds/latest" || true)
+            status=$(echo "$latest" | python3 -c 'import sys,json; d=json.load(sys.stdin); print(d.get("status",""), d.get("commit",""))' 2>/dev/null || echo "? ?")
+            echo "pages build: $status (want built $SHA)"
+            if [ "$status" = "built $SHA" ]; then break; fi
+            sleep 10
+          done
           for i in 1 2 3 4 5 6; do
-            body=$(curl -sSL "$url" || true)
-            if echo "$body" | grep -q "<title>Eliminator picks"; then
+            if curl -sSL "$url" | grep -q "<title>Eliminator picks"; then
               echo "ok: $url serves the eliminator site"; exit 0
             fi
-            echo "attempt $i: not there yet"; sleep 20
+            echo "attempt $i: not there yet"; sleep 15
           done
-          echo "--- what $url serves instead:"; echo "$body" | grep -o "<title>[^<]*</title>" || echo "$body" | head -c 400; echo
-          echo "::error::$url is not serving the eliminator site. GitHub Pages is set to deploy from the branch, which overwrites this workflow's deployment. One-time fix: repository Settings > Pages > Build and deployment > Source: GitHub Actions, then re-run this workflow."
+          echo "::error::$url is not serving the eliminator site yet. Pages must be set to deploy from branch master, folder / (root)."
           exit 1
