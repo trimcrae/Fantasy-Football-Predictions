@@ -62,10 +62,16 @@ Each run does three things:
    with the board, the options table and every entry's season plan. Raw JSON is served under
    `data/`.
 
+**One-time setting.** GitHub Pages must be set to deploy from this workflow, not from the
+branch: repository **Settings > Pages > Build and deployment > Source: GitHub Actions**. With
+the branch source, GitHub's own Jekyll build of the repository root runs on every push and
+replaces the site this workflow publishes; the workflow detects that state, warns in the
+build job and fails the deploy job with the same instruction (the workflow token is not
+allowed to change the setting itself).
+
 To view locally: `python -m eliminator site --offline` writes `site/build/`; open
-`site/build/index.html`. If the Pages site does not appear after the first run, enable Pages
-in the repository settings with **Source: GitHub Actions**. Put a The Odds API key in the
-`ODDS_API_KEY` repository secret to price game-day lines from live books.
+`site/build/index.html`. Put a The Odds API key in the `ODDS_API_KEY` repository secret to
+price game-day lines from live books.
 
 ## Data sources (all free, no keys)
 

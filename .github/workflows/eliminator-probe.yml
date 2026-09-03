@@ -96,6 +96,11 @@ jobs:
         working-directory: eliminator
         run: python -m eliminator update
 
+      - name: What the Pages URL serves right now
+        run: |
+          url="https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/"
+          echo "$url"; curl -sSL "$url" | grep -o "<title>[^<]*</title>" || echo "(no title / not reachable)"
+
       - uses: actions/upload-artifact@v4
         with:
           name: probe-pages
