@@ -27,7 +27,7 @@
   17,
   18
  ],
- "generated_at": "2026-09-03T10:34:57.477267-04:00",
+ "generated_at": "2026-09-03T10:39:40.528709-04:00",
  "ratings_source": "inpredictable",
  "n_lines_posted": 112,
  "n_priced_games": 112,
@@ -3912,6 +3912,10 @@
   {
    "generated_at": "2026-09-03T10:33:02.072316-04:00",
    "picks": "LAC x12, JAX x11, BAL, CIN"
+  },
+  {
+   "generated_at": "2026-09-03T10:34:57.477267-04:00",
+   "picks": "LAC x17, JAX x4, CHI, BAL, DET, KC"
   }
  ]
 }

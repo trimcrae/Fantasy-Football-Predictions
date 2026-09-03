@@ -27,7 +27,7 @@
   17,
   18
  ],
- "generated_at": "2026-09-03T10:35:03.792628-04:00",
+ "generated_at": "2026-09-03T10:39:46.852271-04:00",
  "ratings_source": "inpredictable",
  "n_lines_posted": 112,
  "n_priced_games": 112,
@@ -1031,6 +1031,10 @@
   },
   {
    "generated_at": "2026-09-03T10:33:10.733585-04:00",
+   "picks": "LAC"
+  },
+  {
+   "generated_at": "2026-09-03T10:35:03.792628-04:00",
    "picks": "LAC"
   }
  ]
