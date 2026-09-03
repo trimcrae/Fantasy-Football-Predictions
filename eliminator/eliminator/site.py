@@ -65,7 +65,7 @@ def _f(x) -> float | None:
 
 
 def build_snapshot(res: PlanResult, pool: str, generated_at: dt.datetime, previous: dict | None = None,
-                   ledger: list | None = None) -> dict:
+                   ledger: list | None = None, cfg: dict | None = None) -> dict:
     """Serialise a plan result. ``previous`` is the snapshot this one replaces (same week)."""
     p = res.projection
     st = res.strength
@@ -116,6 +116,9 @@ def build_snapshot(res: PlanResult, pool: str, generated_at: dt.datetime, previo
                                   "penalty": _f(sit.penalty), "injured_week": sit.injured_week, "return_week": sit.return_week,
                                   "source": "auto" if str(sit.note).startswith("auto") else "manual", "p_out": pw})
 
+    from .explain import explain_all
+    explain = explain_all(res, cfg)
+
     revisions = list((previous or {}).get("revisions") or [])
     if previous and previous.get("generated_at"):
         revisions.append({"generated_at": previous["generated_at"], "picks": _pick_summary(previous.get("picks", []))})
@@ -129,7 +132,7 @@ def build_snapshot(res: PlanResult, pool: str, generated_at: dt.datetime, previo
         "ratings_source": st.source, "n_lines_posted": st.detail.get("n_lines"), "n_priced_games": n_lines,
         "summary": summary, "picks": picks, "options": options, "board": board, "plans": plans,
         "statuses": statuses, "ratings": {k: _f(v) for k, v in res.strength.healthy.items()},
-        "qb_situations": qb_situations,
+        "qb_situations": qb_situations, "explain": explain,
         "revisions": revisions,
     }
 
@@ -237,6 +240,10 @@ td.n,th.n{text-align:right}.win{color:var(--win);font-weight:600}.loss{color:var
 .tag{display:inline-block;font-size:11px;padding:1px 6px;border:1px solid var(--line);border-radius:10px;color:var(--muted);margin-left:6px}
 .grid td{font-size:12px;padding:3px 5px}.grid td.now{font-weight:700}.muted{color:var(--muted)}details{margin:10px 0}summary{cursor:pointer;color:var(--accent)}
 .path{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12.5px;white-space:normal}
+.why{font-size:13px;color:var(--muted);margin:6px 0 10px;line-height:1.45;white-space:normal;max-width:900px}
+tr.whyrow td{padding:0 8px 8px;border-bottom:1px solid var(--line)}tr.whyrow .why{margin:0}
+td.whycell{white-space:normal;font-size:12.5px;color:var(--muted);min-width:260px;max-width:460px}
+ul.notes{font-size:13.5px;line-height:1.5;padding-left:20px;max-width:900px}ul.notes li{margin:4px 0}
 """
 
 
@@ -331,8 +338,14 @@ def render_season_index(season: int, snaps: list[dict], games: pd.DataFrame | No
                         f"<div class=\"sub\">win probability {_pct(r['p_win'])} &middot; spread {_spread(r['spread'])} &middot; kickoff {_esc(r['kickoff'])}"
                         + (f" &middot; <span class=\"lock\">locked</span>" if r['status'] == 'locked' else "") + "</div>")
                 sl = next((pl["strikes_left"] for pl in s["plans"] if pl["alive"]), None)
+                ex = s.get("explain") or {}
+                pk = (ex.get("picks") or {}).get(r["team"]) or {}
+                if pk.get("probability"):
+                    body += f"<div class=\"why\">{_esc(pk['probability'])} {_esc(pk.get('timing', ''))}</div>"
                 body += (f"<div><span class=\"stat\">P(survive season) <b>{_pct(s['summary'].get('p_each', [None])[0] if s['summary'].get('p_each') else None)}</b></span>"
                          f"<span class=\"stat\">strikes left <b>{sl if sl is not None else ''} of {s['strikes']}</b></span></div>")
+                if ex.get("summary"):
+                    body += f"<div class=\"why\">{_esc(ex['summary'])}</div>"
             else:
                 body = "<div class=\"big muted\">eliminated</div>"
         else:
@@ -349,9 +362,14 @@ def render_season_index(season: int, snaps: list[dict], games: pd.DataFrame | No
             n_alive = s["summary"].get("n_live", 0)
             body = (f"<div class=\"tw\"><table><tr><th>team</th><th class=\"n\">entries</th><th>opponent</th><th class=\"n\">win prob</th><th class=\"n\">spread</th><th>kickoff</th></tr>{''.join(rows)}</table></div>"
                     if rows else "<div class=\"big muted\">no entries alive</div>")
+            ex = s.get("explain") or {}
+            if ex.get("exposure"):
+                body += f"<div class=\"why\">{_esc(ex['exposure'])}</div>"
             body += (f"<div><span class=\"stat\">entries alive <b>{n_alive} of {s['entries']}</b></span>"
                      f"<span class=\"stat\">P(at least one survives) <b>{_pct(s['summary'].get('p_any'))}</b></span>"
                      f"<span class=\"stat\">expected survivors <b>{s['summary'].get('expected_survivors', 0):.2f}</b></span></div>")
+            if ex.get("summary"):
+                body += f"<div class=\"why\">{_esc(ex['summary'])}</div>"
             changes = [r for r in s["picks"] if r["status"] == "change"]
             if changes:
                 body += f"<div class=\"sub\" style=\"margin-top:6px\">changes vs picks on file: " + ", ".join(f"#{_esc(r['entry'])} {_esc(r['on_file'])}&rarr;{_esc(r['team'])}" for r in changes) + "</div>"
@@ -390,6 +408,7 @@ def render_week_page(season: int, week: int, snaps: list[dict], games: pd.DataFr
     snaps = sorted(snaps, key=lambda s: 0 if s["mode"] == "multi" else 1)
     sections = []
     for s in snaps:
+        ex = s.get("explain") or {}
         graded = {r["entry"]: grade(games, season, week, r["team"]) for r in s["picks"]}
         sec = [f"<h2>{_esc(s['name'])} <span class=\"tag\">{FORMAT_LABEL.get(s['mode'], s['mode'])}</span></h2>",
                f"<div class=\"sub\">generated {_esc(_dt(s['generated_at']))} &middot; ratings: {_esc(s['ratings_source'])} "
@@ -405,12 +424,20 @@ def render_week_page(season: int, week: int, snaps: list[dict], games: pd.DataFr
                            f"<div><span class=\"stat\">P(survive season) <b>{_pct(s['summary']['p_each'][0] if s['summary'].get('p_each') else None)}</b></span>"
                            f"<span class=\"stat\">plan score <b>{_pct(s['summary'].get('p_plugin_first'), 2)}</b></span>"
                            f"<span class=\"stat\">strikes left <b>{sl if sl is not None else ''} of {s['strikes']}</b></span></div>")
+                pk = (ex.get("picks") or {}).get(r["team"]) or {}
+                for key in ("probability", "timing", "not_used"):
+                    if pk.get(key):
+                        sec.append(f"<div class=\"why\">{_esc(pk[key])}</div>")
+                if ex.get("summary"):
+                    sec.append(f"<div class=\"why\">{_esc(ex['summary'])}</div>")
             else:
                 sec.append("<div class=\"big muted\">eliminated</div>")
         else:
             sec.append(f"<div><span class=\"stat\">entries alive <b>{s['summary'].get('n_live', 0)} of {s['entries']}</b></span>"
                        f"<span class=\"stat\">P(at least one survives) <b>{_pct(s['summary'].get('p_any'))}</b></span>"
                        f"<span class=\"stat\">expected survivors <b>{s['summary'].get('expected_survivors', 0):.2f}</b></span></div>")
+            if ex.get("summary"):
+                sec.append(f"<div class=\"why\">{_esc(ex['summary'])}</div>")
             rows = []
             counts: dict[str, list] = {}
             for r in s["picks"]:
@@ -421,8 +448,14 @@ def render_week_page(season: int, week: int, snaps: list[dict], games: pd.DataFr
                 rows.append(f"<tr><td><b>{_esc(team)}</b></td><td class=\"n\">{len(ents)}</td><td>{_esc(_opp(r))}</td><td class=\"n\">{_pct(r['p_win'])}</td>"
                             f"<td class=\"n\">{_spread(r['spread'])}</td><td>{_esc(r['source'])}</td><td>{_esc(r['kickoff'])}</td>"
                             f"<td class=\"{_res_cls(res)}\">{_res_mark(res)}</td><td class=\"muted\">{_esc(' '.join('#' + e for e in ents))}</td></tr>")
+                pk = (ex.get("picks") or {}).get(team) or {}
+                why = " ".join(pk.get(k, "") for k in ("probability", "timing", "not_used") if pk.get(k))
+                if why:
+                    rows.append(f"<tr class=\"whyrow\"><td colspan=\"9\"><div class=\"why\">{_esc(why)}</div></td></tr>")
             sec.append("<h3>Picks by team</h3><div class=\"tw\"><table><tr><th>team</th><th class=\"n\">entries</th><th>opponent</th><th class=\"n\">win prob</th>"
                        f"<th class=\"n\">spread</th><th>source</th><th>kickoff</th><th>result</th><th>entries</th></tr>{''.join(rows)}</table></div>")
+            if ex.get("exposure"):
+                sec.append(f"<div class=\"why\">{_esc(ex['exposure'])}</div>")
             changes = [r for r in s["picks"] if r["status"] == "change"]
             locked = [r for r in s["picks"] if r["status"] == "locked"]
             notes = []
@@ -435,11 +468,13 @@ def render_week_page(season: int, week: int, snaps: list[dict], games: pd.DataFr
 
         # options
         if s.get("options"):
+            whys = ex.get("options") or []
             rows = "".join(f"<tr><td><b>{_esc(o['team'])}</b></td><td class=\"n\">{_pct(o['p_now'])}</td><td class=\"n\">{_pct(o['score'], 2)}</td>"
-                           f"<td class=\"n\">{_pct(o['p_season'], 2)}</td><td class=\"path\">{_esc(' '.join(o['plan']))}</td></tr>" for o in s["options"])
+                           f"<td class=\"n\">{_pct(o['p_season'], 2)}</td><td class=\"path\">{_esc(' '.join(o['plan']))}</td>"
+                           f"<td class=\"whycell\">{_esc(whys[i]) if i < len(whys) else ''}</td></tr>" for i, o in enumerate(s["options"]))
             sec.append("<h3>This week's options</h3><div class=\"sub\">Use the team now and play the rest of the season optimally. "
                        "Score is the discounted number the plan is chosen on; P(season) is the simulated survival probability, the number to believe.</div>"
-                       f"<div class=\"tw\"><table><tr><th>team</th><th class=\"n\">win prob now</th><th class=\"n\">score</th><th class=\"n\">P(season)</th><th>rest of the plan</th></tr>{rows}</table></div>")
+                       f"<div class=\"tw\"><table><tr><th>team</th><th class=\"n\">win prob now</th><th class=\"n\">score</th><th class=\"n\">P(season)</th><th>rest of the plan</th><th>why</th></tr>{rows}</table></div>")
 
         # board
         rows = []
@@ -464,9 +499,10 @@ def render_week_page(season: int, week: int, snaps: list[dict], games: pd.DataFr
                     trs.append(f"<tr><td>#{_esc(pl['entry'])}</td><td class=\"muted\" colspan=\"{len(pw) + 2}\">no feasible path</td></tr>")
                     continue
                 cells = "".join(f"<td class=\"n{' now' if i == 0 else ''}\" title=\"{_pct(step['p'])}\">{_esc(step['team'])}</td>" for i, step in enumerate(pl["path"]))
-                trs.append(f"<tr><td>#{_esc(pl['entry'])}</td><td class=\"n\">{_pct(pl.get('p_season'), 2)}</td><td class=\"n\">{_pct(pl.get('score'), 2)}</td>{cells}</tr>")
+                ewhy = (ex.get("entries") or {}).get(pl["entry"], "")
+                trs.append(f"<tr title=\"{_esc(ewhy)}\"><td>#{_esc(pl['entry'])}</td><td class=\"n\">{_pct(pl.get('p_season'), 2)}</td><td class=\"n\">{_pct(pl.get('score'), 2)}</td>{cells}</tr>")
             sec.append(f"<details><summary>Per-entry season plans ({sum(1 for pl in s['plans'] if pl['alive'])} alive)</summary>"
-                       "<div class=\"sub\">This week's pick first. Later weeks only justify this week's pick and are re-optimised on every run. Hover a cell for the projected win probability.</div>"
+                       "<div class=\"sub\">This week's pick first. Later weeks only justify this week's pick and are re-optimised on every run. Hover a cell for the projected win probability, a row for its weakest and strongest links.</div>"
                        f"<div class=\"tw\"><table class=\"grid\"><tr><th>entry</th><th class=\"n\">P(season)</th><th class=\"n\">score</th>{head}</tr>{''.join(trs)}</table></div></details>")
 
         # entry status history
@@ -484,6 +520,9 @@ def render_week_page(season: int, week: int, snaps: list[dict], games: pd.DataFr
                 trs.append(f"<tr><td>#{_esc(x['entry'])}</td><td>{'alive' if x['alive'] else '<span class=loss>out</span>'}</td><td class=\"n\">{x['losses']}</td>{''.join(cells)}</tr>")
             sec.append(f"<details><summary>Picks on file and results</summary><div class=\"tw\"><table class=\"grid\"><tr><th>entry</th><th>status</th><th class=\"n\">losses</th>{head}</tr>{''.join(trs)}</table></div></details>")
 
+        if ex.get("notes"):
+            items = "".join(f"<li>{_esc(n)}</li>" for n in ex["notes"])
+            sec.append(f"<h3>Why these numbers</h3><ul class=\"notes\">{items}</ul>")
         if s.get("revisions"):
             items = "".join(f"<li>{_esc(_dt(r['generated_at']))}: {_esc(r['picks'])}</li>" for r in s["revisions"])
             sec.append(f"<details><summary>Earlier recommendations this week ({len(s['revisions'])})</summary><ul class=\"sub\">{items}</ul></details>")

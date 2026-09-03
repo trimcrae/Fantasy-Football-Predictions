@@ -27,16 +27,16 @@
   17,
   18
  ],
- "generated_at": "2026-09-03T11:14:59.809806-04:00",
+ "generated_at": "2026-09-03T11:39:27.596344-04:00",
  "ratings_source": "market",
  "n_lines_posted": 112,
  "n_priced_games": 112,
  "summary": {
-  "p_any": 0.1663,
-  "expected_survivors": 0.1663,
+  "p_any": 0.1623,
+  "expected_survivors": 0.1623,
   "n_live": 1,
   "p_each": [
-   0.1663
+   0.1623
   ],
   "p_plugin_first": 0.0299
  },
@@ -52,7 +52,7 @@
    "status": "new",
    "on_file": null,
    "score": 0.0299,
-   "p_season": 0.1663
+   "p_season": 0.1623
   }
  ],
  "options": [
@@ -60,7 +60,7 @@
    "team": "LAC",
    "p_now": 0.8119,
    "score": 0.0299,
-   "p_season": 0.1663,
+   "p_season": 0.1623,
    "plan": [
     "SF",
     "DET",
@@ -85,7 +85,7 @@
    "team": "JAX",
    "p_now": 0.7659,
    "score": 0.0282,
-   "p_season": 0.1502,
+   "p_season": 0.156,
    "plan": [
     "LAC",
     "SF",
@@ -110,7 +110,7 @@
    "team": "DET",
    "p_now": 0.718,
    "score": 0.0267,
-   "p_season": 0.1512,
+   "p_season": 0.147,
    "plan": [
     "LAC",
     "SF",
@@ -135,7 +135,7 @@
    "team": "PHI",
    "p_now": 0.6575,
    "score": 0.0257,
-   "p_season": 0.1417,
+   "p_season": 0.1398,
    "plan": [
     "LAC",
     "SF",
@@ -160,7 +160,7 @@
    "team": "LV",
    "p_now": 0.6369,
    "score": 0.0256,
-   "p_season": 0.1448,
+   "p_season": 0.1442,
    "plan": [
     "LAC",
     "SF",
@@ -185,7 +185,7 @@
    "team": "PIT",
    "p_now": 0.6225,
    "score": 0.0252,
-   "p_season": 0.1424,
+   "p_season": 0.144,
    "plan": [
     "LAC",
     "SF",
@@ -210,7 +210,7 @@
    "team": "CIN",
    "p_now": 0.6369,
    "score": 0.0251,
-   "p_season": 0.142,
+   "p_season": 0.1382,
    "plan": [
     "LAC",
     "SF",
@@ -235,7 +235,7 @@
    "team": "CHI",
    "p_now": 0.583,
    "score": 0.0238,
-   "p_season": 0.1411,
+   "p_season": 0.1382,
    "plan": [
     "LAC",
     "SF",
@@ -260,7 +260,7 @@
    "team": "BAL",
    "p_now": 0.6092,
    "score": 0.0232,
-   "p_season": 0.1379,
+   "p_season": 0.1313,
    "plan": [
     "SF",
     "DET",
@@ -285,7 +285,7 @@
    "team": "TEN",
    "p_now": 0.5427,
    "score": 0.0229,
-   "p_season": 0.131,
+   "p_season": 0.1317,
    "plan": [
     "LAC",
     "SF",
@@ -310,7 +310,7 @@
    "team": "LA",
    "p_now": 0.6369,
    "score": 0.0225,
-   "p_season": 0.131,
+   "p_season": 0.1352,
    "plan": [
     "LAC",
     "SF",
@@ -335,7 +335,7 @@
    "team": "KC",
    "p_now": 0.5721,
    "score": 0.0224,
-   "p_season": 0.1298,
+   "p_season": 0.1323,
    "plan": [
     "SF",
     "DET",
@@ -360,7 +360,7 @@
    "team": "SEA",
    "p_now": 0.6092,
    "score": 0.0224,
-   "p_season": 0.127,
+   "p_season": 0.1278,
    "plan": [
     "SF",
     "DET",
@@ -385,7 +385,7 @@
    "team": "DAL",
    "p_now": 0.5721,
    "score": 0.0222,
-   "p_season": 0.1263,
+   "p_season": 0.1232,
    "plan": [
     "LAC",
     "SF",
@@ -410,7 +410,7 @@
    "team": "MIN",
    "p_now": 0.5174,
    "score": 0.0222,
-   "p_season": 0.1326,
+   "p_season": 0.1327,
    "plan": [
     "LAC",
     "SF",
@@ -435,7 +435,7 @@
    "team": "HOU",
    "p_now": 0.4826,
    "score": 0.0212,
-   "p_season": 0.125,
+   "p_season": 0.1255,
    "plan": [
     "LAC",
     "SF",
@@ -881,7 +881,7 @@
    "alive": true,
    "strikes_left": 2,
    "score": 0.0299,
-   "p_season": 0.1663,
+   "p_season": 0.1623,
    "path": [
     {
      "week": 1,
@@ -1020,6 +1020,44 @@
   "WAS": -1.1107
  },
  "qb_situations": [],
+ "explain": {
+  "summary": "16.2% is the simulated chance of at most 2 losses over the 18 remaining picks, with calibrated uncertainty about how good each team really is. The per-pick numbers in the plan (averaging 66%) are the planning view, which discounts later weeks 16x and so pulls them toward 50%; under that pessimistic view the chance is the plan score, 2.99%, a ranking device rather than a forecast.",
+  "exposure": "",
+  "picks": {
+   "LAC": {
+    "probability": "81% comes from the de-vigged moneyline: LAC +10.2 at home vs ARI. Ratings say LAC +2.6 vs ARI -6.5, home field +1.6 (model spread +10.7).",
+    "timing": "This is the single best spot on the whole remaining schedule (2 spots at 75%+ and 8 at 70%+ all season). LAC's best later spot is week 2 vs LV at 68%, 13% worse, so nothing comparable is given up.",
+    "not_used": ""
+   }
+  },
+  "options": [
+   "Best available: 81% now and the strongest remaining schedule after it.",
+   "77% now vs 81% for LAC. Later weeks shift in 6 places: w2 LAC 68% instead of SF 75%; w3 SF 74% instead of DET 69%; w4 CHI 68% instead of MIN 67%; ....",
+   "72% now vs 81% for LAC. Later weeks shift in 2 places: w2 LAC 68% instead of SF 75%; w3 SF 74% instead of DET 69%.",
+   "66% now vs 81% for LAC. Later weeks shift in 6 places: w2 LAC 68% instead of SF 75%; w3 SF 74% instead of DET 69%; w4 CHI 68% instead of MIN 67%; ....",
+   "64% now vs 81% for LAC. Later weeks shift in 4 places: w2 LAC 68% instead of SF 75%; w3 SF 74% instead of DET 69%; w4 CHI 68% instead of MIN 67%; ....",
+   "62% now vs 81% for LAC. Later weeks shift in 4 places: w2 LAC 68% instead of SF 75%; w3 SF 74% instead of DET 69%; w4 CHI 68% instead of MIN 67%; ....",
+   "64% now vs 81% for LAC. Later weeks shift in 5 places: w2 LAC 68% instead of SF 75%; w3 SF 74% instead of DET 69%; w4 CHI 68% instead of MIN 67%; ....",
+   "58% now vs 81% for LAC. Later weeks shift in 3 places: w2 LAC 68% instead of SF 75%; w3 SF 74% instead of DET 69%; w14 DET 62% instead of CHI 59%.",
+   "61% now vs 81% for LAC. Later weeks shift in 1 place: w16 LAC 61% instead of BAL 65%.",
+   "54% now vs 81% for LAC. Later weeks shift in 4 places: w2 LAC 68% instead of SF 75%; w3 SF 74% instead of DET 69%; w4 CHI 68% instead of MIN 67%; ....",
+   "64% now vs 81% for LAC. Later weeks shift in 4 places: w2 LAC 68% instead of SF 75%; w3 SF 74% instead of DET 69%; w5 DET 66% instead of NE 66%; ....",
+   "57% now vs 81% for LAC. Later weeks shift in 1 place: w11 LAC 65% instead of KC 68%.",
+   "61% now vs 81% for LAC. Later weeks shift in 2 places: w9 KC 67% instead of SEA 71%; w11 LAC 65% instead of KC 68%.",
+   "57% now vs 81% for LAC. Later weeks shift in 5 places: w2 LAC 68% instead of SF 75%; w3 SF 74% instead of DET 69%; w4 CHI 68% instead of MIN 67%; ....",
+   "52% now vs 81% for LAC. Later weeks shift in 4 places: w2 LAC 68% instead of SF 75%; w3 SF 74% instead of DET 69%; w4 CHI 68% instead of MIN 67%; ....",
+   "48% now vs 81% for LAC. Later weeks shift in 4 places: w2 LAC 68% instead of SF 75%; w3 SF 74% instead of DET 69%; w4 CHI 68% instead of MIN 67%; ...."
+  ],
+  "entries": {
+   "1": "18 picks averaging 66%; weakest w14 CHI 59%, strongest w1 LAC 81%. P(season) 16.23% is simulated with calibrated uncertainty; score 2.99% discounts the future and is only for ranking."
+  },
+  "notes": [
+   "Ratings are fitted from the 112 lines posted so far this season (residual 0.69 points), seeded by last season regressed toward average.",
+   "Week 18 spots are shrunk toward 50% (19% flatter) and given extra variance because clinched teams rest starters.",
+   "Every percentage for a later week on this page is the planning view: the projection's uncertainty is inflated 16x (backtest-tuned), which pulls distant games toward 50% so a sure thing now beats a slightly better projection months away. The survival percentages are simulated with calibrated uncertainty instead.",
+   "A tie counts as a loss, and later weeks of every plan are re-optimised on each run; only this week's pick is a recommendation."
+  ]
+ },
  "revisions": [
   {
    "generated_at": "2026-09-03T10:20:20.636607-04:00",
@@ -1047,6 +1085,10 @@
   },
   {
    "generated_at": "2026-09-03T11:02:52.526854-04:00",
+   "picks": "LAC"
+  },
+  {
+   "generated_at": "2026-09-03T11:38:12.558749-04:00",
    "picks": "LAC"
   }
  ]
