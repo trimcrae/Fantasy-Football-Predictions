@@ -34,12 +34,12 @@ Geometric mean of the expected season survival over 2015-2025:
 | planner | policy h=1 | policy h=2 | policy h=4 | discount x16 (previous) | greedy |
 |---|---|---|---|---|---|
 | single elimination | **1.96%** | 1.94% | 1.81% | 1.78% | 1.58% |
-| two strikes (seasons survived) | **28.2%** (3) | 26.8% (4) | 25.0% (4) | 27.2% (3) | 25.5% (2) |
+| two strikes, out on the 2nd loss (seasons survived) | **10.6%** (1) | 10.6% (2) | 10.1% (2) | 9.9% (1) | 9.0% (1) |
 
 Reading: committing only this week and treating everything after as "best available then"
 is the best planner in both single-entry formats, 10% better than the discount planner for
-single elimination and 4% better with two strikes; the longer the commitment, the closer it
-gets to the fixed-path planner. The discount planner was a proxy for the same idea (squash
+single elimination and 8% better with two strikes (h=2 is level with it there, within
+noise); the longer the commitment, the closer it gets to the fixed-path planner. The discount planner was a proxy for the same idea (squash
 the far-off weeks so the optimiser stops hoarding teams for spots that do not materialise);
 this does it directly and also lets the later menu widen as real spreads do. `horizon: 1` is
 the default.

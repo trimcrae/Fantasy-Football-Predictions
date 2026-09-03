@@ -164,7 +164,7 @@ closing prices, geometric mean over 2015-2025 (`BACKTEST.md`):
 | planner | policy, horizon 1 | policy, horizon 2 | policy, horizon 4 | fixed paths, discount 16 (previous) | greedy (no lookahead) |
 |---|---|---|---|---|---|
 | single elimination | **1.96%** | 1.94% | 1.81% | 1.78% | 1.58% |
-| two strikes | **28.2%** | 26.8% | 25.0% | 27.2% | 25.5% |
+| two strikes (out on the 2nd loss) | **10.6%** | 10.6% | 10.1% | 9.9% | 9.0% |
 
 The default is `planning: {mode: policy, horizon: 1}`. The previous planner (fixed paths
 chosen on a simulation with the future variance inflated 16x, `planning.mode: discount`) is
