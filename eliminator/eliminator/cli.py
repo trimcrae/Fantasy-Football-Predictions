@@ -89,10 +89,23 @@ def cmd_calibrate(args):
     print(f"written {p}")
 
 
+def _posted_line_fit(cfg, season: int, games) -> dict | None:
+    """Replace the default line-movement allowance with one fitted from archived lines, if enough."""
+    from .data.lines_archive import load_archive, posted_line_variance
+    fit = posted_line_variance(load_archive(season), games)
+    cfg["model"]["posted_line_fit"] = fit
+    if fit:
+        cfg["model"]["posted_line_var_a"] = fit["posted_line_var_a"]
+        cfg["model"]["posted_line_var_b"] = fit["posted_line_var_b"]
+        print(f"[lines] posted-line movement fitted from {fit['n_obs']} archived lines: var = {fit['posted_line_var_a']} + {fit['posted_line_var_b']} * weeks")
+    return fit
+
+
 def _plan_inputs(args, cfg, state: PoolState, df):
     """Season, time, QB ledger and line overrides (manual + live odds) shared by plan and snapshot."""
     season = int(args.season or state.season or cfg.get("season") or latest_season(df))
     now = _now(args)
+    _posted_line_fit(cfg, season, regular_season(df, season))
     ledger = load_ledger(STATE_DIR / "qb_status.yaml", cfg["qb"])
     overrides = load_overrides(STATE_DIR / "overrides.yaml")
     games = regular_season(df, season)
@@ -166,12 +179,18 @@ def cmd_snapshot(args):
     pools = [Path(p) for p in args.pool] if args.pool else pool_files(STATE_DIR)
     ratings = None
     ratings_loaded = False
+    archived = False
     for pool in pools:
         state = PoolState.load(pool)
         season, now, ledger, overrides = _plan_inputs(args, cfg, state, df)
         state.season = season
         games = regular_season(df, season)
         week = args.week or current_week(games, now)
+        if not archived and not args.no_archive:
+            from .data.lines_archive import archive_lines
+            n = archive_lines(games, season, now)
+            print(f"[lines] archived {n} posted line(s) for {now:%Y-%m-%d}")
+            archived = True
         if not args.no_backfill:
             n = backfill_state(state, games, week, now, data_dir)
             if n:
@@ -305,6 +324,7 @@ def main(argv=None):
     p.add_argument("--no-inpredictable", action="store_true")
     p.add_argument("--data-dir", help="where snapshots live (default site/data)")
     p.add_argument("--no-backfill", action="store_true", help="do not fill missing kicked-off picks from earlier snapshots")
+    p.add_argument("--no-archive", action="store_true", help="do not record today's posted lines")
     p.set_defaults(fn=cmd_snapshot)
 
     p = sub.add_parser("site", help="render the snapshots into static HTML (GitHub Pages)"); common(p)

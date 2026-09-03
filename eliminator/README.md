@@ -117,7 +117,13 @@ and have the same log-loss, so either is fine; the moneyline is the direct price
   that have no line yet. The remaining uncertainty on a posted line is how far it can still
   move before kickoff, `posted_line_var_a + posted_line_var_b * h` points squared (1 + 1h by
   default, a standard deviation of about 1.4 points one week out and 3 points eight weeks
-  out), far smaller than the projection error of a rating-based spread.
+  out), far smaller than the projection error of a rating-based spread. That allowance
+  calibrates itself: every `snapshot` run records the lines it sees for games not yet
+  kicked off in `site/data/lines/<season>.csv`, and once at least 150 of those observations
+  have a closing line to compare with (across three or more horizons) the allowance is
+  fitted from how far the lines actually moved and replaces the default on every run.
+* A week-18 line posted early is shrunk like a projection (see week 18 below): a line set in
+  September cannot know who will rest starters.
 
 ### 3. Discounting the future
 The projection error of a rating-based spread against the eventual closing line grows with
