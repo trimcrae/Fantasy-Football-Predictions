@@ -1,0 +1,18 @@
+[project]
+name = "eliminator"
+version = "0.1.0"
+description = "NFL eliminator / survivor pool strategy: Vegas-driven projections and season-long optimisation"
+requires-python = ">=3.10"
+dependencies = ["numpy>=1.24", "pandas>=2.0", "scipy>=1.10", "requests>=2.28", "PyYAML>=6.0"]
+
+[project.optional-dependencies]
+test = ["pytest>=7.0"]
+
+[project.scripts]
+eliminator = "eliminator.cli:main"
+
+[tool.setuptools]
+packages = ["eliminator", "eliminator.data", "eliminator.model", "eliminator.optimize"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

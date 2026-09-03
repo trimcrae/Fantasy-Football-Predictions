@@ -1,0 +1,12 @@
+# Manual market overrides, applied on top of the nflverse feed. Useful on game day when the
+# feed lags the books, or when you know something the projection does not.
+#
+# lines:
+#   - {week: 3, home: KC, away: LAC, spread: -3.5}          # home-perspective spread
+#   - {week: 3, home: DET, away: NO, home_ml: -240, away_ml: 195}
+#
+# week18_rest_risk:        # probability a team sits starters in week 18 (penalty below)
+#   KC: 0.7
+# week18_rest_penalty: 6.0
+lines: []
+week18_rest_risk: {}
