@@ -183,7 +183,7 @@ def cmd_snapshot(args):
         res = make_plan(state, df, cfg, ledger, ratings, now=now, season=season, week=week,
                         source=args.source, overrides=overrides)
         previous = load_snapshot(snapshot_path(res.season, res.week, pool.stem, data_dir))
-        snap = build_snapshot(res, pool.stem, generated_at=now, previous=previous, ledger=ledger)
+        snap = build_snapshot(res, pool.stem, generated_at=now, previous=previous, ledger=ledger, cfg=cfg)
         path = write_snapshot(snap, data_dir)
         print(render(res, show_paths=False))
         print(f"written {path}\n")
