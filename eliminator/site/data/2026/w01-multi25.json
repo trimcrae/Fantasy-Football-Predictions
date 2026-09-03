@@ -27,7 +27,7 @@
   17,
   18
  ],
- "generated_at": "2026-09-03T13:43:58.905429-04:00",
+ "generated_at": "2026-09-03T13:47:27.135455-04:00",
  "ratings_source": "market",
  "n_lines_posted": 112,
  "n_priced_games": 112,
@@ -3920,7 +3920,7 @@
     "probability": "From the betting odds: BAL favoured by 3.2 on the road.",
     "timing": "BAL's 6th-best spot of 17; best is 72% in wk 4 vs TEN, but far-off games are deliberately trusted less.",
     "not_used": "Passed: LAC 81% saved for wk 16; JAX 77% saved for wk 12; DET 72% saved for wk 3.",
-    "hedge": "As a hedge it survives 0.23% of the seasons where all 24 other entries are dead, the most of any team (LAC 0.22%, DET 0.21%). On its own it would rank 10th."
+    "hedge": "Its path overlaps the other 24 entries least: it survives 0.23% of the seasons where they are all dead, about level with LAC 0.22%, DET 0.21%, SEA 0.21%; a coin flip between them. On its own it would rank 10th."
    }
   },
   "options": [
@@ -3979,10 +3979,6 @@
   ]
  },
  "revisions": [
-  {
-   "generated_at": "2026-09-03T10:34:57.477267-04:00",
-   "picks": "LAC x17, JAX x4, CHI, BAL, DET, KC"
-  },
   {
    "generated_at": "2026-09-03T10:39:40.528709-04:00",
    "picks": "LAC x17, JAX x4, CHI, BAL, DET, KC"
@@ -4057,6 +4053,10 @@
   },
   {
    "generated_at": "2026-09-03T13:39:26.145435-04:00",
+   "picks": "LAC x15, JAX x9, BAL"
+  },
+  {
+   "generated_at": "2026-09-03T13:43:58.905429-04:00",
    "picks": "LAC x15, JAX x9, BAL"
   }
  ]
