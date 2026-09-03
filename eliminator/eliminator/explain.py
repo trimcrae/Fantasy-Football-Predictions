@@ -53,13 +53,17 @@ def best_later_spot(res: PlanResult, team: str) -> tuple[int, str, float] | None
     return best
 
 
-def season_rank(res: PlanResult, week: int, team: str) -> tuple[int, int, int]:
-    """(rank of this spot among all remaining spots, spots >= 75%, spots >= 70%)."""
-    t = res.projection.table
-    t = t[t["prob"] > 0]
-    pr = float(t[(t["week"] == week) & (t["team"] == team)]["prob"].iloc[0])
-    rank = int((t["prob"] > pr).sum()) + 1
-    return rank, int((t["prob"] >= 0.75).sum()), int((t["prob"] >= 0.70).sum())
+def team_rank(res: PlanResult, team: str) -> tuple[int, int]:
+    """(rank of this week's spot among the team's own remaining games, number of those games)."""
+    p = res.projection
+    ti = TEAMS.index(team)
+    probs = [float(p.prob[wi, ti]) for wi in range(len(p.weeks)) if p.has_game[wi, ti]]
+    now = float(p.prob[0, ti])
+    return 1 + sum(1 for x in probs if x > now), len(probs)
+
+
+def _ordinal(n: int) -> str:
+    return f"{n}{'th' if 10 <= n % 100 <= 20 else {1: 'st', 2: 'nd', 3: 'rd'}.get(n % 10, 'th')}"
 
 
 def explain_probability(res: PlanResult, team: str, cfg: dict | None = None) -> str:
@@ -75,18 +79,15 @@ def explain_probability(res: PlanResult, team: str, cfg: dict | None = None) -> 
 
 
 def explain_timing(res: PlanResult, team: str) -> str:
-    """Why use the team now: rank of this spot, and the team's best later spot."""
-    r = res.projection.row(res.week, team)
+    """Why use the team now: where this week sits among the team's own remaining games."""
     later = best_later_spot(res, team)
-    rank, _, _ = season_rank(res, res.week, team)
-    head = "Best spot on the remaining schedule" if rank == 1 else f"#{rank} spot on the remaining schedule"
+    rank, n = team_rank(res, team)
     if later is None:
-        return f"{head}; no later game."
+        return f"{team}'s last game of the season."
     w, opp, pr = later
-    gap = float(r["prob"]) - pr
-    if gap >= 0:
-        return f"{head}; {team}'s next best is {_pct(pr)} (wk {w} vs {opp})."
-    return f"{head}; {team} projects {_pct(pr)} in wk {w} vs {opp}, but far-off games are deliberately trusted less."
+    if rank == 1:
+        return f"{team}'s best spot all season; next best is {_pct(pr)} (wk {w} vs {opp})."
+    return f"{team}'s {_ordinal(rank)}-best spot of {n}; best is {_pct(pr)} in wk {w} vs {opp}, but far-off games are deliberately trusted less."
 
 
 def explain_not_used(res: PlanResult, entry, team: str) -> str:
