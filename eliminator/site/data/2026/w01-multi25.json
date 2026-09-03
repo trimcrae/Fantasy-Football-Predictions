@@ -27,19 +27,19 @@
   17,
   18
  ],
- "generated_at": "2026-09-03T15:33:03.404577-04:00",
+ "generated_at": "2026-09-03T15:37:53.933567-04:00",
  "ratings_source": "market",
  "n_lines_posted": 112,
  "n_priced_games": 112,
  "summary": {
-  "p_any": 0.231,
-  "expected_survivors": 0.3938,
+  "p_any": 0.2314,
+  "expected_survivors": 0.3919,
   "n_live": 25,
   "p_each": [
-   0.024,
-   0.0117,
+   0.0241,
+   0.0118,
    0.0113,
-   0.016,
+   0.0168,
    0.0197,
    0.0148,
    0.0194,
@@ -51,18 +51,18 @@
    0.0137,
    0.0145,
    0.0148,
-   0.0141,
-   0.0207,
+   0.0142,
+   0.0177,
    0.0113,
-   0.0199,
+   0.02,
    0.0151,
    0.0155,
-   0.0142,
-   0.0158,
+   0.014,
+   0.0159,
    0.0124,
    0.0208
   ],
-  "p_plugin_first": 0.024
+  "p_plugin_first": 0.0241
  },
  "picks": [
   {
@@ -75,8 +75,8 @@
    "kickoff": "Sun 09/13 16:25",
    "status": "new",
    "on_file": null,
-   "score": 0.024,
-   "p_season": 0.024
+   "score": 0.0241,
+   "p_season": 0.0241
   },
   {
    "entry": "2",
@@ -88,8 +88,8 @@
    "kickoff": "Sun 09/13 16:25",
    "status": "new",
    "on_file": null,
-   "score": 0.0117,
-   "p_season": 0.0117
+   "score": 0.0118,
+   "p_season": 0.0118
   },
   {
    "entry": "3",
@@ -106,16 +106,16 @@
   },
   {
    "entry": "4",
-   "team": "JAX",
-   "opp": "CLE",
-   "p_win": 0.7659,
-   "spread": 8.3935,
+   "team": "LAC",
+   "opp": "ARI",
+   "p_win": 0.8119,
+   "spread": 10.2376,
    "source": "moneyline",
-   "kickoff": "Sun 09/13 13:00",
+   "kickoff": "Sun 09/13 16:25",
    "status": "new",
    "on_file": null,
-   "score": 0.016,
-   "p_season": 0.016
+   "score": 0.0168,
+   "p_season": 0.0168
   },
   {
    "entry": "5",
@@ -270,21 +270,21 @@
    "kickoff": "Sun 09/13 13:00",
    "status": "new",
    "on_file": null,
-   "score": 0.0141,
-   "p_season": 0.0141
+   "score": 0.0142,
+   "p_season": 0.0142
   },
   {
    "entry": "17",
-   "team": "LAC",
-   "opp": "ARI",
-   "p_win": 0.8119,
-   "spread": 10.2376,
+   "team": "DET",
+   "opp": "NO",
+   "p_win": 0.7221,
+   "spread": 6.8154,
    "source": "moneyline",
-   "kickoff": "Sun 09/13 16:25",
+   "kickoff": "Sun 09/13 13:00",
    "status": "new",
    "on_file": null,
-   "score": 0.0207,
-   "p_season": 0.0207
+   "score": 0.0177,
+   "p_season": 0.0177
   },
   {
    "entry": "18",
@@ -309,8 +309,8 @@
    "kickoff": "Sun 09/13 16:25",
    "status": "new",
    "on_file": null,
-   "score": 0.0199,
-   "p_season": 0.0199
+   "score": 0.02,
+   "p_season": 0.02
   },
   {
    "entry": "20",
@@ -340,29 +340,29 @@
   },
   {
    "entry": "22",
-   "team": "LAC",
-   "opp": "ARI",
-   "p_win": 0.8119,
-   "spread": 10.2376,
+   "team": "JAX",
+   "opp": "CLE",
+   "p_win": 0.7659,
+   "spread": 8.3935,
    "source": "moneyline",
-   "kickoff": "Sun 09/13 16:25",
+   "kickoff": "Sun 09/13 13:00",
    "status": "new",
    "on_file": null,
-   "score": 0.0142,
-   "p_season": 0.0142
+   "score": 0.014,
+   "p_season": 0.014
   },
   {
    "entry": "23",
    "team": "DET",
    "opp": "NO",
-   "p_win": 0.718,
-   "spread": 6.6741,
+   "p_win": 0.7221,
+   "spread": 6.8154,
    "source": "moneyline",
    "kickoff": "Sun 09/13 13:00",
    "status": "new",
    "on_file": null,
-   "score": 0.0158,
-   "p_season": 0.0158
+   "score": 0.0159,
+   "p_season": 0.0159
   },
   {
    "entry": "24",
@@ -397,7 +397,7 @@
    "p_now": 0.8119,
    "score": 0.0286,
    "p_season": 0.0286,
-   "p_pool_add": 0.0061,
+   "p_pool_add": 0.0065,
    "plan": [
     "SF",
     "DET",
@@ -421,9 +421,9 @@
   {
    "team": "JAX",
    "p_now": 0.7659,
-   "score": 0.0276,
-   "p_season": 0.0276,
-   "p_pool_add": 0.0064,
+   "score": 0.0277,
+   "p_season": 0.0277,
+   "p_pool_add": 0.0066,
    "plan": [
     "LAC",
     "SF",
@@ -446,10 +446,10 @@
   },
   {
    "team": "DET",
-   "p_now": 0.718,
-   "score": 0.0246,
-   "p_season": 0.0246,
-   "p_pool_add": 0.0065,
+   "p_now": 0.7221,
+   "score": 0.0248,
+   "p_season": 0.0248,
+   "p_pool_add": 0.006,
    "plan": [
     "LAC",
     "SF",
@@ -473,8 +473,8 @@
   {
    "team": "LV",
    "p_now": 0.6369,
-   "score": 0.024,
-   "p_season": 0.024,
+   "score": 0.0241,
+   "p_season": 0.0241,
    "p_pool_add": 0.0071,
    "plan": [
     "LAC",
@@ -525,8 +525,8 @@
   {
    "team": "PHI",
    "p_now": 0.6575,
-   "score": 0.0229,
-   "p_season": 0.0229,
+   "score": 0.023,
+   "p_season": 0.023,
    "p_pool_add": 0.0067,
    "plan": [
     "LAC",
@@ -550,10 +550,10 @@
   },
   {
    "team": "CIN",
-   "p_now": 0.6369,
-   "score": 0.0225,
-   "p_season": 0.0225,
-   "p_pool_add": 0.0065,
+   "p_now": 0.6309,
+   "score": 0.0223,
+   "p_season": 0.0223,
+   "p_pool_add": 0.0064,
    "plan": [
     "LAC",
     "SF",
@@ -577,8 +577,8 @@
   {
    "team": "BAL",
    "p_now": 0.6092,
-   "score": 0.0214,
-   "p_season": 0.0214,
+   "score": 0.0215,
+   "p_season": 0.0215,
    "p_pool_add": 0.0064,
    "plan": [
     "SF",
@@ -733,8 +733,8 @@
   {
    "team": "KC",
    "p_now": 0.5721,
-   "score": 0.0192,
-   "p_season": 0.0192,
+   "score": 0.0193,
+   "p_season": 0.0193,
    "p_pool_add": 0.0054,
    "plan": [
     "SF",
@@ -841,8 +841,8 @@
    "opp": "NO",
    "home": true,
    "neutral": false,
-   "prob": 0.718,
-   "spread": 6.6741,
+   "prob": 0.7221,
+   "spread": 6.8154,
    "source": "moneyline",
    "kickoff": "2026-09-13T13:00:00-04:00",
    "locked": false,
@@ -876,19 +876,6 @@
    "qb_note": ""
   },
   {
-   "team": "CIN",
-   "opp": "TB",
-   "home": true,
-   "neutral": false,
-   "prob": 0.6369,
-   "spread": 4.052,
-   "source": "moneyline",
-   "kickoff": "2026-09-13T13:00:00-04:00",
-   "locked": false,
-   "played": false,
-   "qb_note": ""
-  },
-  {
    "team": "LV",
    "opp": "MIA",
    "home": true,
@@ -897,6 +884,19 @@
    "spread": 4.052,
    "source": "moneyline",
    "kickoff": "2026-09-13T16:25:00-04:00",
+   "locked": false,
+   "played": false,
+   "qb_note": ""
+  },
+  {
+   "team": "CIN",
+   "opp": "TB",
+   "home": true,
+   "neutral": false,
+   "prob": 0.6309,
+   "spread": 3.8685,
+   "source": "moneyline",
+   "kickoff": "2026-09-13T13:00:00-04:00",
    "locked": false,
    "played": false,
    "qb_note": ""
@@ -1136,6 +1136,19 @@
    "qb_note": ""
   },
   {
+   "team": "TB",
+   "opp": "CIN",
+   "home": false,
+   "neutral": false,
+   "prob": 0.3691,
+   "spread": -3.8685,
+   "source": "moneyline",
+   "kickoff": "2026-09-13T13:00:00-04:00",
+   "locked": false,
+   "played": false,
+   "qb_note": ""
+  },
+  {
    "team": "SF",
    "opp": "LA",
    "home": false,
@@ -1144,19 +1157,6 @@
    "spread": -4.052,
    "source": "moneyline",
    "kickoff": "2026-09-10T20:35:00-04:00",
-   "locked": false,
-   "played": false,
-   "qb_note": ""
-  },
-  {
-   "team": "TB",
-   "opp": "CIN",
-   "home": false,
-   "neutral": false,
-   "prob": 0.3631,
-   "spread": -4.052,
-   "source": "moneyline",
-   "kickoff": "2026-09-13T13:00:00-04:00",
    "locked": false,
    "played": false,
    "qb_note": ""
@@ -1192,8 +1192,8 @@
    "opp": "DET",
    "home": false,
    "neutral": false,
-   "prob": 0.282,
-   "spread": -6.6741,
+   "prob": 0.2779,
+   "spread": -6.8154,
    "source": "moneyline",
    "kickoff": "2026-09-13T13:00:00-04:00",
    "locked": false,
@@ -1232,8 +1232,8 @@
    "entry": "1",
    "alive": true,
    "strikes_left": 0,
-   "score": 0.024,
-   "p_season": 0.024,
+   "score": 0.0241,
+   "p_season": 0.0241,
    "path": [
     {
      "week": 1,
@@ -1331,8 +1331,8 @@
    "entry": "2",
    "alive": true,
    "strikes_left": 0,
-   "score": 0.0117,
-   "p_season": 0.0117,
+   "score": 0.0118,
+   "p_season": 0.0118,
    "path": [
     {
      "week": 1,
@@ -1529,28 +1529,28 @@
    "entry": "4",
    "alive": true,
    "strikes_left": 0,
-   "score": 0.016,
-   "p_season": 0.016,
+   "score": 0.0168,
+   "p_season": 0.0168,
    "path": [
     {
      "week": 1,
-     "team": "JAX",
-     "p": 0.7659
+     "team": "LAC",
+     "p": 0.8119
     },
     {
      "week": 2,
-     "team": "LAC",
-     "p": 0.7492
+     "team": "SF",
+     "p": 0.8353
     },
     {
      "week": 3,
-     "team": "SF",
-     "p": 0.8344
+     "team": "DET",
+     "p": 0.7743
     },
     {
      "week": 4,
-     "team": "CHI",
-     "p": 0.7735
+     "team": "MIN",
+     "p": 0.7682
     },
     {
      "week": 5,
@@ -1589,8 +1589,8 @@
     },
     {
      "week": 12,
-     "team": "CIN",
-     "p": 0.6655
+     "team": "JAX",
+     "p": 0.6924
     },
     {
      "week": 13,
@@ -1599,8 +1599,8 @@
     },
     {
      "week": 14,
-     "team": "DET",
-     "p": 0.7298
+     "team": "CHI",
+     "p": 0.6744
     },
     {
      "week": 15,
@@ -1619,8 +1619,8 @@
     },
     {
      "week": 18,
-     "team": "HOU",
-     "p": 0.6542
+     "team": "CIN",
+     "p": 0.6871
     }
    ]
   },
@@ -2717,8 +2717,8 @@
    "entry": "16",
    "alive": true,
    "strikes_left": 0,
-   "score": 0.0141,
-   "p_season": 0.0141,
+   "score": 0.0142,
+   "p_season": 0.0142,
    "path": [
     {
      "week": 1,
@@ -2816,23 +2816,23 @@
    "entry": "17",
    "alive": true,
    "strikes_left": 0,
-   "score": 0.0207,
-   "p_season": 0.0207,
+   "score": 0.0177,
+   "p_season": 0.0177,
    "path": [
     {
      "week": 1,
-     "team": "LAC",
-     "p": 0.8119
+     "team": "DET",
+     "p": 0.7221
     },
     {
      "week": 2,
-     "team": "SF",
-     "p": 0.8353
+     "team": "LAC",
+     "p": 0.7492
     },
     {
      "week": 3,
-     "team": "DET",
-     "p": 0.7743
+     "team": "SF",
+     "p": 0.8344
     },
     {
      "week": 4,
@@ -3014,8 +3014,8 @@
    "entry": "19",
    "alive": true,
    "strikes_left": 0,
-   "score": 0.0199,
-   "p_season": 0.0199,
+   "score": 0.02,
+   "p_season": 0.02,
    "path": [
     {
      "week": 1,
@@ -3311,28 +3311,28 @@
    "entry": "22",
    "alive": true,
    "strikes_left": 0,
-   "score": 0.0142,
-   "p_season": 0.0142,
+   "score": 0.014,
+   "p_season": 0.014,
    "path": [
     {
      "week": 1,
-     "team": "LAC",
-     "p": 0.8119
+     "team": "JAX",
+     "p": 0.7659
     },
     {
      "week": 2,
-     "team": "SF",
-     "p": 0.8353
+     "team": "LAC",
+     "p": 0.7492
     },
     {
      "week": 3,
-     "team": "DET",
-     "p": 0.7743
+     "team": "SF",
+     "p": 0.8344
     },
     {
      "week": 4,
-     "team": "MIN",
-     "p": 0.7682
+     "team": "CHI",
+     "p": 0.7735
     },
     {
      "week": 5,
@@ -3371,8 +3371,8 @@
     },
     {
      "week": 12,
-     "team": "JAX",
-     "p": 0.6924
+     "team": "CIN",
+     "p": 0.6655
     },
     {
      "week": 13,
@@ -3381,8 +3381,8 @@
     },
     {
      "week": 14,
-     "team": "CHI",
-     "p": 0.6744
+     "team": "DET",
+     "p": 0.7298
     },
     {
      "week": 15,
@@ -3401,8 +3401,8 @@
     },
     {
      "week": 18,
-     "team": "CIN",
-     "p": 0.6871
+     "team": "HOU",
+     "p": 0.6542
     }
    ]
   },
@@ -3410,13 +3410,13 @@
    "entry": "23",
    "alive": true,
    "strikes_left": 0,
-   "score": 0.0158,
-   "p_season": 0.0158,
+   "score": 0.0159,
+   "p_season": 0.0159,
    "path": [
     {
      "week": 1,
      "team": "DET",
-     "p": 0.718
+     "p": 0.7221
     },
     {
      "week": 2,
@@ -3917,8 +3917,8 @@
  },
  "qb_situations": [],
  "explain": {
-  "summary": "Chance that one of 25 entries wins 18 straight, from simulated seasons in which the pool is re-split over the best available teams every week. Each entry survives 1.58% on average; if they were independent that would be 32.8%, but they share teams, so 23.1%.",
-  "exposure": "Board: 2 teams at 75%+, then 72%. Spreading further would lower P(at least one survives). If ARI wins, 15 entries go out together.",
+  "summary": "Chance that one of 25 entries wins 18 straight, from simulated seasons in which the pool is re-split over the best available teams every week. Each entry survives 1.57% on average; if they were independent that would be 32.6%, but they share teams, so 23.1%.",
+  "exposure": "Board: 2 teams at 75%+, then 72%. Spreading further would lower P(at least one survives). If ARI wins, 14 entries go out together.",
   "picks": {
    "LV": {
     "probability": "From the betting odds: LV favoured by 4.1 at home.",
@@ -3939,10 +3939,10 @@
     "hedge": ""
    },
    "DET": {
-    "probability": "From the betting odds: DET favoured by 6.7 at home.",
+    "probability": "From the betting odds: DET favoured by 6.8 at home.",
     "timing": "DET's 4th-best spot of 17; best is 77% in wk 3 vs NYJ, but later weeks are worth whoever is best available then, not a named team.",
     "not_used": "Passed: LAC 81% saved for wk 2; JAX 77% saved for wk 12.",
-    "hedge": "As the pool's last entry it adds 0.65%: how often it survives while the other 24 entries are all dead; LV would add 0.71%."
+    "hedge": "As the pool's last entry it adds 0.60%: how often it survives while the other 24 entries are all dead; LV would add 0.71%."
    }
   },
   "options": [
@@ -3952,7 +3952,7 @@
    "64% now vs 81%. Less likely now, and what is left afterwards does not make up for it.",
    "62% now vs 81%. Less likely now, and what is left afterwards does not make up for it.",
    "66% now vs 81%. Less likely now, and what is left afterwards does not make up for it.",
-   "64% now vs 81%. Less likely now, and what is left afterwards does not make up for it.",
+   "63% now vs 81%. Less likely now, and what is left afterwards does not make up for it.",
    "61% now vs 81%. Less likely now, and what is left afterwards does not make up for it.",
    "58% now vs 81%. Less likely now, and what is left afterwards does not make up for it.",
    "54% now vs 81%. Less likely now, and what is left afterwards does not make up for it.",
@@ -3967,7 +3967,7 @@
    "1": "Avg 75% per pick; weakest wk 1 LV 64%.",
    "2": "Avg 76% per pick; weakest wk 14 CHI 67%.",
    "3": "Avg 76% per pick; weakest wk 14 CHI 67%.",
-   "4": "Avg 76% per pick; weakest wk 18 HOU 65%.",
+   "4": "Avg 76% per pick; weakest wk 14 CHI 67%.",
    "5": "Avg 76% per pick; weakest wk 14 CHI 67%.",
    "6": "Avg 76% per pick; weakest wk 18 HOU 65%.",
    "7": "Avg 76% per pick; weakest wk 18 HOU 65%.",
@@ -3980,18 +3980,18 @@
    "14": "Avg 76% per pick; weakest wk 18 HOU 65%.",
    "15": "Avg 76% per pick; weakest wk 14 CHI 67%.",
    "16": "Avg 76% per pick; weakest wk 18 HOU 65%.",
-   "17": "Avg 76% per pick; weakest wk 14 CHI 67%.",
+   "17": "Avg 75% per pick; weakest wk 14 CHI 67%.",
    "18": "Avg 76% per pick; weakest wk 14 CHI 67%.",
    "19": "Avg 76% per pick; weakest wk 14 CHI 67%.",
    "20": "Avg 76% per pick; weakest wk 14 CHI 67%.",
    "21": "Avg 76% per pick; weakest wk 14 CHI 67%.",
-   "22": "Avg 76% per pick; weakest wk 14 CHI 67%.",
+   "22": "Avg 76% per pick; weakest wk 18 HOU 65%.",
    "23": "Avg 75% per pick; weakest wk 14 CHI 67%.",
    "24": "Avg 76% per pick; weakest wk 14 CHI 67%.",
    "25": "Avg 76% per pick; weakest wk 18 HOU 65%."
   },
   "notes": [
-   "Posted lines are used as-is at any horizon. Games with no line yet use team ratings backed out of the 112 Vegas spreads posted so far.",
+   "Games with no line yet use team ratings backed out of the posted Vegas spreads; inpredictable's ratings were not used because the page still shows last season (516 games played before week 1).",
    "Week 18 spots are shrunk 20% toward 50% for resting starters.",
    "How much a posted line can still move is a default (about 1.4 pts one week out) until enough archived lines have closed to fit it.",
    "Later weeks are not planned as named teams: season odds assume the entry takes the best team still available each week at the line at the time. Simulated spreads widen as the season goes on, as real ones do, so the later menu is richer than today's board.",
@@ -4002,10 +4002,6 @@
  "allocation_view": "policy",
  "horizon": 1,
  "revisions": [
-  {
-   "generated_at": "2026-09-03T11:58:37.088799-04:00",
-   "picks": "LAC x12, JAX x10, LA, BAL, DET"
-  },
   {
    "generated_at": "2026-09-03T11:59:35.401770-04:00",
    "picks": "LAC x12, JAX x11, BAL, CIN"
@@ -4081,6 +4077,10 @@
   {
    "generated_at": "2026-09-03T14:14:39.471725-04:00",
    "picks": "LAC x15, JAX x9, BAL"
+  },
+  {
+   "generated_at": "2026-09-03T15:33:03.404577-04:00",
+   "picks": "LAC x15, JAX x8, LV, DET"
   }
  ]
 }

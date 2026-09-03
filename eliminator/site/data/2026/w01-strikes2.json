@@ -27,7 +27,7 @@
   17,
   18
  ],
- "generated_at": "2026-09-03T15:36:13.140902-04:00",
+ "generated_at": "2026-09-03T15:40:17.396552-04:00",
  "ratings_source": "market",
  "n_lines_posted": 112,
  "n_priced_games": 112,
@@ -36,9 +36,9 @@
   "expected_survivors": 0.3383,
   "n_live": 1,
   "p_each": [
-   0.3382
+   0.3384
   ],
-  "p_plugin_first": 0.3382
+  "p_plugin_first": 0.3384
  },
  "picks": [
   {
@@ -51,16 +51,16 @@
    "kickoff": "Sun 09/13 16:25",
    "status": "new",
    "on_file": null,
-   "score": 0.3382,
-   "p_season": 0.3382
+   "score": 0.3384,
+   "p_season": 0.3384
   }
  ],
  "options": [
   {
    "team": "LAC",
    "p_now": 0.8119,
-   "score": 0.3382,
-   "p_season": 0.3382,
+   "score": 0.3384,
+   "p_season": 0.3384,
    "p_pool_add": null,
    "plan": [
     "SF",
@@ -85,8 +85,8 @@
   {
    "team": "JAX",
    "p_now": 0.7659,
-   "score": 0.3321,
-   "p_season": 0.3321,
+   "score": 0.3322,
+   "p_season": 0.3322,
    "p_pool_add": null,
    "plan": [
     "LAC",
@@ -110,9 +110,9 @@
   },
   {
    "team": "DET",
-   "p_now": 0.718,
-   "score": 0.3136,
-   "p_season": 0.3136,
+   "p_now": 0.7221,
+   "score": 0.3146,
+   "p_season": 0.3146,
    "p_pool_add": null,
    "plan": [
     "LAC",
@@ -137,8 +137,8 @@
   {
    "team": "LV",
    "p_now": 0.6369,
-   "score": 0.3121,
-   "p_season": 0.3121,
+   "score": 0.3122,
+   "p_season": 0.3122,
    "p_pool_add": null,
    "plan": [
     "LAC",
@@ -163,8 +163,8 @@
   {
    "team": "PIT",
    "p_now": 0.6225,
-   "score": 0.3048,
-   "p_season": 0.3048,
+   "score": 0.3049,
+   "p_season": 0.3049,
    "p_pool_add": null,
    "plan": [
     "LAC",
@@ -189,8 +189,8 @@
   {
    "team": "PHI",
    "p_now": 0.6575,
-   "score": 0.3034,
-   "p_season": 0.3034,
+   "score": 0.3035,
+   "p_season": 0.3035,
    "p_pool_add": null,
    "plan": [
     "LAC",
@@ -214,9 +214,9 @@
   },
   {
    "team": "CIN",
-   "p_now": 0.6369,
-   "score": 0.3004,
-   "p_season": 0.3004,
+   "p_now": 0.6309,
+   "score": 0.2992,
+   "p_season": 0.2992,
    "p_pool_add": null,
    "plan": [
     "LAC",
@@ -241,8 +241,8 @@
   {
    "team": "BAL",
    "p_now": 0.6092,
-   "score": 0.2936,
-   "p_season": 0.2936,
+   "score": 0.2937,
+   "p_season": 0.2937,
    "p_pool_add": null,
    "plan": [
     "SF",
@@ -267,8 +267,8 @@
   {
    "team": "TEN",
    "p_now": 0.5427,
-   "score": 0.2899,
-   "p_season": 0.2899,
+   "score": 0.2901,
+   "p_season": 0.2901,
    "p_pool_add": null,
    "plan": [
     "LAC",
@@ -293,8 +293,8 @@
   {
    "team": "CHI",
    "p_now": 0.583,
-   "score": 0.2898,
-   "p_season": 0.2898,
+   "score": 0.29,
+   "p_season": 0.29,
    "p_pool_add": null,
    "plan": [
     "LAC",
@@ -319,8 +319,8 @@
   {
    "team": "DAL",
    "p_now": 0.5721,
-   "score": 0.2862,
-   "p_season": 0.2862,
+   "score": 0.2863,
+   "p_season": 0.2863,
    "p_pool_add": null,
    "plan": [
     "LAC",
@@ -345,8 +345,8 @@
   {
    "team": "SEA",
    "p_now": 0.6092,
-   "score": 0.2845,
-   "p_season": 0.2845,
+   "score": 0.2846,
+   "p_season": 0.2846,
    "p_pool_add": null,
    "plan": [
     "SF",
@@ -371,8 +371,8 @@
   {
    "team": "LA",
    "p_now": 0.6369,
-   "score": 0.2816,
-   "p_season": 0.2816,
+   "score": 0.2818,
+   "p_season": 0.2818,
    "p_pool_add": null,
    "plan": [
     "LAC",
@@ -397,8 +397,8 @@
   {
    "team": "KC",
    "p_now": 0.5721,
-   "score": 0.279,
-   "p_season": 0.279,
+   "score": 0.2792,
+   "p_season": 0.2792,
    "p_pool_add": null,
    "plan": [
     "SF",
@@ -423,8 +423,8 @@
   {
    "team": "MIN",
    "p_now": 0.5174,
-   "score": 0.277,
-   "p_season": 0.277,
+   "score": 0.2772,
+   "p_season": 0.2772,
    "p_pool_add": null,
    "plan": [
     "LAC",
@@ -449,8 +449,8 @@
   {
    "team": "NYJ",
    "p_now": 0.4573,
-   "score": 0.2725,
-   "p_season": 0.2725,
+   "score": 0.2726,
+   "p_season": 0.2726,
    "p_pool_add": null,
    "plan": [
     "LAC",
@@ -505,8 +505,8 @@
    "opp": "NO",
    "home": true,
    "neutral": false,
-   "prob": 0.718,
-   "spread": 6.6741,
+   "prob": 0.7221,
+   "spread": 6.8154,
    "source": "moneyline",
    "kickoff": "2026-09-13T13:00:00-04:00",
    "locked": false,
@@ -540,19 +540,6 @@
    "qb_note": ""
   },
   {
-   "team": "CIN",
-   "opp": "TB",
-   "home": true,
-   "neutral": false,
-   "prob": 0.6369,
-   "spread": 4.052,
-   "source": "moneyline",
-   "kickoff": "2026-09-13T13:00:00-04:00",
-   "locked": false,
-   "played": false,
-   "qb_note": ""
-  },
-  {
    "team": "LV",
    "opp": "MIA",
    "home": true,
@@ -561,6 +548,19 @@
    "spread": 4.052,
    "source": "moneyline",
    "kickoff": "2026-09-13T16:25:00-04:00",
+   "locked": false,
+   "played": false,
+   "qb_note": ""
+  },
+  {
+   "team": "CIN",
+   "opp": "TB",
+   "home": true,
+   "neutral": false,
+   "prob": 0.6309,
+   "spread": 3.8685,
+   "source": "moneyline",
+   "kickoff": "2026-09-13T13:00:00-04:00",
    "locked": false,
    "played": false,
    "qb_note": ""
@@ -800,6 +800,19 @@
    "qb_note": ""
   },
   {
+   "team": "TB",
+   "opp": "CIN",
+   "home": false,
+   "neutral": false,
+   "prob": 0.3691,
+   "spread": -3.8685,
+   "source": "moneyline",
+   "kickoff": "2026-09-13T13:00:00-04:00",
+   "locked": false,
+   "played": false,
+   "qb_note": ""
+  },
+  {
    "team": "SF",
    "opp": "LA",
    "home": false,
@@ -808,19 +821,6 @@
    "spread": -4.052,
    "source": "moneyline",
    "kickoff": "2026-09-10T20:35:00-04:00",
-   "locked": false,
-   "played": false,
-   "qb_note": ""
-  },
-  {
-   "team": "TB",
-   "opp": "CIN",
-   "home": false,
-   "neutral": false,
-   "prob": 0.3631,
-   "spread": -4.052,
-   "source": "moneyline",
-   "kickoff": "2026-09-13T13:00:00-04:00",
    "locked": false,
    "played": false,
    "qb_note": ""
@@ -856,8 +856,8 @@
    "opp": "DET",
    "home": false,
    "neutral": false,
-   "prob": 0.282,
-   "spread": -6.6741,
+   "prob": 0.2779,
+   "spread": -6.8154,
    "source": "moneyline",
    "kickoff": "2026-09-13T13:00:00-04:00",
    "locked": false,
@@ -896,8 +896,8 @@
    "entry": "1",
    "alive": true,
    "strikes_left": 2,
-   "score": 0.3382,
-   "p_season": 0.3382,
+   "score": 0.3384,
+   "p_season": 0.3384,
    "path": [
     {
      "week": 1,
@@ -1054,7 +1054,7 @@
    "64% now vs 81%. Less likely now, and what is left afterwards does not make up for it.",
    "62% now vs 81%. Less likely now, and what is left afterwards does not make up for it.",
    "66% now vs 81%. Less likely now, and what is left afterwards does not make up for it.",
-   "64% now vs 81%. Less likely now, and what is left afterwards does not make up for it.",
+   "63% now vs 81%. Less likely now, and what is left afterwards does not make up for it.",
    "61% now vs 81%. Less likely now, and what is left afterwards does not make up for it.",
    "54% now vs 81%. Less likely now, and what is left afterwards does not make up for it.",
    "58% now vs 81%. Less likely now, and what is left afterwards does not make up for it.",
@@ -1069,7 +1069,7 @@
    "1": "Avg 76% per pick; weakest wk 14 CHI 67%."
   },
   "notes": [
-   "Posted lines are used as-is at any horizon. Games with no line yet use team ratings backed out of the 112 Vegas spreads posted so far.",
+   "Games with no line yet use team ratings backed out of the posted Vegas spreads; inpredictable's ratings were not used because the page still shows last season (516 games played before week 1).",
    "Week 18 spots are shrunk 20% toward 50% for resting starters.",
    "How much a posted line can still move is a default (about 1.4 pts one week out) until enough archived lines have closed to fit it.",
    "Later weeks are not planned as named teams: season odds assume the entry takes the best team still available each week at the line at the time. Simulated spreads widen as the season goes on, as real ones do, so the later menu is richer than today's board.",
@@ -1080,10 +1080,6 @@
  "allocation_view": "policy",
  "horizon": 1,
  "revisions": [
-  {
-   "generated_at": "2026-09-03T11:58:40.417692-04:00",
-   "picks": "LAC"
-  },
   {
    "generated_at": "2026-09-03T11:59:40.342569-04:00",
    "picks": "LAC"
@@ -1158,6 +1154,10 @@
   },
   {
    "generated_at": "2026-09-03T14:15:42.952427-04:00",
+   "picks": "LAC"
+  },
+  {
+   "generated_at": "2026-09-03T15:36:13.140902-04:00",
    "picks": "LAC"
   }
  ]
