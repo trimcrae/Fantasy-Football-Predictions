@@ -1,0 +1,18 @@
+# User overrides. Anything here beats calibration.json and the code defaults.
+# See eliminator/config.py for every key and its meaning.
+season: null            # null = latest season present in the schedule feed
+season_weeks: 18
+
+model:
+  ratings_source: auto  # auto -> inpredictable when reachable, else market-implied fit
+  # Week 18: calibration finds closing lines ~12% flatter and noisier than projections because
+  # clinched teams rest starters. 0.8 is deliberately a bit more cautious than the fitted 0.88,
+  # since the teams a survivor plan wants in week 18 are exactly the ones likely to rest.
+  week18_shrink: 0.8
+
+qb:
+  default_tier: average
+
+simulation:
+  scenarios: 20000
+  seed: 7

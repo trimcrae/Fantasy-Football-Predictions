@@ -1,0 +1,12 @@
+# QB availability ledger. The model reads this file; `eliminator update` prints the nflverse
+# injury report so you can keep it current. Delete or set status: healthy when a QB is back.
+#
+# - team: BAL
+#   player: Lamar Jackson
+#   tier: elite            # elite 7 | good 5 | average 3.5 | replacement 1.5 points (or penalty: 6.0)
+#   status: out            # out | doubtful | questionable | ir | season | healthy
+#   injury: hamstring      # keyword for the duration prior when return_week is unknown
+#   injured_week: 5        # first week missed
+#   return_week: 8         # optional expected first week back
+#   note: "week-to-week per HC"
+[]
