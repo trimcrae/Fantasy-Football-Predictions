@@ -27,7 +27,7 @@
   17,
   18
  ],
- "generated_at": "2026-09-03T11:39:24.416026-04:00",
+ "generated_at": "2026-09-03T11:55:52.578984-04:00",
  "ratings_source": "market",
  "n_lines_posted": 112,
  "n_priced_games": 112,
@@ -3901,90 +3901,90 @@
  },
  "qb_situations": [],
  "explain": {
-  "summary": "8.8% is the simulated chance that at least one of 25 entries wins all 18 remaining picks. Simulated one at a time the entries survive about 0.55% each, which would give 12.8% if they were independent; they share teams and die together, so it lands at 8.8%. Expected survivors 0.14 is the same simulation counted per entry. The per-pick numbers in the plans are the planning view, discounted 16x for later weeks, so the product of a plan's picks is far below its simulated survival.",
-  "exposure": "25 live entries across 5 teams; 12 on LAC. The board has 2 teams at 75% or better, then it drops to 72% (a 5% step after the top two). The objective is that at least one entry survives the season, so entries only spread onto weaker teams when that costs little; moving a dozen entries onto a 64% team to avoid sharing would lower that probability. The flip side is correlation: if ARI wins, the 12 LAC entries go out together.",
+  "summary": "Simulated chance one of 25 entries wins 18 straight. Alone each survives 0.55%; independent that would be 12.8%, shared teams pull it to 8.8%.",
+  "exposure": "Board: 2 teams at 75%+, then 72%. Spreading further would lower P(at least one survives). If ARI wins, 12 entries go out together.",
   "picks": {
    "LAC": {
-    "probability": "81% comes from the de-vigged moneyline: LAC +10.2 at home vs ARI. Ratings say LAC +2.6 vs ARI -6.5, home field +1.6 (model spread +10.7).",
-    "timing": "This is the single best spot on the whole remaining schedule (2 spots at 75%+ and 8 at 70%+ all season). LAC's best later spot is week 2 vs LV at 68%, 13% worse, so nothing comparable is given up.",
+    "probability": "moneyline, LAC +10.2 at home.",
+    "timing": "Best spot on the remaining schedule; LAC's next best is 68% (wk 2 vs LV).",
     "not_used": ""
    },
    "JAX": {
-    "probability": "77% comes from the de-vigged moneyline: JAX +8.4 at home vs CLE. Ratings say JAX +1.0 vs CLE -5.0, home field +1.6 (model spread +7.6).",
-    "timing": "This is the #2 spot on the whole remaining schedule (2 spots at 75%+ and 8 at 70%+ all season). JAX's best later spot is week 12 vs TEN at 60%, 16% worse, so nothing comparable is given up.",
-    "not_used": "Bigger favourites passed over: LAC (81% now) is saved for week 2 vs LV (68%)."
+    "probability": "moneyline, JAX +8.4 at home.",
+    "timing": "#2 spot on the remaining schedule; JAX's next best is 60% (wk 12 vs TEN).",
+    "not_used": "Passed: LAC 81% saved for wk 2."
    },
    "LA": {
-    "probability": "64% comes from the de-vigged moneyline: LA +4.1 neutral site vs SF. Ratings say LA +5.9 vs SF +2.8 (model spread +3.0).",
-    "timing": "This is the #37 spot on the remaining schedule (2 spots at 75%+ and 8 at 70%+ all season). LA projects better in week 6 vs ARI (74%), but that projection is weeks away and discounted; the plan still spends them now.",
-    "not_used": "Bigger favourites passed over: LAC (81% now) is saved for week 2 vs LV (68%); JAX (77% now) is saved for week 12 vs TEN (60%); DET (72% now) is saved for week 5 vs ARI (66%)."
+    "probability": "moneyline, LA +4.1 neutral site.",
+    "timing": "#37 spot on the remaining schedule; LA projects 74% in wk 6 vs ARI, but that is discounted as far off.",
+    "not_used": "Passed: LAC 81% saved for wk 2; JAX 77% saved for wk 12; DET 72% saved for wk 5."
    },
    "BAL": {
-    "probability": "61% comes from the de-vigged moneyline: BAL +3.2 on the road vs IND. Ratings say BAL +3.4 vs IND -1.5, home field -1.6 (model spread +3.2).",
-    "timing": "This is the #64 spot on the remaining schedule (2 spots at 75%+ and 8 at 70%+ all season). BAL projects better in week 4 vs TEN (68%), but that projection is weeks away and discounted; the plan still spends them now.",
-    "not_used": "Bigger favourites passed over: LAC (81% now) is saved for week 16 vs MIA (61%); JAX (77% now) is saved for week 12 vs TEN (60%); DET (72% now) is saved for week 3 vs NYJ (69%)."
+    "probability": "moneyline, BAL +3.2 on the road.",
+    "timing": "#64 spot on the remaining schedule; BAL projects 68% in wk 4 vs TEN, but that is discounted as far off.",
+    "not_used": "Passed: LAC 81% saved for wk 16; JAX 77% saved for wk 12; DET 72% saved for wk 3."
    },
    "DET": {
-    "probability": "72% comes from the de-vigged moneyline: DET +6.7 at home vs NO. Ratings say DET +2.5 vs NO -2.7, home field +1.6 (model spread +6.8).",
-    "timing": "This is the #7 spot on the remaining schedule (2 spots at 75%+ and 8 at 70%+ all season). DET's best later spot is week 3 vs NYJ at 69%, nearly as good; the plan prefers the sure thing now because future spots are discounted heavily.",
-    "not_used": "Bigger favourites passed over: LAC (81% now) is saved for week 16 vs MIA (61%); JAX (77% now) is saved for week 12 vs TEN (60%)."
+    "probability": "moneyline, DET +6.7 at home.",
+    "timing": "#7 spot on the remaining schedule; DET's next best is 69% (wk 3 vs NYJ).",
+    "not_used": "Passed: LAC 81% saved for wk 16; JAX 77% saved for wk 12."
    }
   },
   "options": [
-   "Best available: 81% now and the strongest remaining schedule after it.",
-   "77% now vs 81% for LAC. Later weeks shift in 6 places: w2 LAC 68% instead of SF 75%; w3 SF 74% instead of DET 69%; w4 CHI 68% instead of MIN 67%; .... Simulated P(season) is higher than the top row's; plans are chosen on the discounted score, which trusts this week's price over distant projections.",
-   "72% now vs 81% for LAC. Later weeks shift in 2 places: w2 LAC 68% instead of SF 75%; w3 SF 74% instead of DET 69%. Simulated P(season) is higher than the top row's; plans are chosen on the discounted score, which trusts this week's price over distant projections.",
-   "66% now vs 81% for LAC. Later weeks shift in 6 places: w2 LAC 68% instead of SF 75%; w3 SF 74% instead of DET 69%; w4 CHI 68% instead of MIN 67%; ....",
-   "64% now vs 81% for LAC. Later weeks shift in 4 places: w2 LAC 68% instead of SF 75%; w3 SF 74% instead of DET 69%; w4 CHI 68% instead of MIN 67%; .... Simulated P(season) is higher than the top row's; plans are chosen on the discounted score, which trusts this week's price over distant projections.",
-   "62% now vs 81% for LAC. Later weeks shift in 4 places: w2 LAC 68% instead of SF 75%; w3 SF 74% instead of DET 69%; w4 CHI 68% instead of MIN 67%; .... Simulated P(season) is higher than the top row's; plans are chosen on the discounted score, which trusts this week's price over distant projections.",
-   "64% now vs 81% for LAC. Later weeks shift in 5 places: w2 LAC 68% instead of SF 75%; w3 SF 74% instead of DET 69%; w4 CHI 68% instead of MIN 67%; ....",
-   "58% now vs 81% for LAC. Later weeks shift in 3 places: w2 LAC 68% instead of SF 75%; w3 SF 74% instead of DET 69%; w14 DET 62% instead of CHI 59%.",
-   "61% now vs 81% for LAC. Later weeks shift in 1 place: w16 LAC 61% instead of BAL 65%. Simulated P(season) is higher than the top row's; plans are chosen on the discounted score, which trusts this week's price over distant projections.",
-   "54% now vs 81% for LAC. Later weeks shift in 4 places: w2 LAC 68% instead of SF 75%; w3 SF 74% instead of DET 69%; w4 CHI 68% instead of MIN 67%; ....",
-   "64% now vs 81% for LAC. Later weeks shift in 4 places: w2 LAC 68% instead of SF 75%; w3 SF 74% instead of DET 69%; w5 DET 66% instead of NE 66%; .... Simulated P(season) is higher than the top row's; plans are chosen on the discounted score, which trusts this week's price over distant projections.",
-   "61% now vs 81% for LAC. Later weeks shift in 2 places: w9 KC 67% instead of SEA 71%; w11 LAC 65% instead of KC 68%.",
-   "57% now vs 81% for LAC. Later weeks shift in 1 place: w11 LAC 65% instead of KC 68%.",
-   "57% now vs 81% for LAC. Later weeks shift in 5 places: w2 LAC 68% instead of SF 75%; w3 SF 74% instead of DET 69%; w4 CHI 68% instead of MIN 67%; ....",
-   "52% now vs 81% for LAC. Later weeks shift in 4 places: w2 LAC 68% instead of SF 75%; w3 SF 74% instead of DET 69%; w4 CHI 68% instead of MIN 67%; ....",
-   "48% now vs 81% for LAC. Later weeks shift in 4 places: w2 LAC 68% instead of SF 75%; w3 SF 74% instead of DET 69%; w4 CHI 68% instead of MIN 67%; ...."
+   "Best now and best schedule after.",
+   "77% now vs 81%. Later plan differs in 6 weeks (wk 2: LAC 68% for SF 75%, ...). Higher P(season): plans are ranked on the discounted score.",
+   "72% now vs 81%. Later plan differs in 2 weeks (wk 2: LAC 68% for SF 75%, ...). Higher P(season): plans are ranked on the discounted score.",
+   "66% now vs 81%. Later plan differs in 6 weeks (wk 2: LAC 68% for SF 75%, ...).",
+   "64% now vs 81%. Later plan differs in 4 weeks (wk 2: LAC 68% for SF 75%, ...). Higher P(season): plans are ranked on the discounted score.",
+   "62% now vs 81%. Later plan differs in 4 weeks (wk 2: LAC 68% for SF 75%, ...). Higher P(season): plans are ranked on the discounted score.",
+   "64% now vs 81%. Later plan differs in 5 weeks (wk 2: LAC 68% for SF 75%, ...).",
+   "58% now vs 81%. Later plan differs in 3 weeks (wk 2: LAC 68% for SF 75%, ...).",
+   "61% now vs 81%. Later plan differs in 1 week (wk 16: LAC 61% for BAL 65%). Higher P(season): plans are ranked on the discounted score.",
+   "54% now vs 81%. Later plan differs in 4 weeks (wk 2: LAC 68% for SF 75%, ...).",
+   "64% now vs 81%. Later plan differs in 4 weeks (wk 2: LAC 68% for SF 75%, ...). Higher P(season): plans are ranked on the discounted score.",
+   "61% now vs 81%. Later plan differs in 2 weeks (wk 9: KC 67% for SEA 71%, ...).",
+   "57% now vs 81%. Later plan differs in 1 week (wk 11: LAC 65% for KC 68%).",
+   "57% now vs 81%. Later plan differs in 5 weeks (wk 2: LAC 68% for SF 75%, ...).",
+   "52% now vs 81%. Later plan differs in 4 weeks (wk 2: LAC 68% for SF 75%, ...).",
+   "48% now vs 81%. Later plan differs in 4 weeks (wk 2: LAC 68% for SF 75%, ...)."
   ],
   "entries": {
-   "1": "18 picks averaging 66%; weakest w16 NO 58%, strongest w1 LAC 81%. P(season) 0.77% is simulated with calibrated uncertainty; score 0.05% discounts the future and is only for ranking.",
-   "2": "18 picks averaging 64%; weakest w17 GB 53%, strongest w1 JAX 77%. P(season) 0.22% is simulated with calibrated uncertainty; score 0.03% discounts the future and is only for ranking.",
-   "3": "18 picks averaging 66%; weakest w18 CIN 60%, strongest w1 LAC 81%. P(season) 0.52% is simulated with calibrated uncertainty; score 0.05% discounts the future and is only for ranking.",
-   "4": "18 picks averaging 66%; weakest w12 CIN 59%, strongest w1 JAX 77%. P(season) 0.73% is simulated with calibrated uncertainty; score 0.05% discounts the future and is only for ranking.",
-   "5": "18 picks averaging 65%; weakest w18 HOU 58%, strongest w1 LAC 81%. P(season) 0.53% is simulated with calibrated uncertainty; score 0.04% discounts the future and is only for ranking.",
-   "6": "18 picks averaging 66%; weakest w16 PIT 55%, strongest w1 LAC 81%. P(season) 0.80% is simulated with calibrated uncertainty; score 0.05% discounts the future and is only for ranking.",
-   "7": "18 picks averaging 63%; weakest w15 WAS 55%, strongest w1 JAX 77%. P(season) 0.23% is simulated with calibrated uncertainty; score 0.03% discounts the future and is only for ranking.",
-   "8": "18 picks averaging 65%; weakest w12 CIN 59%, strongest w1 JAX 77%. P(season) 0.85% is simulated with calibrated uncertainty; score 0.05% discounts the future and is only for ranking.",
-   "9": "18 picks averaging 66%; weakest w12 WAS 56%, strongest w1 LAC 81%. P(season) 0.82% is simulated with calibrated uncertainty; score 0.05% discounts the future and is only for ranking.",
-   "10": "18 picks averaging 66%; weakest w17 IND 53%, strongest w1 LAC 81%. P(season) 0.57% is simulated with calibrated uncertainty; score 0.05% discounts the future and is only for ranking.",
-   "11": "18 picks averaging 64%; weakest w16 PIT 55%, strongest w1 JAX 77%. P(season) 0.22% is simulated with calibrated uncertainty; score 0.03% discounts the future and is only for ranking.",
-   "12": "18 picks averaging 65%; weakest w14 CHI 59%, strongest w1 LAC 81%. P(season) 0.80% is simulated with calibrated uncertainty; score 0.04% discounts the future and is only for ranking.",
-   "13": "18 picks averaging 65%; weakest w12 TB 57%, strongest w1 JAX 77%. P(season) 0.48% is simulated with calibrated uncertainty; score 0.04% discounts the future and is only for ranking.",
-   "14": "18 picks averaging 66%; weakest w12 WAS 56%, strongest w1 JAX 77%. P(season) 0.77% is simulated with calibrated uncertainty; score 0.05% discounts the future and is only for ranking.",
-   "15": "18 picks averaging 64%; weakest w14 ATL 51%, strongest w1 LAC 81%. P(season) 0.17% is simulated with calibrated uncertainty; score 0.03% discounts the future and is only for ranking.",
-   "16": "18 picks averaging 65%; weakest w7 PHI 56%, strongest w1 LAC 81%. P(season) 0.42% is simulated with calibrated uncertainty; score 0.04% discounts the future and is only for ranking.",
-   "17": "18 picks averaging 65%; weakest w14 CHI 59%, strongest w3 SF 74%. P(season) 0.65% is simulated with calibrated uncertainty; score 0.04% discounts the future and is only for ranking.",
-   "18": "18 picks averaging 65%; weakest w17 DAL 57%, strongest w1 JAX 77%. P(season) 0.50% is simulated with calibrated uncertainty; score 0.04% discounts the future and is only for ranking.",
-   "19": "18 picks averaging 65%; weakest w17 PIT 52%, strongest w1 JAX 77%. P(season) 0.58% is simulated with calibrated uncertainty; score 0.04% discounts the future and is only for ranking.",
-   "20": "18 picks averaging 65%; weakest w14 CHI 59%, strongest w2 SF 75%. P(season) 0.68% is simulated with calibrated uncertainty; score 0.04% discounts the future and is only for ranking.",
-   "21": "18 picks averaging 63%; weakest w12 DEN 52%, strongest w1 LAC 81%. P(season) 0.12% is simulated with calibrated uncertainty; score 0.02% discounts the future and is only for ranking.",
-   "22": "18 picks averaging 66%; weakest w12 TB 57%, strongest w1 LAC 81%. P(season) 0.78% is simulated with calibrated uncertainty; score 0.05% discounts the future and is only for ranking.",
-   "23": "18 picks averaging 63%; weakest w8 NYJ 52%, strongest w3 SF 74%. P(season) 0.07% is simulated with calibrated uncertainty; score 0.02% discounts the future and is only for ranking.",
-   "24": "18 picks averaging 65%; weakest w17 IND 53%, strongest w1 LAC 81%. P(season) 0.60% is simulated with calibrated uncertainty; score 0.04% discounts the future and is only for ranking.",
-   "25": "18 picks averaging 66%; weakest w12 WAS 56%, strongest w1 JAX 77%. P(season) 0.78% is simulated with calibrated uncertainty; score 0.05% discounts the future and is only for ranking."
+   "1": "Avg 66% per pick; weakest wk 16 NO 58%.",
+   "2": "Avg 64% per pick; weakest wk 17 GB 53%.",
+   "3": "Avg 66% per pick; weakest wk 18 CIN 60%.",
+   "4": "Avg 66% per pick; weakest wk 12 CIN 59%.",
+   "5": "Avg 65% per pick; weakest wk 18 HOU 58%.",
+   "6": "Avg 66% per pick; weakest wk 16 PIT 55%.",
+   "7": "Avg 63% per pick; weakest wk 15 WAS 55%.",
+   "8": "Avg 65% per pick; weakest wk 12 CIN 59%.",
+   "9": "Avg 66% per pick; weakest wk 12 WAS 56%.",
+   "10": "Avg 66% per pick; weakest wk 17 IND 53%.",
+   "11": "Avg 64% per pick; weakest wk 16 PIT 55%.",
+   "12": "Avg 65% per pick; weakest wk 14 CHI 59%.",
+   "13": "Avg 65% per pick; weakest wk 12 TB 57%.",
+   "14": "Avg 66% per pick; weakest wk 12 WAS 56%.",
+   "15": "Avg 64% per pick; weakest wk 14 ATL 51%.",
+   "16": "Avg 65% per pick; weakest wk 7 PHI 56%.",
+   "17": "Avg 65% per pick; weakest wk 14 CHI 59%.",
+   "18": "Avg 65% per pick; weakest wk 17 DAL 57%.",
+   "19": "Avg 65% per pick; weakest wk 17 PIT 52%.",
+   "20": "Avg 65% per pick; weakest wk 14 CHI 59%.",
+   "21": "Avg 63% per pick; weakest wk 12 DEN 52%.",
+   "22": "Avg 66% per pick; weakest wk 12 TB 57%.",
+   "23": "Avg 63% per pick; weakest wk 8 NYJ 52%.",
+   "24": "Avg 65% per pick; weakest wk 17 IND 53%.",
+   "25": "Avg 66% per pick; weakest wk 12 WAS 56%."
   },
   "notes": [
-   "Ratings are fitted from the 112 lines posted so far this season (residual 0.69 points), seeded by last season regressed toward average.",
-   "1 entry on BAL (61%) rather than LAC (81%): 1 of them uses LAC later (week 16).",
-   "1 entry on DET (72%) rather than LAC (81%): 1 of them uses LAC later (week 16).",
-   "10 entries on JAX (77%) rather than LAC (81%): 10 of them use LAC later (weeks 2, 11, 14, 16).",
-   "1 entry on LA (64%) rather than LAC (81%): 1 of them uses LAC later (week 2).",
-   "Road pick BAL: the line already includes home field (about 1.6 points), so the probability is not optimistic about it.",
-   "Week 18 spots are shrunk toward 50% (19% flatter) and given extra variance because clinched teams rest starters.",
-   "Every percentage for a later week on this page is the planning view: the projection's uncertainty is inflated 16x (backtest-tuned), which pulls distant games toward 50% so a sure thing now beats a slightly better projection months away. The survival percentages are simulated with calibrated uncertainty instead.",
-   "A tie counts as a loss, and later weeks of every plan are re-optimised on each run; only this week's pick is a recommendation."
+   "Ratings: fitted from 112 posted lines, seeded by last season regressed to average.",
+   "1 on BAL (61%) not LAC (81%): 1 saves LAC for wk 16.",
+   "1 on DET (72%) not LAC (81%): 1 saves LAC for wk 16.",
+   "10 on JAX (77%) not LAC (81%): 10 save LAC for wk 2, 11, 14, 16.",
+   "1 on LA (64%) not LAC (81%): 1 saves LAC for wk 2.",
+   "Road pick BAL: the line already includes home field.",
+   "Week 18 spots are shrunk 20% toward 50% for resting starters.",
+   "Later-week percentages are the planning view, discounted 16x toward 50%; survival percentages are simulated without that discount.",
+   "A tie is a loss. Only this week's pick is a recommendation; later weeks re-solve every run."
   ]
  },
  "revisions": [
@@ -4018,6 +4018,10 @@
   },
   {
    "generated_at": "2026-09-03T11:38:09.406628-04:00",
+   "picks": "LAC x12, JAX x10, LA, BAL, DET"
+  },
+  {
+   "generated_at": "2026-09-03T11:39:24.416026-04:00",
    "picks": "LAC x12, JAX x10, LA, BAL, DET"
   }
  ]

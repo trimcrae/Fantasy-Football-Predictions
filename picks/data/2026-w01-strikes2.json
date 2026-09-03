@@ -27,7 +27,7 @@
   17,
   18
  ],
- "generated_at": "2026-09-03T11:39:27.596344-04:00",
+ "generated_at": "2026-09-03T11:55:55.759276-04:00",
  "ratings_source": "market",
  "n_lines_posted": 112,
  "n_priced_games": 112,
@@ -1021,41 +1021,41 @@
  },
  "qb_situations": [],
  "explain": {
-  "summary": "16.2% is the simulated chance of at most 2 losses over the 18 remaining picks, with calibrated uncertainty about how good each team really is. The per-pick numbers in the plan (averaging 66%) are the planning view, which discounts later weeks 16x and so pulls them toward 50%; under that pessimistic view the chance is the plan score, 2.99%, a ranking device rather than a forecast.",
+  "summary": "Simulated chance of at most 2 losses in 18 picks. Score 3.0% is the same under the 16x future discount; it ranks plans, it is not a forecast.",
   "exposure": "",
   "picks": {
    "LAC": {
-    "probability": "81% comes from the de-vigged moneyline: LAC +10.2 at home vs ARI. Ratings say LAC +2.6 vs ARI -6.5, home field +1.6 (model spread +10.7).",
-    "timing": "This is the single best spot on the whole remaining schedule (2 spots at 75%+ and 8 at 70%+ all season). LAC's best later spot is week 2 vs LV at 68%, 13% worse, so nothing comparable is given up.",
+    "probability": "moneyline, LAC +10.2 at home.",
+    "timing": "Best spot on the remaining schedule; LAC's next best is 68% (wk 2 vs LV).",
     "not_used": ""
    }
   },
   "options": [
-   "Best available: 81% now and the strongest remaining schedule after it.",
-   "77% now vs 81% for LAC. Later weeks shift in 6 places: w2 LAC 68% instead of SF 75%; w3 SF 74% instead of DET 69%; w4 CHI 68% instead of MIN 67%; ....",
-   "72% now vs 81% for LAC. Later weeks shift in 2 places: w2 LAC 68% instead of SF 75%; w3 SF 74% instead of DET 69%.",
-   "66% now vs 81% for LAC. Later weeks shift in 6 places: w2 LAC 68% instead of SF 75%; w3 SF 74% instead of DET 69%; w4 CHI 68% instead of MIN 67%; ....",
-   "64% now vs 81% for LAC. Later weeks shift in 4 places: w2 LAC 68% instead of SF 75%; w3 SF 74% instead of DET 69%; w4 CHI 68% instead of MIN 67%; ....",
-   "62% now vs 81% for LAC. Later weeks shift in 4 places: w2 LAC 68% instead of SF 75%; w3 SF 74% instead of DET 69%; w4 CHI 68% instead of MIN 67%; ....",
-   "64% now vs 81% for LAC. Later weeks shift in 5 places: w2 LAC 68% instead of SF 75%; w3 SF 74% instead of DET 69%; w4 CHI 68% instead of MIN 67%; ....",
-   "58% now vs 81% for LAC. Later weeks shift in 3 places: w2 LAC 68% instead of SF 75%; w3 SF 74% instead of DET 69%; w14 DET 62% instead of CHI 59%.",
-   "61% now vs 81% for LAC. Later weeks shift in 1 place: w16 LAC 61% instead of BAL 65%.",
-   "54% now vs 81% for LAC. Later weeks shift in 4 places: w2 LAC 68% instead of SF 75%; w3 SF 74% instead of DET 69%; w4 CHI 68% instead of MIN 67%; ....",
-   "64% now vs 81% for LAC. Later weeks shift in 4 places: w2 LAC 68% instead of SF 75%; w3 SF 74% instead of DET 69%; w5 DET 66% instead of NE 66%; ....",
-   "57% now vs 81% for LAC. Later weeks shift in 1 place: w11 LAC 65% instead of KC 68%.",
-   "61% now vs 81% for LAC. Later weeks shift in 2 places: w9 KC 67% instead of SEA 71%; w11 LAC 65% instead of KC 68%.",
-   "57% now vs 81% for LAC. Later weeks shift in 5 places: w2 LAC 68% instead of SF 75%; w3 SF 74% instead of DET 69%; w4 CHI 68% instead of MIN 67%; ....",
-   "52% now vs 81% for LAC. Later weeks shift in 4 places: w2 LAC 68% instead of SF 75%; w3 SF 74% instead of DET 69%; w4 CHI 68% instead of MIN 67%; ....",
-   "48% now vs 81% for LAC. Later weeks shift in 4 places: w2 LAC 68% instead of SF 75%; w3 SF 74% instead of DET 69%; w4 CHI 68% instead of MIN 67%; ...."
+   "Best now and best schedule after.",
+   "77% now vs 81%. Later plan differs in 6 weeks (wk 2: LAC 68% for SF 75%, ...).",
+   "72% now vs 81%. Later plan differs in 2 weeks (wk 2: LAC 68% for SF 75%, ...).",
+   "66% now vs 81%. Later plan differs in 6 weeks (wk 2: LAC 68% for SF 75%, ...).",
+   "64% now vs 81%. Later plan differs in 4 weeks (wk 2: LAC 68% for SF 75%, ...).",
+   "62% now vs 81%. Later plan differs in 4 weeks (wk 2: LAC 68% for SF 75%, ...).",
+   "64% now vs 81%. Later plan differs in 5 weeks (wk 2: LAC 68% for SF 75%, ...).",
+   "58% now vs 81%. Later plan differs in 3 weeks (wk 2: LAC 68% for SF 75%, ...).",
+   "61% now vs 81%. Later plan differs in 1 week (wk 16: LAC 61% for BAL 65%).",
+   "54% now vs 81%. Later plan differs in 4 weeks (wk 2: LAC 68% for SF 75%, ...).",
+   "64% now vs 81%. Later plan differs in 4 weeks (wk 2: LAC 68% for SF 75%, ...).",
+   "57% now vs 81%. Later plan differs in 1 week (wk 11: LAC 65% for KC 68%).",
+   "61% now vs 81%. Later plan differs in 2 weeks (wk 9: KC 67% for SEA 71%, ...).",
+   "57% now vs 81%. Later plan differs in 5 weeks (wk 2: LAC 68% for SF 75%, ...).",
+   "52% now vs 81%. Later plan differs in 4 weeks (wk 2: LAC 68% for SF 75%, ...).",
+   "48% now vs 81%. Later plan differs in 4 weeks (wk 2: LAC 68% for SF 75%, ...)."
   ],
   "entries": {
-   "1": "18 picks averaging 66%; weakest w14 CHI 59%, strongest w1 LAC 81%. P(season) 16.23% is simulated with calibrated uncertainty; score 2.99% discounts the future and is only for ranking."
+   "1": "Avg 66% per pick; weakest wk 14 CHI 59%."
   },
   "notes": [
-   "Ratings are fitted from the 112 lines posted so far this season (residual 0.69 points), seeded by last season regressed toward average.",
-   "Week 18 spots are shrunk toward 50% (19% flatter) and given extra variance because clinched teams rest starters.",
-   "Every percentage for a later week on this page is the planning view: the projection's uncertainty is inflated 16x (backtest-tuned), which pulls distant games toward 50% so a sure thing now beats a slightly better projection months away. The survival percentages are simulated with calibrated uncertainty instead.",
-   "A tie counts as a loss, and later weeks of every plan are re-optimised on each run; only this week's pick is a recommendation."
+   "Ratings: fitted from 112 posted lines, seeded by last season regressed to average.",
+   "Week 18 spots are shrunk 20% toward 50% for resting starters.",
+   "Later-week percentages are the planning view, discounted 16x toward 50%; survival percentages are simulated without that discount.",
+   "A tie is a loss. Only this week's pick is a recommendation; later weeks re-solve every run."
   ]
  },
  "revisions": [
@@ -1089,6 +1089,10 @@
   },
   {
    "generated_at": "2026-09-03T11:38:12.558749-04:00",
+   "picks": "LAC"
+  },
+  {
+   "generated_at": "2026-09-03T11:39:27.596344-04:00",
    "picks": "LAC"
   }
  ]
