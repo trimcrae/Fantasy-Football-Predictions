@@ -27,7 +27,7 @@
   17,
   18
  ],
- "generated_at": "2026-09-03T13:23:19.871361-04:00",
+ "generated_at": "2026-09-03T13:35:44.018688-04:00",
  "ratings_source": "market",
  "n_lines_posted": 112,
  "n_priced_games": 112,
@@ -1062,10 +1062,6 @@
  },
  "revisions": [
   {
-   "generated_at": "2026-09-03T10:20:20.636607-04:00",
-   "picks": "LAC"
-  },
-  {
    "generated_at": "2026-09-03T10:23:54.567169-04:00",
    "picks": "LAC"
   },
@@ -1139,6 +1135,10 @@
   },
   {
    "generated_at": "2026-09-03T13:20:52.774402-04:00",
+   "picks": "LAC"
+  },
+  {
+   "generated_at": "2026-09-03T13:23:19.871361-04:00",
    "picks": "LAC"
   }
  ]
