@@ -24,10 +24,12 @@ def _src(source: str) -> str:
         return "From the point spread"
     if s == "result":
         return "From the final score"
-    if s.startswith("blend"):
-        return "From the posted line, blended with our projection"
+    if s.startswith("posted-moneyline"):
+        return "From the posted odds"
+    if s.startswith("posted-"):
+        return "From the posted spread"
     if s.startswith("model"):
-        return "From our projection, no line posted yet" + (" (week 18, starters may rest)" if "wk18" in s else "")
+        return "No line posted yet, so from our ratings" + (" (week 18, starters may rest)" if "wk18" in s else "")
     return s
 
 
@@ -67,9 +69,6 @@ def explain_probability(res: PlanResult, team: str, cfg: dict | None = None) -> 
     sp = float(r["spread"])
     side = f"favoured by {abs(sp):.1f}" if sp > 0 else (f"an underdog by {abs(sp):.1f}" if sp < 0 else "a pick'em")
     out = f"{_src(r['source'])}: {team} {side} {where}."
-    if not np.isnan(r.get("line_spread", np.nan)) and abs(float(r["model_spread"]) - float(r["line_spread"])) >= 2.0:
-        d = float(r["line_spread"]) - float(r["model_spread"])
-        out += f" The line is {abs(d):.1f} pts {'kinder' if d > 0 else 'harsher'} to {team} than our ratings."
     if r.get("qb_note"):
         out += f" QB: {r['qb_note']}."
     return out
@@ -171,16 +170,11 @@ def notes(res: PlanResult, cfg: dict | None = None) -> list[str]:
     m = (cfg or {}).get("model", {})
     chk = (st.detail or {}).get("inpredictable_check")
     if chk and chk.get("reason"):
-        out.append(f"Team ratings are backed out of the point spreads posted so far; inpredictable's ratings were not used because the {chk['reason']}.")
+        out.append(f"Games with no line yet use team ratings backed out of the posted Vegas spreads; inpredictable's ratings were not used because the {chk['reason']}.")
     elif st.source == "inpredictable":
-        out.append("Team ratings come from inpredictable (betting-market power ratings).")
+        out.append("Games with no line yet use inpredictable's betting-market power ratings.")
     else:
-        out.append(f"Team ratings are backed out of the {st.detail.get('n_lines')} point spreads posted so far, starting from last season's ratings pulled toward average.")
-    board = p.table[(p.table["week"] == res.week) & p.table["home"]]
-    big = board[(board["line_spread"].notna()) & ((board["line_spread"] - board["model_spread"]).abs() >= 3.0)]
-    for r in big.itertuples(index=False):
-        d = float(r.line_spread) - float(r.model_spread)
-        out.append(f"{r.team} vs {r.opp}: the line is {abs(d):.1f} pts {'kinder' if d > 0 else 'harsher'} to {r.team} than our ratings; the line decides this week, the ratings decide later weeks.")
+        out.append(f"Posted lines are used as-is at any horizon. Games with no line yet use team ratings backed out of the {st.detail.get('n_lines')} Vegas spreads posted so far.")
     tw = res.this_week()
     if not tw.empty:
         board_all = p.table[(p.table["week"] == res.week) & (p.table["prob"] > 0)].sort_values("prob", ascending=False)

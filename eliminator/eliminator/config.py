@@ -23,7 +23,8 @@ DEFAULTS: dict[str, Any] = {
         "horizon_var_a": 4.0,       # projection error variance vs closing line at h=0 (points^2)
         "horizon_var_b": 2.0,       # additional variance per week of horizon
         "future_discount": 16.0,    # multiplier on horizon variance when *choosing* plans (backtest-tuned)
-        "line_weight_by_horizon": {"0": 1.0, "1": 0.9, "2": 0.75, "3": 0.6, "default": 0.5},
+        "posted_line_var_a": 1.0,   # variance (points^2) of a posted line vs its close, next week
+        "posted_line_var_b": 1.0,   # additional variance per week of horizon: how far a line can move
         "week18_shrink": 0.6,       # week-18 probabilities shrunk toward 0.5 (starters rest)
         "week18_extra_var": 20.0,   # extra spread variance for week 18 projections
         "ratings_source": "auto",   # auto | inpredictable | market | blend
@@ -64,8 +65,3 @@ def load_config(root: Path | None = None) -> dict[str, Any]:
     if user.exists():
         cfg = _deep_merge(cfg, yaml.safe_load(user.read_text()) or {})
     return cfg
-
-
-def line_weight(cfg: dict, horizon: int) -> float:
-    table = cfg["model"]["line_weight_by_horizon"]
-    return float(table.get(str(int(horizon)), table.get("default", 0.5)))

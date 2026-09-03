@@ -18,7 +18,10 @@ def test_projection_uses_lines_now_and_model_later(games_all, cfg, before_week1)
     proj = build_projection(regular_season(games_all, 2026), 2026, 1, st, cfg, now=before_week1)
     t = proj.table
     assert (t[t.week == 1].source == "moneyline").all()
-    assert t[t.week == 2].source.str.startswith("blend").all()
+    assert t[t.week == 2].source.str.startswith("posted-").all()
+    # a posted line is used as the spread, not blended with the ratings
+    w2 = t[(t.week == 2) & t.home]
+    assert (w2.spread - w2.line_spread).abs().max() < 1e-9
     assert (t[t.week == 10].source == "model").all()
     assert (t[t.week == 18].source == "model+wk18").all()
     # probabilities of the two sides of a game sum to one, and every team has a game each week

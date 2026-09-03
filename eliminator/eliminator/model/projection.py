@@ -22,7 +22,6 @@ import pandas as pd
 import yaml
 from scipy.stats import norm
 
-from ..config import line_weight
 from ..data.schedule import ET
 from ..probability import moneyline_home_prob, prob_to_spread
 from ..teams import TEAMS, normalize
@@ -82,6 +81,7 @@ def build_projection(games: pd.DataFrame, season: int, current_week: int, streng
     sigma = float(m["sigma"])
     disc = float(m.get("future_discount", 1.0))
     a, b, c = float(m["horizon_var_a"]), float(m["horizon_var_b"]), float(m.get("horizon_var_c", 0.0))
+    la, lb = float(m.get("posted_line_var_a", 1.0)), float(m.get("posted_line_var_b", 1.0))
     w18_shrink = float(m["week18_shrink"])
     w18_var = float(m["week18_extra_var"])
     rest_risk = {normalize(k): float(v) for k, v in (overrides.get("week18_rest_risk") or {}).items()}
@@ -123,11 +123,20 @@ def build_projection(games: pd.DataFrame, season: int, current_week: int, streng
         elif h == 0 and line_sp is not None:
             p_home = p_ml if p_ml is not None else float(norm.cdf(line_sp / sigma))
             s_home = line_sp; var_h = 0.0; src = line_src
+        elif line_sp is not None:
+            # a posted line is the truth at any horizon; the only uncertainty left is how far the
+            # line can still move before kickoff (injuries, news), which grows with the horizon
+            s_home = line_sp
+            var_h = disc * max(la + lb * h, 0.0)
+            src = f"posted-{line_src}"
+            if w == season_weeks and h >= 1:
+                s_home -= rest_pen * rest_risk.get(g.home, 0.0)
+                s_home += rest_pen * rest_risk.get(g.away, 0.0)
+            p_home = float(norm.cdf(s_home / np.sqrt(sigma ** 2 + var_h)))
         else:
-            lam = line_weight(cfg, h) if line_sp is not None else 0.0
-            s_home = (lam * line_sp + (1 - lam) * model_sp) if line_sp is not None else model_sp
+            s_home = model_sp
             var_h = disc * max(a + b * h + c / (1.0 + current_week), 0.0) if h >= 1 else max(a + c / (1.0 + current_week), 0.0)
-            src = f"blend({line_src},{lam:.2f})" if line_sp is not None else "model"
+            src = "model"
             if w == season_weeks and h >= 1:
                 s_home *= w18_shrink; var_h += w18_var; src += "+wk18"
                 # explicit rest risk: expected points lost by a team likely to sit starters

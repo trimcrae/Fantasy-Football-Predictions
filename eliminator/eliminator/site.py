@@ -251,8 +251,10 @@ def _source_label(src) -> str:
     s = str(src)
     if s == "moneyline":
         return "odds"
-    if s.startswith("blend"):
-        return "line + model"
+    if s == "posted-moneyline":
+        return "odds (posted)"
+    if s == "posted-spread":
+        return "spread (posted)"
     if s == "model+wk18":
         return "model, wk 18"
     return s

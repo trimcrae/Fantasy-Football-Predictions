@@ -112,9 +112,12 @@ and have the same log-loss, so either is fine; the moneyline is the direct price
   games (the 8 international games in 2026) get none.
 * `rest_per_day` = 0.14 points per day of rest differential, clipped to +/-7 days. A bye
   week is worth roughly a point; a short Thursday week costs about half a point.
-* When a lookahead line is posted for a future game it is blended with the model, the line's
-  weight falling with horizon (`line_weight_by_horizon`), because posted lookahead lines can
-  be stale after an injury.
+* When a line is posted for a future game it is used as the spread outright, at any horizon:
+  Vegas is the source of truth wherever it has spoken, and the ratings only fill in games
+  that have no line yet. The remaining uncertainty on a posted line is how far it can still
+  move before kickoff, `posted_line_var_a + posted_line_var_b * h` points squared (1 + 1h by
+  default, a standard deviation of about 1.4 points one week out and 3 points eight weeks
+  out), far smaller than the projection error of a rating-based spread.
 
 ### 3. Discounting the future
 The projection error of a rating-based spread against the eventual closing line grows with
