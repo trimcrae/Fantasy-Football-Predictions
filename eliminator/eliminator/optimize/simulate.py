@@ -64,7 +64,7 @@ def simulate_wins(proj: Projection, cfg: dict, n: int | None = None, seed: int |
                 # game's variance is the posted-line variance, keeping the cross-week correlation
                 L = max(la + lb * h, 0.0)
                 scale = np.sqrt(L / A) if A > 0 else 0.0
-                extra = 0.0
+                extra = max(float(r.line_var) - plan_disc * L, 0.0)      # week-18 noise
             else:
                 scale = 1.0
                 extra = max(float(r.line_var) - plan_disc * A, 0.0)      # week-18 noise

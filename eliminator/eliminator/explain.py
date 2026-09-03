@@ -206,6 +206,11 @@ def notes(res: PlanResult, cfg: dict | None = None) -> list[str]:
                 out.append(f"{team}: {r['qb_note']}.")
     if 18 in p.weeks:
         out.append(f"Week 18 spots are shrunk {int(round(100 * (1 - float(m.get('week18_shrink', 0.8)))))}% toward 50% for resting starters.")
+    fit = m.get("posted_line_fit")
+    if fit:
+        out.append(f"How much a posted line can still move is fitted from {fit['n_obs']} archived lines (about {np.sqrt(fit['posted_line_var_a'] + fit['posted_line_var_b']):.1f} pts one week out).")
+    else:
+        out.append(f"How much a posted line can still move is a default (about {np.sqrt(float(m.get('posted_line_var_a', 1.0)) + float(m.get('posted_line_var_b', 1.0))):.1f} pts one week out) until enough archived lines have closed to fit it.")
     out.append("Percentages for later weeks are deliberately pulled toward 50% because far-off games are trusted much less; the season survival percentages are not.")
     out.append("A tie is a loss. Only this week's pick is a recommendation; later weeks re-solve every run.")
     return out

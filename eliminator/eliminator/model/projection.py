@@ -130,6 +130,8 @@ def build_projection(games: pd.DataFrame, season: int, current_week: int, streng
             var_h = disc * max(la + lb * h, 0.0)
             src = f"posted-{line_src}"
             if w == season_weeks and h >= 1:
+                # a week-18 line posted early cannot know who will rest starters
+                s_home *= w18_shrink; var_h += w18_var; src += "+wk18"
                 s_home -= rest_pen * rest_risk.get(g.home, 0.0)
                 s_home += rest_pen * rest_risk.get(g.away, 0.0)
             p_home = float(norm.cdf(s_home / np.sqrt(sigma ** 2 + var_h)))
