@@ -27,7 +27,7 @@
   17,
   18
  ],
- "generated_at": "2026-09-03T13:47:27.135455-04:00",
+ "generated_at": "2026-09-03T13:56:04.500935-04:00",
  "ratings_source": "market",
  "n_lines_posted": 112,
  "n_priced_games": 112,
@@ -397,6 +397,7 @@
    "p_now": 0.8119,
    "score": 0.0009,
    "p_season": 0.0087,
+   "p_pool_add": 0.0022,
    "plan": [
     "SF",
     "DET",
@@ -422,6 +423,7 @@
    "p_now": 0.7659,
    "score": 0.0008,
    "p_season": 0.0088,
+   "p_pool_add": 0.0,
    "plan": [
     "LAC",
     "SF",
@@ -444,9 +446,10 @@
   },
   {
    "team": "DET",
-   "p_now": 0.7221,
+   "p_now": 0.718,
    "score": 0.0008,
    "p_season": 0.0076,
+   "p_pool_add": 0.0021,
    "plan": [
     "LAC",
     "SF",
@@ -472,6 +475,7 @@
    "p_now": 0.6575,
    "score": 0.0007,
    "p_season": 0.0071,
+   "p_pool_add": 0.002,
    "plan": [
     "LAC",
     "SF",
@@ -496,7 +500,8 @@
    "team": "LV",
    "p_now": 0.6369,
    "score": 0.0007,
-   "p_season": 0.0068,
+   "p_season": 0.0067,
+   "p_pool_add": 0.002,
    "plan": [
     "LAC",
     "SF",
@@ -522,6 +527,7 @@
    "p_now": 0.6225,
    "score": 0.0007,
    "p_season": 0.0068,
+   "p_pool_add": 0.0021,
    "plan": [
     "LAC",
     "SF",
@@ -544,9 +550,10 @@
   },
   {
    "team": "CIN",
-   "p_now": 0.6309,
+   "p_now": 0.6369,
    "score": 0.0007,
    "p_season": 0.0073,
+   "p_pool_add": 0.001,
    "plan": [
     "LAC",
     "SF",
@@ -572,6 +579,7 @@
    "p_now": 0.583,
    "score": 0.0007,
    "p_season": 0.0061,
+   "p_pool_add": 0.0019,
    "plan": [
     "LAC",
     "SF",
@@ -597,6 +605,7 @@
    "p_now": 0.6092,
    "score": 0.0006,
    "p_season": 0.006,
+   "p_pool_add": 0.0023,
    "plan": [
     "SF",
     "DET",
@@ -622,6 +631,7 @@
    "p_now": 0.6369,
    "score": 0.0006,
    "p_season": 0.0061,
+   "p_pool_add": 0.0015,
    "plan": [
     "LAC",
     "SF",
@@ -647,6 +657,7 @@
    "p_now": 0.5427,
    "score": 0.0006,
    "p_season": 0.0057,
+   "p_pool_add": 0.0018,
    "plan": [
     "LAC",
     "SF",
@@ -672,6 +683,7 @@
    "p_now": 0.6092,
    "score": 0.0006,
    "p_season": 0.0059,
+   "p_pool_add": 0.0021,
    "plan": [
     "SF",
     "DET",
@@ -697,6 +709,7 @@
    "p_now": 0.5721,
    "score": 0.0006,
    "p_season": 0.0054,
+   "p_pool_add": 0.0019,
    "plan": [
     "SF",
     "DET",
@@ -722,6 +735,7 @@
    "p_now": 0.5721,
    "score": 0.0006,
    "p_season": 0.0055,
+   "p_pool_add": 0.0017,
    "plan": [
     "LAC",
     "SF",
@@ -747,6 +761,7 @@
    "p_now": 0.5174,
    "score": 0.0006,
    "p_season": 0.0055,
+   "p_pool_add": 0.0015,
    "plan": [
     "LAC",
     "SF",
@@ -772,6 +787,7 @@
    "p_now": 0.4826,
    "score": 0.0005,
    "p_season": 0.0055,
+   "p_pool_add": 0.002,
    "plan": [
     "LAC",
     "SF",
@@ -825,8 +841,8 @@
    "opp": "NO",
    "home": true,
    "neutral": false,
-   "prob": 0.7221,
-   "spread": 6.8154,
+   "prob": 0.718,
+   "spread": 6.6741,
    "source": "moneyline",
    "kickoff": "2026-09-13T13:00:00-04:00",
    "locked": false,
@@ -860,6 +876,19 @@
    "qb_note": ""
   },
   {
+   "team": "CIN",
+   "opp": "TB",
+   "home": true,
+   "neutral": false,
+   "prob": 0.6369,
+   "spread": 4.052,
+   "source": "moneyline",
+   "kickoff": "2026-09-13T13:00:00-04:00",
+   "locked": false,
+   "played": false,
+   "qb_note": ""
+  },
+  {
    "team": "LV",
    "opp": "MIA",
    "home": true,
@@ -868,19 +897,6 @@
    "spread": 4.052,
    "source": "moneyline",
    "kickoff": "2026-09-13T16:25:00-04:00",
-   "locked": false,
-   "played": false,
-   "qb_note": ""
-  },
-  {
-   "team": "CIN",
-   "opp": "TB",
-   "home": true,
-   "neutral": false,
-   "prob": 0.6309,
-   "spread": 3.8685,
-   "source": "moneyline",
-   "kickoff": "2026-09-13T13:00:00-04:00",
    "locked": false,
    "played": false,
    "qb_note": ""
@@ -1120,19 +1136,6 @@
    "qb_note": ""
   },
   {
-   "team": "TB",
-   "opp": "CIN",
-   "home": false,
-   "neutral": false,
-   "prob": 0.3691,
-   "spread": -3.8685,
-   "source": "moneyline",
-   "kickoff": "2026-09-13T13:00:00-04:00",
-   "locked": false,
-   "played": false,
-   "qb_note": ""
-  },
-  {
    "team": "SF",
    "opp": "LA",
    "home": false,
@@ -1141,6 +1144,19 @@
    "spread": -4.052,
    "source": "moneyline",
    "kickoff": "2026-09-10T20:35:00-04:00",
+   "locked": false,
+   "played": false,
+   "qb_note": ""
+  },
+  {
+   "team": "TB",
+   "opp": "CIN",
+   "home": false,
+   "neutral": false,
+   "prob": 0.3631,
+   "spread": -4.052,
+   "source": "moneyline",
+   "kickoff": "2026-09-13T13:00:00-04:00",
    "locked": false,
    "played": false,
    "qb_note": ""
@@ -1176,8 +1192,8 @@
    "opp": "DET",
    "home": false,
    "neutral": false,
-   "prob": 0.2779,
-   "spread": -6.8154,
+   "prob": 0.282,
+   "spread": -6.6741,
    "source": "moneyline",
    "kickoff": "2026-09-13T13:00:00-04:00",
    "locked": false,
@@ -3920,17 +3936,17 @@
     "probability": "From the betting odds: BAL favoured by 3.2 on the road.",
     "timing": "BAL's 6th-best spot of 17; best is 72% in wk 4 vs TEN, but far-off games are deliberately trusted less.",
     "not_used": "Passed: LAC 81% saved for wk 16; JAX 77% saved for wk 12; DET 72% saved for wk 3.",
-    "hedge": "Its path overlaps the other 24 entries least: it survives 0.23% of the seasons where they are all dead, about level with LAC 0.22%, DET 0.21%, SEA 0.21%; a coin flip between them. On its own it would rank 10th."
+    "hedge": "Its path overlaps the other 24 entries least: it survives 0.23% of the seasons where they are all dead, about level with LAC 0.22%, SEA 0.21%, DET 0.21%; a coin flip between them. On its own it would rank 10th."
    }
   },
   "options": [
-   "Best now and best schedule after.",
+   "Best now and best schedule after for a single entry.",
    "77% now vs 81%. Later plan differs in 5 weeks (wk 2: LAC 73% for SF 81%, ...). P(season) is within simulation noise of the top row.",
    "72% now vs 81%. Later plan differs in 2 weeks (wk 2: LAC 73% for SF 81%, ...).",
    "66% now vs 81%. Later plan differs in 4 weeks (wk 2: LAC 73% for SF 81%, ...).",
    "64% now vs 81%. Later plan differs in 4 weeks (wk 2: LAC 73% for SF 81%, ...).",
    "62% now vs 81%. Later plan differs in 4 weeks (wk 2: LAC 73% for SF 81%, ...).",
-   "63% now vs 81%. Later plan differs in 4 weeks (wk 2: LAC 73% for SF 81%, ...).",
+   "64% now vs 81%. Later plan differs in 4 weeks (wk 2: LAC 73% for SF 81%, ...).",
    "58% now vs 81%. Later plan differs in 3 weeks (wk 2: LAC 73% for SF 81%, ...).",
    "61% now vs 81%. Later plan differs in 1 week (wk 16: LAC 61% for BAL 65%).",
    "64% now vs 81%. Later plan differs in 4 weeks (wk 2: LAC 73% for SF 81%, ...).",
@@ -3969,7 +3985,7 @@
    "25": "Avg 67% per pick; weakest wk 12 WAS 56%."
   },
   "notes": [
-   "Games with no line yet use team ratings backed out of the posted Vegas spreads; inpredictable's ratings were not used because the page still shows last season (516 games played before week 1).",
+   "Posted lines are used as-is at any horizon. Games with no line yet use team ratings backed out of the 112 Vegas spreads posted so far.",
    "Road pick BAL: the line already includes home field.",
    "Week 18 spots are shrunk 20% toward 50% for resting starters.",
    "How much a posted line can still move is a default (about 1.4 pts one week out) until enough archived lines have closed to fit it.",
