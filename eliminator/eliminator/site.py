@@ -240,11 +240,28 @@ td.n,th.n{text-align:right}.win{color:var(--win);font-weight:600}.loss{color:var
 .tag{display:inline-block;font-size:11px;padding:1px 6px;border:1px solid var(--line);border-radius:10px;color:var(--muted);margin-left:6px}
 .grid td{font-size:12px;padding:3px 5px}.grid td.now{font-weight:700}.muted{color:var(--muted)}details{margin:10px 0}summary{cursor:pointer;color:var(--accent)}
 .path{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12.5px;white-space:normal}
+.logo{vertical-align:middle;margin-right:5px;border-radius:3px}td .logo{margin-right:6px}.big .logo{width:40px;height:40px;margin-right:8px}
 .why{font-size:13px;color:var(--muted);margin:6px 0 10px;line-height:1.45;white-space:normal;max-width:900px}
 tr.whyrow td{padding:0 8px 8px;border-bottom:1px solid var(--line)}tr.whyrow .why{margin:0}
 td.whycell{white-space:normal;font-size:12.5px;color:var(--muted);min-width:260px;max-width:460px}
 ul.notes{font-size:13.5px;line-height:1.5;padding-left:20px;max-width:900px}ul.notes li{margin:4px 0}
 """
+
+
+LOGO_DIR = SITE_DIR / "logos"
+
+
+def _team(code, size: int = 20) -> str:
+    """Team code with its logo in front (the code stays for accessibility and copy/paste)."""
+    c = _esc(code)
+    return f"<img class=\"logo\" src=\"logos/{c}.png\" alt=\"\" width=\"{size}\" height=\"{size}\" loading=\"lazy\"><b>{c}</b>"
+
+
+def _opp_html(r: dict) -> str:
+    if "home" in r:
+        return ("vs " if r.get("home") else "@ ") + _team(r["opp"], 16)
+    opp = str(r["opp"])
+    return ("@ " + _team(opp[1:], 16)) if opp.startswith("@") else ("vs " + _team(opp, 16))
 
 
 def _source_label(src) -> str:
@@ -320,7 +337,7 @@ def _picks_cell(snap: dict, graded: dict[str, str]) -> str:
             return "<span class=\"muted\">eliminated</span>"
         r = snap["picks"][0]
         res = graded.get(r["entry"], "unknown")
-        return f"<b>{_esc(r['team'])}</b> <span class=\"muted\">{_esc(_opp(r))} {_pct(r['p_win'])}</span> <span class=\"{_res_cls(res)}\">{_res_mark(res)}</span>"
+        return f"{_team(r['team'], 18)} <span class=\"muted\">{_esc(_opp(r))} {_pct(r['p_win'])}</span> <span class=\"{_res_cls(res)}\">{_res_mark(res)}</span>"
     if not snap["picks"]:
         return "<span class=\"muted\">no entries alive</span>"
     counts: dict[str, list] = {}
@@ -328,7 +345,7 @@ def _picks_cell(snap: dict, graded: dict[str, str]) -> str:
         counts.setdefault(r["team"], [0, r, graded.get(r["entry"], "unknown")])[0] += 1
     parts = []
     for team, (n, r, res) in sorted(counts.items(), key=lambda kv: (-kv[1][0], -(kv[1][1]["p_win"] or 0))):
-        parts.append(f"<b>{_esc(team)}</b>&thinsp;x{n} <span class=\"muted\">{_pct(r['p_win'])}</span> <span class=\"{_res_cls(res)}\">{_res_mark(res)}</span>")
+        parts.append(f"{_team(team, 18)}&thinsp;x{n} <span class=\"muted\">{_pct(r['p_win'])}</span> <span class=\"{_res_cls(res)}\">{_res_mark(res)}</span>")
     return "<br>".join(parts)
 
 
@@ -347,7 +364,7 @@ def render_season_index(season: int, snaps: list[dict], games: pd.DataFrame | No
         if s["mode"] == "strikes":
             if s["picks"]:
                 r = s["picks"][0]
-                body = (f"<div class=\"big\">{_esc(r['team'])} <span class=\"muted\" style=\"font-size:18px;font-weight:400\">{_esc(_opp(r))}</span></div>"
+                body = (f"<div class=\"big\">{_team(r['team'], 40)} <span class=\"muted\" style=\"font-size:18px;font-weight:400\">{_opp_html(r)}</span></div>"
                         f"<div class=\"sub\">win probability {_pct(r['p_win'])} &middot; spread {_spread(r['spread'])} &middot; kickoff {_esc(r['kickoff'])}"
                         + (f" &middot; <span class=\"lock\">locked</span>" if r['status'] == 'locked' else "") + "</div>")
                 sl = next((pl["strikes_left"] for pl in s["plans"] if pl["alive"]), None)
@@ -370,7 +387,7 @@ def render_season_index(season: int, snaps: list[dict], games: pd.DataFrame | No
                 c[2] += 1 if r["status"] == "locked" else 0
             for team, (n, r, nlock) in sorted(counts.items(), key=lambda kv: (-kv[1][0], -(kv[1][1]["p_win"] or 0))):
                 lock = f" <span class=\"lock\">({nlock} locked)</span>" if nlock else ""
-                rows.append(f"<tr><td><b>{_esc(team)}</b></td><td class=\"n\">{n}{lock}</td><td>{_esc(_opp(r))}</td><td class=\"n\">{_pct(r['p_win'])}</td>"
+                rows.append(f"<tr><td>{_team(team)}</td><td class=\"n\">{n}{lock}</td><td>{_opp_html(r)}</td><td class=\"n\">{_pct(r['p_win'])}</td>"
                             f"<td class=\"n\">{_spread(r['spread'])}</td><td>{_esc(r['kickoff'])}</td></tr>")
             n_alive = s["summary"].get("n_live", 0)
             body = (f"<div class=\"tw\"><table><tr><th>team</th><th class=\"n\">entries</th><th>opponent</th><th class=\"n\">win prob</th><th class=\"n\">spread</th><th>kickoff</th></tr>{''.join(rows)}</table></div>"
@@ -431,7 +448,7 @@ def render_week_page(season: int, week: int, snaps: list[dict], games: pd.DataFr
                 r = s["picks"][0]
                 res = graded.get(r["entry"], "unknown")
                 sl = next((pl["strikes_left"] for pl in s["plans"] if pl["alive"]), None)
-                sec.append(f"<div class=\"big\">{_esc(r['team'])} <span class=\"muted\" style=\"font-size:18px;font-weight:400\">{_esc(_opp(r))}</span> "
+                sec.append(f"<div class=\"big\">{_team(r['team'], 40)} <span class=\"muted\" style=\"font-size:18px;font-weight:400\">{_opp_html(r)}</span> "
                            f"<span class=\"{_res_cls(res)}\" style=\"font-size:20px\">{_res_mark(res)}</span></div>"
                            f"<div class=\"sub\">win probability {_pct(r['p_win'])} &middot; spread {_spread(r['spread'])} &middot; kickoff {_esc(r['kickoff'])} &middot; {_esc(r['status'])}</div>"
                            f"<div><span class=\"stat\">P(survive season) <b>{_pct(s['summary']['p_each'][0] if s['summary'].get('p_each') else None)}</b></span>"
@@ -458,7 +475,7 @@ def render_week_page(season: int, week: int, snaps: list[dict], games: pd.DataFr
                 c[0].append(r["entry"])
             for team, (ents, r) in sorted(counts.items(), key=lambda kv: (-len(kv[1][0]), -(kv[1][1]["p_win"] or 0))):
                 res = graded.get(ents[0], "unknown")
-                rows.append(f"<tr><td><b>{_esc(team)}</b></td><td class=\"n\">{len(ents)}</td><td>{_esc(_opp(r))}</td><td class=\"n\">{_pct(r['p_win'])}</td>"
+                rows.append(f"<tr><td>{_team(team)}</td><td class=\"n\">{len(ents)}</td><td>{_opp_html(r)}</td><td class=\"n\">{_pct(r['p_win'])}</td>"
                             f"<td class=\"n\">{_spread(r['spread'])}</td><td>{_esc(_source_label(r['source']))}</td><td>{_esc(r['kickoff'])}</td>"
                             f"<td class=\"{_res_cls(res)}\">{_res_mark(res)}</td><td class=\"muted\">{_esc(' '.join('#' + e for e in ents))}</td></tr>")
                 pk = (ex.get("picks") or {}).get(team) or {}
@@ -482,7 +499,7 @@ def render_week_page(season: int, week: int, snaps: list[dict], games: pd.DataFr
         # options
         if s.get("options"):
             whys = ex.get("options") or []
-            rows = "".join(f"<tr><td><b>{_esc(o['team'])}</b></td><td class=\"n\">{_pct(o['p_now'])}</td><td class=\"n\">{_pct(o['score'], 2)}</td>"
+            rows = "".join(f"<tr><td>{_team(o['team'])}</td><td class=\"n\">{_pct(o['p_now'])}</td><td class=\"n\">{_pct(o['score'], 2)}</td>"
                            f"<td class=\"n\">{_pct(o['p_season'], 2)}</td><td class=\"path\">{_esc(' '.join(o['plan']))}</td>"
                            f"<td class=\"whycell\">{_esc(whys[i]) if i < len(whys) else ''}</td></tr>" for i, o in enumerate(s["options"]))
             sec.append("<h3>This week's options</h3><div class=\"sub\">Use the team now and play the rest of the season optimally. "
@@ -494,7 +511,7 @@ def render_week_page(season: int, week: int, snaps: list[dict], games: pd.DataFr
         for r in s["board"]:
             res = grade(games, season, week, r["team"]) if r.get("played") else ("pending" if r.get("locked") else "")
             flag = " <span class=\"lock\">kicked off</span>" if r.get("locked") and not r.get("played") else ""
-            rows.append(f"<tr><td><b>{_esc(r['team'])}</b></td><td>{_esc(_opp(r))}</td><td class=\"n\">{_pct(r['prob'])}</td><td class=\"n\">{_spread(r['spread'])}</td>"
+            rows.append(f"<tr><td>{_team(r['team'])}</td><td>{_opp_html(r)}</td><td class=\"n\">{_pct(r['prob'])}</td><td class=\"n\">{_spread(r['spread'])}</td>"
                         f"<td>{_esc(_source_label(r['source']))}{flag}</td><td>{_esc(_kick(r['kickoff']))}</td><td class=\"{_res_cls(res)}\">{_res_mark(res)}</td><td class=\"muted\">{_esc(r.get('qb_note', ''))}</td></tr>")
         sec.append(f"<details><summary>Week {week} board ({len(s['board'])} teams)</summary><div class=\"tw\"><table><tr><th>team</th><th>opponent</th><th class=\"n\">win prob</th>"
                    f"<th class=\"n\">spread</th><th>source</th><th>kickoff</th><th>result</th><th>QB note</th></tr>{''.join(rows)}</table></div></details>")
@@ -544,7 +561,7 @@ def render_week_page(season: int, week: int, snaps: list[dict], games: pd.DataFr
     # QB situations (shared)
     qbs = snaps[0].get("qb_situations") or []
     if qbs:
-        rows = "".join(f"<tr><td><b>{_esc(q['team'])}</b></td><td>{_esc(q['player'])}</td><td>{_esc(q['status'])}</td><td>{_esc(q['injury'])}</td>"
+        rows = "".join(f"<tr><td>{_team(q['team'])}</td><td>{_esc(q['player'])}</td><td>{_esc(q['status'])}</td><td>{_esc(q['injury'])}</td>"
                        f"<td class=\"n\">{q['penalty']:.1f}</td><td class=\"n\">{_esc(q.get('injured_week') or '')}</td><td class=\"n\">{_esc(q.get('return_week') or '')}</td>"
                        f"<td>{_esc(q['source'])}</td><td class=\"path\">{_esc(' '.join(f'w{w}:{int(round(100 * v))}%' for w, v in sorted(q['p_out'].items(), key=lambda kv: int(kv[0]))))}</td></tr>" for q in qbs)
         sections.append(f"<details open><summary>Quarterback situations ({len(qbs)})</summary>"
@@ -555,7 +572,7 @@ def render_week_page(season: int, week: int, snaps: list[dict], games: pd.DataFr
     # ratings (shared)
     ratings = snaps[0].get("ratings") or {}
     if ratings:
-        rows = "".join(f"<tr><td>{_esc(t)}</td><td class=\"n\">{float(v):+.1f}</td></tr>" for t, v in sorted(ratings.items(), key=lambda kv: -(kv[1] or 0)))
+        rows = "".join(f"<tr><td>{_team(t)}</td><td class=\"n\">{float(v):+.1f}</td></tr>" for t, v in sorted(ratings.items(), key=lambda kv: -(kv[1] or 0)))
         sections.append(f"<details><summary>Team ratings (points vs average, healthy starter, neutral field)</summary><div class=\"tw\" style=\"max-width:320px\"><table><tr><th>team</th><th class=\"n\">rating</th></tr>{rows}</table></div></details>")
 
     idx = all_weeks.index(week)
@@ -582,6 +599,10 @@ def build_site(games: pd.DataFrame | None, data_dir: Path = DATA_DIR, out_dir: P
     out_dir.mkdir(parents=True, exist_ok=True)
     written: list[Path] = []
     (out_dir / ".nojekyll").write_text("")
+    if LOGO_DIR.exists():
+        (out_dir / "logos").mkdir(exist_ok=True)
+        for f in LOGO_DIR.glob("*.png"):
+            (out_dir / "logos" / f.name).write_bytes(f.read_bytes())
     if not snaps:
         p = out_dir / "index.html"
         p.write_text(_page("Eliminator picks", "<p class=\"sub\">No snapshots yet. Run <code>python -m eliminator snapshot</code> and rebuild.</p>"))
