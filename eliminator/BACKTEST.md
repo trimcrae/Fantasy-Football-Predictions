@@ -40,7 +40,19 @@ the far-off weeks so the optimiser stops hoarding teams for spots that do not ma
 this does it directly and also lets the later menu widen as real spreads do. `horizon: 1` is
 the default.
 
-MULTI_PLACEHOLDER
+For the 25-entry pool the only score available is the realised one (a survivor in the
+season or not), which is one rare event per season and therefore noisy: with a season-level
+chance of roughly 20-25%, 2 and 4 out of 11 are one standard deviation apart.
+
+| planner | policy h=1 | policy h=2 | policy h=4 | discount x16 (previous) | greedy |
+|---|---|---|---|---|---|
+| 25 entries, seasons with a survivor | 2 / 11 | 3 / 11 | 2 / 11 | 4 / 11 | 0 / 11 |
+| mean survivors per season | 0.18 | 0.45 | 0.18 | 0.36 | 0.00 |
+
+This does not confirm the improvement for the pool format, nor contradict it; the pool is
+played with the same valuation the single-entry results validate, plus the weekly re-split
+(`spread_weights`), which cannot be tuned on a metric this noisy. `horizon: 1` is used for
+every format so that the site's season odds mean the same thing everywhere.
 
 ## The previous planner: choosing the future discount
 
