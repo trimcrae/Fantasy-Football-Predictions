@@ -122,12 +122,17 @@ def explain_hedge(res: PlanResult, entry, team: str) -> str:
         alts.append((t, float((path_alive(res.wins, o.teams, entry.strikes_left) & dead).mean())))
     alts.sort(key=lambda x: -x[1])
     n_others = len(others)
+    n = res.wins.shape[0]
+    se = float(np.sqrt(2 * max(chosen * (1 - chosen), 1e-12) / n))   # error on a difference of two such rates
     alone_rank = 1 + sum(1 for o in res.options if TEAMS[o.teams[0]] != team and (o.detail.get("sim") or 0) > (entry.alive_mask.mean() if entry.alive_mask is not None else 0))
-    head = f"As a hedge it survives {_pct(chosen, 2)} of the seasons where all {n_others} other entries are dead"
+    head = f"Its path overlaps the other {n_others} entries least: it survives {_pct(chosen, 2)} of the seasons where they are all dead"
     if not alts:
         return head + "."
+    close = [f"{t} {_pct(v, 2)}" for t, v in alts[:3] if abs(chosen - v) < 2 * se]
+    if close:
+        return f"{head}, about level with {', '.join(close)}; a coin flip between them. On its own it would rank {_ordinal(alone_rank)}."
     if chosen >= alts[0][1]:
-        return f"{head}, the most of any team ({alts[0][0]} {_pct(alts[0][1], 2)}, {alts[1][0]} {_pct(alts[1][1], 2)}). On its own it would rank {_ordinal(alone_rank)}." if len(alts) > 1 else f"{head}, the most of any team ({alts[0][0]} {_pct(alts[0][1], 2)})."
+        return f"{head}, the most of any team ({alts[0][0]} {_pct(alts[0][1], 2)}). On its own it would rank {_ordinal(alone_rank)}."
     return f"{head}; {alts[0][0]} would survive {_pct(alts[0][1], 2)} of them."
 
 
