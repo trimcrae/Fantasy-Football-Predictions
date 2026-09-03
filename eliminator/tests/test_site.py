@@ -26,7 +26,8 @@ def test_snapshot_roundtrip_and_site(tmp_path, games_all, cfg, before_week1):
             # every team other than the most-used one carries a hedge sentence
             teams = {r["team"] for r in snap["picks"]}
             top = max(teams, key=lambda t: sum(r["team"] == t for r in snap["picks"]))
-            assert all(snap["explain"]["picks"][t]["hedge"].startswith("As a hedge") for t in teams if t != top)
+            lone = [t for t in teams if t != top and sum(r["team"] == t for r in snap["picks"]) <= 2]
+            assert all(snap["explain"]["picks"][t]["hedge"].startswith("As a hedge") for t in lone)
         path = write_snapshot(snap, data)
         assert path == snapshot_path(2026, 1, st.path.stem, data)
         back = json.loads(path.read_text())

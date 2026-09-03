@@ -245,7 +245,7 @@ def explain_all(res: PlanResult, cfg: dict | None = None) -> dict:
         e0 = ent[str(eids[0])]
         picks[team] = {"probability": explain_probability(res, team, cfg), "timing": explain_timing(res, team),
                        "not_used": explain_not_used(res, e0, team),
-                       "hedge": explain_hedge(res, e0, team) if team != top else ""}
+                       "hedge": explain_hedge(res, e0, team) if team != top and len(eids) <= 2 else ""}
     best = res.options[0] if res.options else None
     return {
         "summary": explain_summary(res, cfg),
