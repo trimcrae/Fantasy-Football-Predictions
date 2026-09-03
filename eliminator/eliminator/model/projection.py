@@ -115,6 +115,8 @@ def build_projection(games: pd.DataFrame, season: int, current_week: int, streng
         kicked = g.kickoff <= now
         note = ""
         p_away = None
+        # the market's price on the game whatever its state: kept for the record once it is played
+        p_line = p_ml if p_ml is not None else (float(norm.cdf(line_sp / sigma)) if line_sp is not None else None)
         if g.played:
             p_home = 1.0 if g.result > 0 else 0.0
             p_away = 1.0 if g.result < 0 else 0.0          # a tie is a loss for both sides
@@ -156,6 +158,7 @@ def build_projection(games: pd.DataFrame, season: int, current_week: int, streng
             rows.append({"week": w, "team": team, "opp": other, "home": is_home, "neutral": bool(g.neutral),
                          "kickoff": g.kickoff, "horizon": h, "spread": s, "line_var": var_h,
                          "prob": p, "source": src, "locked": bool(kicked), "played": bool(g.played),
+                         "line_prob": (p_line if is_home else 1.0 - p_line) if p_line is not None else np.nan,
                          "model_spread": model_sp if is_home else -model_sp,
                          "line_spread": (line_sp if is_home else -line_sp) if line_sp is not None else np.nan,
                          "qb_note": note})

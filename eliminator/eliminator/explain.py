@@ -53,12 +53,21 @@ def best_later_spot(res: PlanResult, team: str) -> tuple[int, str, float] | None
     return best
 
 
+def now_prob(res: PlanResult, team: str) -> float:
+    """This week's win probability as priced before kickoff (a played game keeps its closing price)."""
+    r = res.projection.row(res.week, team)
+    if r["played"] and not np.isnan(float(r["line_prob"])):
+        return float(r["line_prob"])
+    return float(r["prob"])
+
+
 def team_rank(res: PlanResult, team: str) -> tuple[int, int]:
     """(rank of this week's spot among the team's own remaining games, number of those games)."""
     p = res.projection
     ti = TEAMS.index(team)
-    probs = [float(p.prob[wi, ti]) for wi in range(len(p.weeks)) if p.has_game[wi, ti]]
-    now = float(p.prob[0, ti])
+    probs = [float(p.prob[wi, ti]) for wi in range(1, len(p.weeks)) if p.has_game[wi, ti]]
+    now = now_prob(res, team)
+    probs.append(now)
     return 1 + sum(1 for x in probs if x > now), len(probs)
 
 
@@ -237,13 +246,17 @@ def explain_exposure(res: PlanResult) -> str:
         return ""
     counts = tw.groupby("team").size().sort_values(ascending=False)
     p = res.projection
-    probs = p.table[(p.table["week"] == res.week) & (p.table["prob"] > 0)].sort_values("prob", ascending=False)["prob"].to_list()
+    wk = p.table[p.table["week"] == res.week]
+    shown = wk["line_prob"].where(wk["played"] & wk["line_prob"].notna(), wk["prob"])   # played games at their closing price
+    probs = sorted((float(x) for x in shown if x > 0), reverse=True)
     n_strong = sum(1 for x in probs if x >= 0.75)
     top = counts.index[0]
     r = p.row(res.week, top)
     board = (f"{n_strong} team{'s' if n_strong != 1 else ''} at 75%+, then {_pct(probs[n_strong])}" if n_strong and len(probs) > n_strong
              else f"best on the board {_pct(probs[0])}")
-    return f"Board: {board}. Spreading further would lower P(at least one survives). If {r['opp']} wins, {counts.iloc[0]} entries go out together."
+    n_top = int(counts.iloc[0])
+    tail = f"If {r['opp']} wins, {n_top} entries go out together." if n_top > 1 else f"If {r['opp']} wins, that entry goes out."
+    return f"Board: {board}. Spreading further would lower P(at least one survives). {tail}"
 
 
 def explain_summary(res: PlanResult, cfg: dict | None = None) -> str:
@@ -254,9 +267,13 @@ def explain_summary(res: PlanResult, cfg: dict | None = None) -> str:
     n_weeks = len(res.projection.weeks)
     if s.mode == "strikes":
         e = live[0]
+        k = res.strikes_left_of(e.entry_id)
+        if res.decided_now(e.entry_id):          # this week's game is over: the odds are about the weeks left
+            n_weeks -= 1
+        losses = f"at most {k} loss{'es' if k != 1 else ''}" if k else "no losses"
         if res.horizon:
-            return f"Chance of at most {e.strikes_left} loss{'es' if e.strikes_left != 1 else ''} in {n_weeks} picks, from simulated seasons in which the entry takes the best team still available each later week."
-        return f"Chance of at most {e.strikes_left} loss{'es' if e.strikes_left != 1 else ''} in {n_weeks} picks, from simulated seasons. The score treats later weeks as far less certain; it ranks plans and is not a forecast."
+            return f"Chance of {losses} in {n_weeks} picks, from simulated seasons in which the entry takes the best team still available each later week."
+        return f"Chance of {losses} in {n_weeks} picks, from simulated seasons. The score treats later weeks as far less certain; it ranks plans and is not a forecast."
     sims = [e.p_season() for e in live if e.p_season() is not None]
     per = float(np.mean(sims)) if sims else float("nan")
     indep = 1 - (1 - per) ** len(live)

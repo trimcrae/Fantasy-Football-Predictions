@@ -143,3 +143,29 @@ def test_discount_mode_still_available(games_all, cfg, before_week1):
     res = make_plan(state, games_all, c, [], None, now=before_week1, season=2026, source="market", scenarios=1000, keep_wins=True)
     assert res.horizon is None and res.allocation_view == "planning" and res.wins_policy is not None
     assert res.projection.line_var[5].max() > 100
+
+
+def test_locked_loss_is_charged_once(games_all, cfg):
+    """After a two-strike entry's pick has lost, its strike shows as used, and the season odds
+    are P(at most one more loss over the remaining weeks), not the loss counted twice."""
+    from eliminator.optimize.simulate import policy_run, survival_given_lines
+    g = games_all.copy()
+    first_idx = g.index[(g.season == 2026) & (g.week == 1)][0]
+    g.loc[first_idx, ["result", "played", "home_win"]] = [-3.0, True, 0.0]     # the away team won
+    home = g.loc[first_idx, "home"]
+    state = PoolState(name="s", mode="strikes", n_entries=1, strikes=2, season=2026, picks={"1": {1: home}})
+    after = g.loc[first_idx, "kickoff"] + dt.timedelta(hours=5)
+    res = make_plan(state, g, cfg, [], None, now=after, season=2026, source="market", scenarios=1000, keep_wins=True)
+    e = res.entries[0]
+    assert e.alive and res.strikes_left_of("1") == 1 and res.decided_now("1")
+    assert TEAMS[e.path.teams[0]] == home and e.path.probs[0] == 0.0
+    _, pwin, _ = policy_run(res.sim, [TEAMS.index(home)], e.available)
+    expected = survival_given_lines(pwin[:, 1:], strikes=1).mean()        # one strike left for the weeks ahead
+    assert abs(e.path.value - expected) < 1e-9
+    assert e.path.value > 0.5 * survival_given_lines(pwin[:, 1:], strikes=0).mean() + 0.01
+    assert "strikes left: 1 of 2" in render(res)
+    from eliminator.explain import explain_summary
+    assert explain_summary(res).startswith("Chance of at most 1 loss in 17 picks")
+    # a locked pick still pending is charged nothing yet
+    pending = make_plan(state, games_all, cfg, [], None, now=after, season=2026, source="market", scenarios=1000)
+    assert pending.entries[0].strikes_left == 2 and pending.strikes_left_of("1") == 2 and not pending.decided_now("1")

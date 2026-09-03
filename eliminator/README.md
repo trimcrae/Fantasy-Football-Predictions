@@ -53,7 +53,12 @@ Each run does three things:
 1. `python -m eliminator snapshot` refreshes the feeds, plans every pool in `state/` and
    writes `site/data/<season>/w<NN>-<pool>.json`. The current week's file is overwritten on
    every run (earlier recommendations that week are kept inside it as revisions); once the
-   season moves on, the file is frozen and becomes the record of what was recommended.
+   season moves on, the file is frozen and becomes the record of what was recommended. That
+   record is kept honest by the runs after kickoff: a pick whose game has been played stays in
+   the file at the price it closed at (not at 100% or 0% from the score, which is graded
+   separately), and an entry that lost this week keeps its pick on the week's record instead
+   of vanishing with the eliminated entry, so the week-by-week table and its "alive after"
+   counts are right even though the last run of a week happens on Monday morning.
    Before planning, any pick a pool file is missing for a game that has already kicked off is
    filled in from that week's snapshot, so the entries stay alive from week to week without
    anyone running `plan --commit`. A pick you enter yourself (`record`, or editing the YAML)
@@ -81,7 +86,10 @@ price game-day lines from live books.
   derived from the betting market, exactly what the projection needs. Verified against the
   live page from GitHub Actions (the page's rows carry hidden sparkline cells, which the
   parser handles). If the fetch fails the tool says so and falls back to the market fit
-  below; you can also feed a saved page or a CSV with `--inpredictable-file`. The Actions
+  below; you can also feed a saved page or a CSV with `--inpredictable-file`. A page that is
+  still showing last season is rejected in any week (its records carry far more team-games
+  than the schedule has played), as is one that disagrees with this season's posted lines by
+  more than `inpredictable_max_rmse` points per team. The Actions
   workflow **Eliminator source probe** (run it from the Actions tab) prints what the live
   page and The Odds API return, for when either changes shape.
 * **Market-implied ratings** (built in): a recency-weighted ridge fit of team strengths to
