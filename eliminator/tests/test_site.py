@@ -47,6 +47,9 @@ def test_snapshot_roundtrip_and_site(tmp_path, games_all, cfg, before_week1):
     assert "This week's options" in wk and "Per-entry season plans" in wk
     assert (out / "data" / "2026-w01-strikes2.json").exists()
     assert len(load_snapshots(data)) == 2
+    # team logos ship with the site and every pick shows one
+    assert len(list((out / "logos").glob("*.png"))) == 32
+    assert 'src="logos/' in idx and 'src="logos/' in wk
 
 
 def test_backfill_fills_only_kicked_off_missing_picks(tmp_path, games_all, cfg, before_week1):

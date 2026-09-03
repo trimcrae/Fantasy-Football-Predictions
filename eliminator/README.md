@@ -258,6 +258,7 @@ eliminator/
   state/qb_auto.yaml     QB situations added automatically from the injury report (tool-written)
   state/overrides.yaml   manual line overrides and week-18 rest risks
   site/data/             weekly recommendation snapshots (written by `snapshot`, committed by CI)
+  site/logos/            team logos shown on the site (nflverse squared logos)
   site/build/            rendered site (ignored by git)
   data/cache/            downloaded feeds (ignored by git)
   eliminator/            the package
