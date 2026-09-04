@@ -246,13 +246,7 @@ whole remaining season with the latest information.
 The "this week's options" table is the most useful output when you want to overrule the
 tool: it lists, for each team you could use now, the plan score and the simulated season
 survival probability if you use it now and play the rest optimally. For the 25-entry pool
-the site lists each team with the number of entries on it; Details carries the numbers
-behind the split: one entry on that team alone, and **move one**, the change in P(at least
-one entry survives), in percentage points, if one entry moved off the largest group onto
-that team now (the cheapest entry in that group, scored on the same simulated seasons so
-the difference is nearly noise-free). It should be zero or negative everywhere; a positive
-value beyond the noise is a single change the split missed. The hedge sentence under a lone
-entry is the same idea for that entry: what switching it to each alternative would do.
+the site lists each team with the number of entries on it.
 
 Example (two-strike pool, 2026 week 1, market-implied ratings):
 
