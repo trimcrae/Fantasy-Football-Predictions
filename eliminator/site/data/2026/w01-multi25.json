@@ -27,12 +27,12 @@
   17,
   18
  ],
- "generated_at": "2026-09-03T20:33:32.780222-04:00",
+ "generated_at": "2026-09-03T20:45:35.332400-04:00",
  "ratings_source": "market",
  "n_lines_posted": 112,
  "n_priced_games": 112,
  "summary": {
-  "p_any": 0.2318,
+  "p_any": 0.2315,
   "expected_survivors": 0.3943,
   "n_live": 25,
   "p_each": [
@@ -706,9 +706,9 @@
   },
   {
    "team": "LA",
-   "p_now": 0.6309,
-   "score": 0.0197,
-   "p_season": 0.0197,
+   "p_now": 0.6369,
+   "score": 0.0199,
+   "p_season": 0.0199,
    "p_pool_add": null,
    "plan": [
     "LAC",
@@ -876,6 +876,19 @@
    "qb_note": ""
   },
   {
+   "team": "LA",
+   "opp": "SF",
+   "home": true,
+   "neutral": true,
+   "prob": 0.6369,
+   "spread": 4.052,
+   "source": "moneyline",
+   "kickoff": "2026-09-10T20:35:00-04:00",
+   "locked": false,
+   "played": false,
+   "qb_note": ""
+  },
+  {
    "team": "LV",
    "opp": "MIA",
    "home": true,
@@ -884,19 +897,6 @@
    "spread": 4.052,
    "source": "moneyline",
    "kickoff": "2026-09-13T16:25:00-04:00",
-   "locked": false,
-   "played": false,
-   "qb_note": ""
-  },
-  {
-   "team": "LA",
-   "opp": "SF",
-   "home": true,
-   "neutral": true,
-   "prob": 0.6309,
-   "spread": 3.8685,
-   "source": "moneyline",
-   "kickoff": "2026-09-10T20:35:00-04:00",
    "locked": false,
    "played": false,
    "qb_note": ""
@@ -1140,8 +1140,8 @@
    "opp": "LA",
    "home": false,
    "neutral": true,
-   "prob": 0.3691,
-   "spread": -3.8685,
+   "prob": 0.3631,
+   "spread": -4.052,
    "source": "moneyline",
    "kickoff": "2026-09-10T20:35:00-04:00",
    "locked": false,
@@ -3946,22 +3946,22 @@
    }
   },
   "options": [
-   "Best season odds for a single entry: this week's win chance times what is left to pick from afterwards.",
-   "77% now vs 82%. Less likely now, and what is left afterwards does not make up for it.",
-   "72% now vs 82%. Less likely now, and what is left afterwards does not make up for it.",
-   "64% now vs 82%. Less likely now, and what is left afterwards does not make up for it.",
-   "62% now vs 82%. Less likely now, and what is left afterwards does not make up for it.",
-   "66% now vs 82%. Less likely now, and what is left afterwards does not make up for it.",
-   "64% now vs 82%. Less likely now, and what is left afterwards does not make up for it.",
-   "61% now vs 82%. Less likely now, and what is left afterwards does not make up for it.",
-   "62% now vs 82%. Less likely now, and what is left afterwards does not make up for it.",
-   "54% now vs 82%. Less likely now, and what is left afterwards does not make up for it.",
-   "57% now vs 82%. Less likely now, and what is left afterwards does not make up for it.",
-   "57% now vs 82%. Less likely now, and what is left afterwards does not make up for it.",
-   "63% now vs 82%. Less likely now, and what is left afterwards does not make up for it.",
-   "57% now vs 82%. Less likely now, and what is left afterwards does not make up for it.",
-   "52% now vs 82%. Less likely now, and what is left afterwards does not make up for it.",
-   "52% now vs 82%. Less likely now, and what is left afterwards does not make up for it."
+   "Best season odds: 82% now, and LAC's best spot of the season (next best 76%, wk 11 vs NYJ).",
+   "77% now vs 82% for LAC. JAX's best spot of the season (next best 69%, wk 12 vs TEN), so using it now gives up nothing later; it trails LAC only on this week's chance (2.8% season vs 2.9%).",
+   "72% now vs 82% for LAC. DET's 4th-best spot of 17 (best 77% in wk 3 vs NYJ), so using it now spends a better week (2.5% season vs 2.9%).",
+   "64% now vs 82% for LAC. LV's best spot of the season (next best 54%, wk 16 vs TEN), so using it now gives up nothing later; it trails LAC only on this week's chance (2.4% season vs 2.9%).",
+   "62% now vs 82% for LAC. PIT's 2nd-best spot of 17 (best 68% in wk 8 vs CLE), so using it now spends a better week (2.3% season vs 2.9%).",
+   "66% now vs 82% for LAC. PHI's 4th-best spot of 17 (best 73% in wk 13 vs ARI), so using it now spends a better week (2.3% season vs 2.9%).",
+   "64% now vs 82% for LAC. CIN's 6th-best spot of 17 (best 70% in wk 8 vs TEN), so using it now spends a better week (2.3% season vs 2.9%).",
+   "61% now vs 82% for LAC. BAL's 11th-best spot of 17 (best 78% in wk 16 vs CLE), so using it now spends a better week (2.1% season vs 2.9%).",
+   "62% now vs 82% for LAC. SEA's 8th-best spot of 17 (best 83% in wk 9 vs ARI), so using it now spends a better week (2.1% season vs 2.9%).",
+   "54% now vs 82% for LAC. TEN's 2nd-best spot of 17 (best 59% in wk 7 vs CLE), so using it now spends a better week (2.0% season vs 2.9%).",
+   "57% now vs 82% for LAC. CHI's 8th-best spot of 17 (best 77% in wk 4 vs NYJ), so using it now spends a better week (2.0% season vs 2.9%).",
+   "57% now vs 82% for LAC. DAL's 6th-best spot of 17 (best 77% in wk 8 vs ARI), so using it now spends a better week (2.0% season vs 2.9%).",
+   "64% now vs 82% for LAC. LA's 10th-best spot of 17 (best 85% in wk 6 vs ARI), so using it now spends a better week (2.0% season vs 2.9%).",
+   "57% now vs 82% for LAC. KC's 8th-best spot of 17 (best 81% in wk 11 vs ARI), so using it now spends a better week (1.9% season vs 2.9%).",
+   "52% now vs 82% for LAC. MIN's 8th-best spot of 17 (best 77% in wk 4 vs MIA), so using it now spends a better week (1.9% season vs 2.9%).",
+   "52% now vs 82% for LAC. BUF's 15th-best spot of 17 (best 82% in wk 11 vs MIA), so using it now spends a better week (1.8% season vs 2.9%)."
   ],
   "entries": {
    "1": "Avg 75% per pick; weakest wk 1 LV 64%.",
@@ -4002,10 +4002,6 @@
  "allocation_view": "policy",
  "horizon": 1,
  "revisions": [
-  {
-   "generated_at": "2026-09-03T12:22:04.791645-04:00",
-   "picks": "LAC x13, JAX x7, DET, CHI, BAL, CIN, PHI"
-  },
   {
    "generated_at": "2026-09-03T12:42:59.171244-04:00",
    "picks": "LAC x17, JAX x7, SEA"
@@ -4080,6 +4076,10 @@
   },
   {
    "generated_at": "2026-09-03T20:27:37.149927-04:00",
+   "picks": "LAC x14, JAX x9, LV, DET"
+  },
+  {
+   "generated_at": "2026-09-03T20:33:32.780222-04:00",
    "picks": "LAC x14, JAX x9, LV, DET"
   }
  ]
