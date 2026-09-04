@@ -27,12 +27,12 @@
   17,
   18
  ],
- "generated_at": "2026-09-03T20:10:28.388198-04:00",
+ "generated_at": "2026-09-03T20:23:01.114075-04:00",
  "ratings_source": "market",
  "n_lines_posted": 112,
  "n_priced_games": 112,
  "summary": {
-  "p_any": 0.2315,
+  "p_any": 0.2318,
   "expected_survivors": 0.3943,
   "n_live": 25,
   "p_each": [
@@ -398,7 +398,7 @@
    "score": 0.0287,
    "p_season": 0.0287,
    "p_pool_add": null,
-   "p_move": -4.3e-05,
+   "p_move": -4.5e-05,
    "move_se": 2.2e-05,
    "move_from": "JAX",
    "plan": [
@@ -427,7 +427,7 @@
    "score": 0.0276,
    "p_season": 0.0276,
    "p_pool_add": null,
-   "p_move": -0.000169,
+   "p_move": -0.000164,
    "move_se": 2.1e-05,
    "move_from": "LAC",
    "plan": [
@@ -456,7 +456,7 @@
    "score": 0.0248,
    "p_season": 0.0248,
    "p_pool_add": null,
-   "p_move": -0.000262,
+   "p_move": -0.000261,
    "move_se": 2.1e-05,
    "move_from": "LAC",
    "plan": [
@@ -485,7 +485,7 @@
    "score": 0.024,
    "p_season": 0.024,
    "p_pool_add": null,
-   "p_move": -0.000345,
+   "p_move": -0.000334,
    "move_se": 1.8e-05,
    "move_from": "LAC",
    "plan": [
@@ -514,8 +514,8 @@
    "score": 0.023,
    "p_season": 0.023,
    "p_pool_add": null,
-   "p_move": -0.000396,
-   "move_se": 1.8e-05,
+   "p_move": -0.00039,
+   "move_se": 1.9e-05,
    "move_from": "LAC",
    "plan": [
     "LAC",
@@ -572,7 +572,7 @@
    "score": 0.0227,
    "p_season": 0.0227,
    "p_pool_add": null,
-   "p_move": -0.000483,
+   "p_move": -0.000471,
    "move_se": 2e-05,
    "move_from": "LAC",
    "plan": [
@@ -601,7 +601,7 @@
    "score": 0.0214,
    "p_season": 0.0214,
    "p_pool_add": null,
-   "p_move": -0.000712,
+   "p_move": -0.000703,
    "move_se": 1.9e-05,
    "move_from": "LAC",
    "plan": [
@@ -630,7 +630,7 @@
    "score": 0.0206,
    "p_season": 0.0206,
    "p_pool_add": null,
-   "p_move": -0.000842,
+   "p_move": -0.000837,
    "move_se": 2e-05,
    "move_from": "LAC",
    "plan": [
@@ -659,7 +659,7 @@
    "score": 0.0204,
    "p_season": 0.0204,
    "p_pool_add": null,
-   "p_move": -0.000785,
+   "p_move": -0.000778,
    "move_se": 1.8e-05,
    "move_from": "LAC",
    "plan": [
@@ -688,7 +688,7 @@
    "score": 0.0203,
    "p_season": 0.0203,
    "p_pool_add": null,
-   "p_move": -0.000844,
+   "p_move": -0.000834,
    "move_se": 1.9e-05,
    "move_from": "LAC",
    "plan": [
@@ -717,7 +717,7 @@
    "score": 0.0201,
    "p_season": 0.0201,
    "p_pool_add": null,
-   "p_move": -0.000905,
+   "p_move": -0.000896,
    "move_se": 1.9e-05,
    "move_from": "LAC",
    "plan": [
@@ -742,11 +742,11 @@
   },
   {
    "team": "LA",
-   "p_now": 0.6369,
-   "score": 0.0199,
-   "p_season": 0.0199,
+   "p_now": 0.6309,
+   "score": 0.0197,
+   "p_season": 0.0197,
    "p_pool_add": null,
-   "p_move": -0.001079,
+   "p_move": -0.001095,
    "move_se": 2.2e-05,
    "move_from": "LAC",
    "plan": [
@@ -775,7 +775,7 @@
    "score": 0.0192,
    "p_season": 0.0192,
    "p_pool_add": null,
-   "p_move": -0.001076,
+   "p_move": -0.00107,
    "move_se": 2e-05,
    "move_from": "LAC",
    "plan": [
@@ -804,7 +804,7 @@
    "score": 0.0185,
    "p_season": 0.0185,
    "p_pool_add": null,
-   "p_move": -0.001117,
+   "p_move": -0.001112,
    "move_se": 1.9e-05,
    "move_from": "LAC",
    "plan": [
@@ -833,7 +833,7 @@
    "score": 0.0176,
    "p_season": 0.0176,
    "p_pool_add": null,
-   "p_move": -0.001366,
+   "p_move": -0.001361,
    "move_se": 2e-05,
    "move_from": "LAC",
    "plan": [
@@ -924,19 +924,6 @@
    "qb_note": ""
   },
   {
-   "team": "LA",
-   "opp": "SF",
-   "home": true,
-   "neutral": true,
-   "prob": 0.6369,
-   "spread": 4.052,
-   "source": "moneyline",
-   "kickoff": "2026-09-10T20:35:00-04:00",
-   "locked": false,
-   "played": false,
-   "qb_note": ""
-  },
-  {
    "team": "LV",
    "opp": "MIA",
    "home": true,
@@ -945,6 +932,19 @@
    "spread": 4.052,
    "source": "moneyline",
    "kickoff": "2026-09-13T16:25:00-04:00",
+   "locked": false,
+   "played": false,
+   "qb_note": ""
+  },
+  {
+   "team": "LA",
+   "opp": "SF",
+   "home": true,
+   "neutral": true,
+   "prob": 0.6309,
+   "spread": 3.8685,
+   "source": "moneyline",
+   "kickoff": "2026-09-10T20:35:00-04:00",
    "locked": false,
    "played": false,
    "qb_note": ""
@@ -1188,8 +1188,8 @@
    "opp": "LA",
    "home": false,
    "neutral": true,
-   "prob": 0.3631,
-   "spread": -4.052,
+   "prob": 0.3691,
+   "spread": -3.8685,
    "source": "moneyline",
    "kickoff": "2026-09-10T20:35:00-04:00",
    "locked": false,
@@ -3972,7 +3972,7 @@
     "probability": "From the betting odds: LV favoured by 4.1 at home.",
     "timing": "LV's best spot all season; next best is 54% (wk 16 vs TEN).",
     "not_used": "Passed: LAC 82% saved for wk 2; JAX 77% saved for wk 12; DET 72% saved for wk 14.",
-    "hedge": "Switching this entry to PIT -0.03 points; PHI -0.05 points, DET -0.06 points, back onto LAC -0.08 points. Negative is what the pool's season odds would lose."
+    "hedge": "Switching this entry to PIT (the next best) would cost the pool 0.03 points; back onto LAC would cost the pool 0.08 points."
    },
    "LAC": {
     "probability": "From the betting odds: LAC favoured by 10.5 at home.",
@@ -3990,7 +3990,7 @@
     "probability": "From the betting odds: DET favoured by 6.8 at home.",
     "timing": "DET's 4th-best spot of 17; best is 77% in wk 3 vs NYJ, but later weeks are worth whoever is best available then, not a named team.",
     "not_used": "Passed: LAC 82% saved for wk 2; JAX 77% saved for wk 12.",
-    "hedge": "Switching this entry to PIT -0.03 points; JAX -0.03 points, PHI -0.03 points, back onto LAC -0.04 points. Negative is what the pool's season odds would lose."
+    "hedge": "Switching this entry to PIT (the next best) would cost the pool 0.03 points; back onto LAC would cost the pool 0.04 points."
    }
   },
   "options": [
@@ -4006,7 +4006,7 @@
    "54% now vs 82%. Less likely now, and what is left afterwards does not make up for it.",
    "57% now vs 82%. Less likely now, and what is left afterwards does not make up for it.",
    "57% now vs 82%. Less likely now, and what is left afterwards does not make up for it.",
-   "64% now vs 82%. Less likely now, and what is left afterwards does not make up for it.",
+   "63% now vs 82%. Less likely now, and what is left afterwards does not make up for it.",
    "57% now vs 82%. Less likely now, and what is left afterwards does not make up for it.",
    "52% now vs 82%. Less likely now, and what is left afterwards does not make up for it.",
    "52% now vs 82%. Less likely now, and what is left afterwards does not make up for it."
@@ -4050,10 +4050,6 @@
  "allocation_view": "policy",
  "horizon": 1,
  "revisions": [
-  {
-   "generated_at": "2026-09-03T12:14:38.490870-04:00",
-   "picks": "LAC x13, JAX x7, DET, CHI, BAL, CIN, PHI"
-  },
   {
    "generated_at": "2026-09-03T12:21:04.632151-04:00",
    "picks": "LAC x17, JAX x7, SEA"
@@ -4129,6 +4125,10 @@
   {
    "generated_at": "2026-09-03T19:45:58.076570-04:00",
    "picks": "DET x9, JAX x8, PHI x5, LAC x3"
+  },
+  {
+   "generated_at": "2026-09-03T20:10:28.388198-04:00",
+   "picks": "LAC x14, JAX x9, LV, DET"
   }
  ]
 }

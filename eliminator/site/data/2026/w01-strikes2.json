@@ -27,7 +27,7 @@
   17,
   18
  ],
- "generated_at": "2026-09-03T20:13:39.902094-04:00",
+ "generated_at": "2026-09-03T20:26:35.351056-04:00",
  "ratings_source": "market",
  "n_lines_posted": 112,
  "n_priced_games": 112,
@@ -406,9 +406,9 @@
   },
   {
    "team": "LA",
-   "p_now": 0.6369,
-   "score": 0.1056,
-   "p_season": 0.1056,
+   "p_now": 0.6309,
+   "score": 0.1049,
+   "p_season": 0.1049,
    "p_pool_add": null,
    "p_move": null,
    "move_se": null,
@@ -588,19 +588,6 @@
    "qb_note": ""
   },
   {
-   "team": "LA",
-   "opp": "SF",
-   "home": true,
-   "neutral": true,
-   "prob": 0.6369,
-   "spread": 4.052,
-   "source": "moneyline",
-   "kickoff": "2026-09-10T20:35:00-04:00",
-   "locked": false,
-   "played": false,
-   "qb_note": ""
-  },
-  {
    "team": "LV",
    "opp": "MIA",
    "home": true,
@@ -609,6 +596,19 @@
    "spread": 4.052,
    "source": "moneyline",
    "kickoff": "2026-09-13T16:25:00-04:00",
+   "locked": false,
+   "played": false,
+   "qb_note": ""
+  },
+  {
+   "team": "LA",
+   "opp": "SF",
+   "home": true,
+   "neutral": true,
+   "prob": 0.6309,
+   "spread": 3.8685,
+   "source": "moneyline",
+   "kickoff": "2026-09-10T20:35:00-04:00",
    "locked": false,
    "played": false,
    "qb_note": ""
@@ -852,8 +852,8 @@
    "opp": "LA",
    "home": false,
    "neutral": true,
-   "prob": 0.3631,
-   "spread": -4.052,
+   "prob": 0.3691,
+   "spread": -3.8685,
    "source": "moneyline",
    "kickoff": "2026-09-10T20:35:00-04:00",
    "locked": false,
@@ -1108,7 +1108,7 @@
    "62% now vs 82%. Less likely now, and what is left afterwards does not make up for it.",
    "57% now vs 82%. Less likely now, and what is left afterwards does not make up for it.",
    "57% now vs 82%. Less likely now, and what is left afterwards does not make up for it.",
-   "64% now vs 82%. Less likely now, and what is left afterwards does not make up for it.",
+   "63% now vs 82%. Less likely now, and what is left afterwards does not make up for it.",
    "57% now vs 82%. Less likely now, and what is left afterwards does not make up for it.",
    "52% now vs 82%. Less likely now, and what is left afterwards does not make up for it.",
    "46% now vs 82%. Less likely now, and what is left afterwards does not make up for it."
@@ -1128,10 +1128,6 @@
  "allocation_view": "policy",
  "horizon": 1,
  "revisions": [
-  {
-   "generated_at": "2026-09-03T12:14:43.855131-04:00",
-   "picks": "LAC"
-  },
   {
    "generated_at": "2026-09-03T12:21:08.506868-04:00",
    "picks": "LAC"
@@ -1207,6 +1203,10 @@
   {
    "generated_at": "2026-09-03T19:47:32.274318-04:00",
    "picks": "JAX"
+  },
+  {
+   "generated_at": "2026-09-03T20:13:39.902094-04:00",
+   "picks": "LAC"
   }
  ]
 }
