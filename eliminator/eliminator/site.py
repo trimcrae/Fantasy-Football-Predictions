@@ -569,7 +569,9 @@ def render_week_page(season: int, week: int, snaps: list[dict], games: pd.DataFr
                 cells = "".join(f"<td class=\"{'now' if i == 0 else ''}\" title=\"{_pct(step['p'])}\">{_esc(step['team'])}</td>" for i, step in enumerate(pl["path"]))
                 ewhy = (ex.get("entries") or {}).get(pl["entry"], "")
                 trs.append(f"<tr title=\"{_esc(ewhy)}\"><td>#{_esc(pl['entry'])}</td><td class=\"n\">{_surv(pl.get('p_season'))}</td>{cells}</tr>")
-            caption = ("This week is the pick. Later weeks are a sketch on today's lines: the entry actually takes the best team still available each week, and P(season) assumes that. Hover a cell for its probability."
+            caption = (("This week is the pick. Later weeks are a sketch on today's lines: in the simulation the pool is spread each week across the best few teams still available to it (most entries on the best, some on the second and third), and P(season) assumes that. Hover a cell for its probability."
+                        if s["mode"] != "strikes" else
+                        "This week is the pick. Later weeks are a sketch on today's lines: the entry actually takes the best team still available each week, and P(season) assumes that. Hover a cell for its probability.")
                        if s.get("allocation_view") == "policy" else "This week first; later weeks only justify it and re-solve every run. Hover a cell for its probability.")
             more.append(f"<details><summary>Per-entry season plans</summary><div class=\"sub\">{caption}</div>"
                         f"<div class=\"tw\"><table class=\"grid-t\"><thead><tr><th>entry</th><th class=\"n\">P(season)</th>{head_cells}</tr></thead><tbody>{''.join(trs)}</tbody></table></div></details>")
