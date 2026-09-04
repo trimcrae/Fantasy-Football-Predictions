@@ -61,3 +61,22 @@ def test_auto_rejects_last_seasons_ratings_before_week_one(games_all, cfg, befor
     assert st.source == "market" and "disagree" in st.detail["inpredictable_check"]["reason"]
     # explicit choice is honoured
     assert assemble(games_all, 2026, 1, cfg, [], wrong, "inpredictable").source == "inpredictable"
+
+
+def test_auto_rejects_last_seasons_ratings_in_season_too(games_all, cfg):
+    """By week 3 last season's ratings can sit within the rmse limit of this season's lines; the
+    page's records still give it away (32*17 team-games against the feed's two played weeks)."""
+    import pandas as pd
+    from eliminator.model.strength import assemble
+    from eliminator.teams import TEAMS
+    g = games_all.copy()
+    wk = (g["season"] == 2026) & (g["week"] <= 2)
+    g.loc[wk, "result"] = 3.0; g.loc[wk, "played"] = True; g.loc[wk, "home_win"] = 1.0
+    mk = assemble(g, 2026, 3, cfg, [], None, "market")
+    agree = pd.DataFrame({"team": TEAMS, "gpf": [mk.healthy[t] for t in TEAMS]})
+    agree.attrs["games_played"] = 32 * 17
+    st = assemble(g, 2026, 3, cfg, [], agree, "auto")
+    assert st.source == "market" and "last season" in st.detail["inpredictable_check"]["reason"]
+    # this season's records (two weeks played, the page a few games ahead of the feed) are fine
+    agree.attrs["games_played"] = 2 * 32 + 6
+    assert assemble(g, 2026, 3, cfg, [], agree, "auto").source == "inpredictable"

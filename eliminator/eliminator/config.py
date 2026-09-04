@@ -40,7 +40,7 @@ DEFAULTS: dict[str, Any] = {
         "auto_from_injuries": True,      # add starters with a game designation to the ledger automatically
     },
     "simulation": {"scenarios": 20000, "seed": 7, "discount": 1.0},  # discount: drift multiplier, 1 = calibrated
-    "portfolio": {"candidates_per_slot": 60, "improve_passes": 2,
+    "portfolio": {"candidates_per_slot": 60, "improve_passes": 6,   # coordinate ascent stops early once no entry moves
                   "allocation_view": "planning"},   # planning.mode = discount only: planning (discounted) | calibrated scores the split
     # How the future is valued when choosing this week's pick.
     #   policy   - this week (and the next horizon-1 weeks) are a commitment; every later week is

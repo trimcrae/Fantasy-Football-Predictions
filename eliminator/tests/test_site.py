@@ -27,7 +27,10 @@ def test_snapshot_roundtrip_and_site(tmp_path, games_all, cfg, before_week1):
             teams = {r["team"] for r in snap["picks"]}
             top = max(teams, key=lambda t: sum(r["team"] == t for r in snap["picks"]))
             lone = [t for t in teams if t != top and sum(r["team"] == t for r in snap["picks"]) <= 2]
-            assert all(snap["explain"]["picks"][t]["hedge"].startswith("As the pool's last entry") for t in lone)
+            assert all(snap["explain"]["picks"][t]["hedge"].startswith("Switching this entry to") for t in lone)
+            # move-one column: a paired change in P(any) for every option the pool could move onto
+            mv = [o for o in snap["options"] if o["p_move"] is not None]
+            assert mv and all(abs(o["p_move"]) < 0.5 and o["move_se"] >= 0 and o["move_from"] in teams for o in mv)
         path = write_snapshot(snap, data)
         assert path == snapshot_path(2026, 1, st.path.stem, data)
         back = json.loads(path.read_text())
@@ -111,3 +114,32 @@ def test_snapshot_carries_qb_situations_and_week_page_renders_them(tmp_path, gam
     build_site(games_all, data_dir=data, out_dir=tmp_path / "build", built_at=before_week1)
     page = (tmp_path / "build" / "s2026-w01.html").read_text()
     assert "Quarterback situations (1)" in page and "Patrick Mahomes" in page
+
+
+def test_played_pick_is_recorded_at_its_closing_price(tmp_path, games_all, cfg):
+    """The last run of a week happens after most games are played; the record must keep the
+    price the pick closed at, not 100% / 0% from the score."""
+    g = games_all.copy()
+    wk1 = (g.season == 2026) & (g.week == 1)
+    g.loc[wk1, "result"] = 3.0; g.loc[wk1, "played"] = True; g.loc[wk1, "home_win"] = 1.0
+    first = g[wk1].iloc[0]
+    home, away = first["home"], first["away"]
+    st = PoolState.load(_pool(tmp_path, "multi25", "multi", 2, 0))
+    st.picks = {"1": {1: home}, "2": {1: away}}
+    later = first["kickoff"] + dt.timedelta(hours=5)
+    res = make_plan(st, g, cfg, [], None, now=later, season=2026, source="market")
+    snap = build_snapshot(res, "multi25", generated_at=later)
+    by_entry = {r["entry"]: r for r in snap["picks"]}
+    assert by_entry["1"]["status"] == "locked" and 0 < by_entry["1"]["p_win"] < 1
+    # the entry that lost is eliminated, but its pick stays on the week's record, at its price
+    assert by_entry["2"]["status"] == "locked" and by_entry["2"]["p_season"] is None
+    assert abs(by_entry["1"]["p_win"] + by_entry["2"]["p_win"] - 1) < 1e-3
+    assert [pl["alive"] for pl in snap["plans"]] == [True, False]
+    rec = week_record([snap], g)
+    assert rec["multi25"]["by_week"][1]["graded"] == {"1": "win", "2": "loss"}
+    assert rec["multi25"]["by_week"][1]["alive_after"] == 1
+    board = {r["team"]: r for r in snap["board"]}
+    assert board[home]["played"] and 0 < board[home]["prob"] < 1 and board[home]["source"] == "result"
+    assert grade(g, 2026, 1, home) == "win" and grade(g, 2026, 1, away) == "loss"
+    # the timing sentence ranks the played spot at its price, not at 100%
+    assert "100%" not in snap["explain"]["picks"][home]["timing"]

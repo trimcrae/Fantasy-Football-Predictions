@@ -106,11 +106,16 @@ def assemble(games_all: pd.DataFrame, season: int, current_week: int, cfg: dict,
     if inp_healthy is not None:
         rmse = float(np.sqrt(((inp_healthy - market) ** 2).mean()))
         played = inpredictable.attrs.get("games_played")
-        stale = current_week == 1 and played is not None and played > 0
+        # the page's records (team-games, W+L+T summed over teams) against the feed's: a page that
+        # is more than a week of games ahead of the schedule is still showing last season, in
+        # week 1 and just as much in week 3 when its stale ratings may still resemble the market
+        feed_played = 2 * int(games["played"].sum())
+        stale = played is not None and played > feed_played + 2 * 16
         max_rmse = float(m.get("inpredictable_max_rmse", 2.0))
         reason = None
         if stale:
-            reason = f"page still shows last season ({played} games played before week 1)"
+            reason = (f"page still shows last season ({played} team-games on its records, "
+                      f"{feed_played} played this season)")
         elif rmse > max_rmse:
             reason = f"ratings disagree with this season's lines by {rmse:.1f} points per team on average (limit {max_rmse:.1f})"
         inp_check = {"rmse": rmse, "games_played": played, "reason": reason}

@@ -42,17 +42,40 @@ class PlanResult:
         rows = []
         status = {s.entry_id: s for s in self.statuses}
         for e in self.entries:
-            if not e.alive or e.path is None:
-                continue
-            t = TEAMS[e.path.teams[0]]
-            r = self.projection.row(self.week, t)
             st = status[e.entry_id]
+            if e.alive and e.path is not None:
+                t = TEAMS[e.path.teams[0]]
+            elif not e.alive and st.locked_now is not None and self._died_this_week(st):
+                t = st.locked_now          # the pick went in and lost: it stays on this week's record
+            else:
+                continue
+            r = self.projection.row(self.week, t)
             rows.append({"entry": e.entry_id, "team": t, "opp": ("" if r["home"] else "@") + r["opp"],
-                         "p_win": r["prob"], "spread": r["spread"], "source": r["source"],
+                         "p_win": r["prob"], "p_line": r["line_prob"], "spread": r["spread"], "source": r["source"],
                          "kickoff": r["kickoff"].strftime("%a %m/%d %H:%M"),
                          "status": "locked" if st.locked_now == t else ("keep" if st.provisional_now == t else ("change" if st.provisional_now else "new")),
-                         "p_season": e.path.value, "p_season_sim": e.p_season() if e.p_season() is not None else np.nan})
+                         "p_season": e.path.value if e.path is not None else np.nan,
+                         "p_season_sim": e.p_season() if e.path is not None and e.p_season() is not None else np.nan})
         return pd.DataFrame(rows)
+
+    def status_of(self, entry_id: str) -> EntryStatus:
+        return next(x for x in self.statuses if x.entry_id == entry_id)
+
+    def strikes_left_of(self, entry_id: str) -> int:
+        """Strikes the entry has left after every result in so far: 2 of 2 at the start of a
+        two-strike pool, 1 after a loss, 0 when it is out. What to show, not what the optimiser
+        plans with (``EntryPlan.strikes_left`` is the losses it can still take, see ``make_plan``)."""
+        return max(self.state.strikes - self.status_of(entry_id).losses, 0)
+
+    def decided_now(self, entry_id: str) -> bool:
+        """This week's pick has kicked off and its result is in."""
+        st = self.status_of(entry_id)
+        return st.locked_now is not None and st.results.get(self.week) in ("win", "loss")
+
+    def _died_this_week(self, st: EntryStatus) -> bool:
+        """An entry that was still alive coming into this week and lost this week's game."""
+        lost_now = st.results.get(self.week) in ("loss", "missed")
+        return lost_now and st.losses - 1 <= self.state.lives
 
     def picks_by_team(self) -> pd.DataFrame:
         tw = self.this_week()
@@ -91,8 +114,13 @@ def make_plan(state: PoolState, games_all: pd.DataFrame, cfg: dict, ledger: list
         if s.locked_now is not None:
             fixed[0] = TEAMS.index(s.locked_now)
             available[fixed[0]] = True
+        # A locked pick whose result is already in sits at P = 1 or 0 in the projection and the
+        # simulation, so a loss there is charged by the simulation itself; the strikes the
+        # optimiser plans with must not charge it a second time. (The strikes shown to the user
+        # come from the results: PlanResult.strikes_left_of.)
+        losses_ahead = s.losses - (1 if s.locked_now is not None and s.results.get(week) == "loss" else 0)
         entries.append(EntryPlan(entry_id=s.entry_id, available=available, fixed=fixed,
-                                 strikes_left=max(state.strikes - s.losses, 0), alive=s.alive or ignore_elimination))
+                                 strikes_left=max(state.lives - losses_ahead, 0), alive=s.alive or ignore_elimination))
     plan_disc = float(cfg["model"].get("future_discount", 1.0))
     real_disc = float(cfg["simulation"].get("discount", 1.0))
     sim = simulate_season(proj, cfg, n=scenarios, discount=real_disc)            # calibrated: reporting, and choosing in policy mode
@@ -189,7 +217,7 @@ def render(result: PlanResult, show_paths: bool = True, top_options: int = 12) -
         if e0 is None:
             out.append("entry is eliminated.")
             return "\n".join(out)
-        out.append(f"strikes left: {e0.strikes_left} of {s.strikes}")
+        out.append(f"strikes left: {result.strikes_left_of(e0.entry_id)} of {s.strikes}")
         out.append(f"P(survive season) following the plan: {result.summary['p_each'][0]:.3f} (simulated; plan score {result.summary.get('p_plugin_first', float('nan')):.3f})")
     else:
         out.append(f"entries alive: {len(live)} of {len(result.entries)}; eliminated: {len(dead)}")

@@ -4,8 +4,9 @@ Entries that share picks live and die together, so the value of an extra entry i
 survival in the scenarios where every other entry is already dead. The portfolio is built
 greedily on common random numbers: for each entry a pool of strong, deliberately diverse
 candidate paths is generated (penalised assignments, forced current-week alternatives,
-perturbed assignments) and the candidate with the largest marginal gain is kept; a couple
-of coordinate-ascent passes then revisit every entry.
+perturbed assignments) and the candidate with the largest marginal gain is kept;
+coordinate-ascent passes then revisit every entry until none moves (or the pass cap is hit),
+so that no single entry can be moved onto any candidate for a gain.
 
 With a planning horizon (the default) only the first ``horizon`` picks of a candidate are a
 commitment; every later week is re-picked from whatever is best available at the time

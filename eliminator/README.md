@@ -5,7 +5,7 @@ Season-long pick optimisation for two pool formats:
 | pool | file | objective |
 |---|---|---|
 | single elimination, 25 entries | `state/multi25.yaml` | maximise **P(at least one entry survives the whole season)** |
-| one entry, two strikes | `state/strikes2.yaml` | maximise **P(the entry survives the whole season)** (at most 2 losses) |
+| one entry, two strikes | `state/strikes2.yaml` | maximise **P(the entry survives the whole season)** (out on the second loss) |
 
 Everything is driven by the betting market. Where a Vegas price exists it is the truth;
 where it does not, team strength is backed out of the market (inpredictable's GPF, or the
@@ -53,7 +53,12 @@ Each run does three things:
 1. `python -m eliminator snapshot` refreshes the feeds, plans every pool in `state/` and
    writes `site/data/<season>/w<NN>-<pool>.json`. The current week's file is overwritten on
    every run (earlier recommendations that week are kept inside it as revisions); once the
-   season moves on, the file is frozen and becomes the record of what was recommended.
+   season moves on, the file is frozen and becomes the record of what was recommended. That
+   record is kept honest by the runs after kickoff: a pick whose game has been played stays in
+   the file at the price it closed at (not at 100% or 0% from the score, which is graded
+   separately), and an entry that lost this week keeps its pick on the week's record instead
+   of vanishing with the eliminated entry, so the week-by-week table and its "alive after"
+   counts are right even though the last run of a week happens on Monday morning.
    Before planning, any pick a pool file is missing for a game that has already kicked off is
    filled in from that week's snapshot, so the entries stay alive from week to week without
    anyone running `plan --commit`. A pick you enter yourself (`record`, or editing the YAML)
@@ -81,7 +86,10 @@ price game-day lines from live books.
   derived from the betting market, exactly what the projection needs. Verified against the
   live page from GitHub Actions (the page's rows carry hidden sparkline cells, which the
   parser handles). If the fetch fails the tool says so and falls back to the market fit
-  below; you can also feed a saved page or a CSV with `--inpredictable-file`. The Actions
+  below; you can also feed a saved page or a CSV with `--inpredictable-file`. A page that is
+  still showing last season is rejected in any week (its records carry far more team-games
+  than the schedule has played), as is one that disagrees with this season's posted lines by
+  more than `inpredictable_max_rmse` points per team. The Actions
   workflow **Eliminator source probe** (run it from the Actions tab) prints what the live
   page and The Odds API return, for when either changes shape.
 * **Market-implied ratings** (built in): a recency-weighted ridge fit of team strengths to
@@ -144,7 +152,7 @@ So the planner does not score fixed 18-week paths. Each simulated season carries
 closing lines (today's line plus per-team drift calibrated to the variance above, so the
 spreads widen as they do in reality), and an entry is valued as: use this team now, then
 every later week take the best team still available at that season's line. Survival given
-the lines is computed exactly (a product of the picks' probabilities, or the two-strike tail),
+the lines is computed exactly (a product of the picks' probabilities, or the one-loss tail of the two-strike pool),
 so close options can be told apart without millions of coin flips. Using a strong team now is
 charged for the thinner menu the entry faces later, and nothing else. A pool of entries is
 re-split every week, so in the 25-entry format each entry follows its own pattern later
@@ -156,7 +164,7 @@ closing prices, geometric mean over 2015-2025 (`BACKTEST.md`):
 | planner | policy, horizon 1 | policy, horizon 2 | policy, horizon 4 | fixed paths, discount 16 (previous) | greedy (no lookahead) |
 |---|---|---|---|---|---|
 | single elimination | **1.96%** | 1.94% | 1.81% | 1.78% | 1.58% |
-| two strikes | **28.2%** | 26.8% | 25.0% | 27.2% | 25.5% |
+| two strikes (out on the 2nd loss) | **10.6%** | 10.6% | 10.1% | 9.9% | 9.0% |
 
 The default is `planning: {mode: policy, horizon: 1}`. The previous planner (fixed paths
 chosen on a simulation with the future variance inflated 16x, `planning.mode: discount`) is
@@ -220,9 +228,11 @@ list every situation in play with its source.
 * **One entry, single elimination**: with independent games the season survival probability
   is the product of the picks' win probabilities, so the best plan is a minimum-cost
   assignment on `-log p` (one distinct team per week, Hungarian algorithm, exact).
-* **One entry, k strikes**: the objective is `P(at most k losses)`, optimised by local search
-  (replace / swap moves) from the max-product plan with perturbed restarts. Strikes already
-  used are read from the pool file, so after a loss the plan is re-solved with one fewer.
+* **One entry, k strikes**: the entry is out on its k-th loss (`strikes: 2` in the pool file
+  means the second loss eliminates, so one loss can be taken), and the objective is
+  `P(fewer than k losses)`, optimised by local search (replace / swap moves) from the
+  max-product plan with perturbed restarts. Strikes already used are read from the pool
+  file, so after a loss the plan is re-solved with one fewer.
 * **25 entries**: entries that share picks live and die together, so the value of a new entry
   is its survival in the scenarios where every other entry is already dead. The portfolio
   is built greedily on common random numbers from a pool of strong, deliberately diverse
@@ -235,7 +245,13 @@ whole remaining season with the latest information.
 
 The "this week's options" table is the most useful output when you want to overrule the
 tool: it lists, for each team you could use now, the plan score and the simulated season
-survival probability if you use it now and play the rest optimally.
+survival probability if you use it now and play the rest optimally. For the 25-entry pool
+the site adds a **move one** column: the change in P(at least one entry survives), in
+percentage points, if one entry moved off the largest group onto that team now (the
+cheapest entry in that group, scored on the same simulated seasons so the difference is
+nearly noise-free). It should be zero or negative everywhere; a positive value beyond the
+noise is a single change the split missed. The hedge sentence under a lone entry is the
+same idea for that entry: what switching it to each alternative would do to the pool.
 
 Example (two-strike pool, 2026 week 1, market-implied ratings):
 

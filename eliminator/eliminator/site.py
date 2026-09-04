@@ -28,7 +28,7 @@ import pandas as pd
 from .config import ROOT
 from .data.schedule import ET
 from .plan import PlanResult
-from .state import PoolState
+from .state import PoolState, lives
 from .teams import TEAMS
 
 SCHEMA = 1
@@ -64,6 +64,15 @@ def _f(x) -> float | None:
     return None if np.isnan(v) else round(v, 4)
 
 
+def _f6(x) -> float | None:
+    """Paired differences are far smaller than the survival numbers: keep six decimals."""
+    try:
+        v = float(x)
+    except (TypeError, ValueError):
+        return None
+    return None if np.isnan(v) else round(v, 6)
+
+
 def build_snapshot(res: PlanResult, pool: str, generated_at: dt.datetime, previous: dict | None = None,
                    ledger: list | None = None, cfg: dict | None = None) -> dict:
     """Serialise a plan result. ``previous`` is the snapshot this one replaces (same week)."""
@@ -74,28 +83,38 @@ def build_snapshot(res: PlanResult, pool: str, generated_at: dt.datetime, previo
 
     board = []
     for r in p.table[p.table["week"] == res.week].sort_values("prob", ascending=False).itertuples(index=False):
+        # a played game keeps the price it closed at; the result is graded separately
+        prob = r.line_prob if r.played and pd.notna(r.line_prob) else r.prob
         board.append({"team": r.team, "opp": r.opp, "home": bool(r.home), "neutral": bool(r.neutral),
-                      "prob": _f(r.prob), "spread": _f(r.spread), "source": str(r.source),
+                      "prob": _f(prob), "spread": _f(r.spread), "source": str(r.source),
                       "kickoff": r.kickoff.isoformat(), "locked": bool(r.locked), "played": bool(r.played),
                       "qb_note": str(r.qb_note or "")})
 
     options = []
-    from .explain import pool_add_values
-    pool_add = pool_add_values(res) if s.mode != "strikes" else {}
+    from .explain import move_values, pool_add_values
+    policy = bool(res.horizon) and res.sim is not None
+    moves = move_values(res) if s.mode != "strikes" and policy else {}
+    pool_add = pool_add_values(res) if s.mode != "strikes" and not policy else {}
     for i, o in enumerate(res.options[:16]):
+        mv = moves.get(i)
         options.append({"team": TEAMS[o.teams[0]], "p_now": _f(o.detail.get("now_prob", 0.0)), "score": _f(o.value),
-                        "p_season": _f(o.detail.get("sim")), "p_pool_add": _f(pool_add.get(i)), "plan": [TEAMS[t] for t in o.teams[1:]]})
+                        "p_season": _f(o.detail.get("sim")), "p_pool_add": _f(pool_add.get(i)),
+                        "p_move": _f6(mv["delta"]) if mv else None, "move_se": _f6(mv["se"]) if mv else None,
+                        "move_from": mv["from"] if mv else None, "plan": [TEAMS[t] for t in o.teams[1:]]})
 
     picks = []
     for r in res.this_week().to_dict(orient="records"):
-        picks.append({"entry": str(r["entry"]), "team": r["team"], "opp": r["opp"], "p_win": _f(r["p_win"]),
+        # a pick whose game has kicked off is recorded at the price before kickoff, not at 100% or
+        # 0% once the result is in: the week-by-week record grades it against the score separately
+        p_win = r["p_line"] if r["status"] == "locked" and pd.notna(r.get("p_line")) else r["p_win"]
+        picks.append({"entry": str(r["entry"]), "team": r["team"], "opp": r["opp"], "p_win": _f(p_win),
                       "spread": _f(r["spread"]), "source": r["source"], "kickoff": r["kickoff"], "status": r["status"],
                       "on_file": status[str(r["entry"])].provisional_now or status[str(r["entry"])].locked_now,
                       "score": _f(r["p_season"]), "p_season": _f(r["p_season_sim"])})
 
     plans = []
     for e in res.entries:
-        row = {"entry": str(e.entry_id), "alive": bool(e.alive), "strikes_left": int(e.strikes_left)}
+        row = {"entry": str(e.entry_id), "alive": bool(e.alive), "strikes_left": int(res.strikes_left_of(e.entry_id))}
         if e.alive and e.path is not None:
             row["score"] = _f(e.path.value)
             row["p_season"] = _f(e.p_season())
@@ -215,7 +234,7 @@ def week_record(snaps: list[dict], games: pd.DataFrame | None) -> dict[str, dict
                 graded[r["entry"]] = res
                 if res == "loss":
                     losses[r["entry"]] = losses.get(r["entry"], 0) + 1
-            alive = [e for e in (str(i) for i in range(1, n_entries + 1)) if losses.get(e, 0) <= strikes]
+            alive = [e for e in (str(i) for i in range(1, n_entries + 1)) if losses.get(e, 0) <= lives(strikes)]
             by_week[s["week"]] = {"graded": graded, "alive_after": len(alive), "losses": dict(losses)}
         out[pool] = {"by_week": by_week, "strikes": strikes, "entries": n_entries}
     return out
@@ -255,6 +274,7 @@ main{max-width:1040px;margin:0 auto;padding:28px 20px 64px}
 .chip{display:inline-flex;align-items:center;gap:7px;background:var(--chip);border-radius:999px;padding:5px 12px 5px 6px;font-size:13.5px;font-weight:600}
 .chip img{width:22px;height:22px;border-radius:50%}.chip .c{font-weight:500;color:var(--ink2)}.chip .p{font-weight:500;color:var(--ink3)}
 .badge{display:inline-flex;align-items:center;gap:4px;font-size:11.5px;font-weight:650;padding:1px 7px;border-radius:999px}
+b.good{color:var(--good)}b.bad{color:var(--bad)}b.sub{color:var(--ink3)}
 .badge.win{color:var(--good);background:var(--good-bg)}.badge.loss{color:var(--bad);background:var(--bad-bg)}.badge.pending{color:var(--ink3);background:var(--chip)}
 .meter{display:inline-flex;align-items:center;gap:8px;min-width:150px;width:150px}.meter .bar{display:block;flex:1;height:6px;border-radius:3px;background:var(--track);overflow:hidden}.meter .fill{display:block;height:100%;background:var(--accent);border-radius:0 3px 3px 0}.meter .mv{display:block;font-variant-numeric:tabular-nums;width:40px;text-align:right;font-size:13px;font-weight:600}
 details{margin:14px 0 0}summary{cursor:pointer;color:var(--accent);font-size:13.5px;font-weight:500;list-style:none;display:inline-block}summary::-webkit-details-marker{display:none}summary::before{content:"\\25B8";margin-right:6px;font-size:11px}details[open]>summary::before{content:"\\25BE"}
@@ -323,6 +343,11 @@ def _pct(x, digits: int = 1) -> str:
 def _surv(x) -> str:
     """Season survival to a precision the simulation supports: 0.9%, 1.2%, 17.1%."""
     return _pct(x, 1)
+
+
+def _pts(x) -> str:
+    """A change in a probability, in percentage points: +0.12 / -0.35."""
+    return "&mdash;" if x is None else f"{100 * float(x):+.2f}"
 
 
 def _spread(x) -> str:
@@ -432,14 +457,15 @@ def render_season_index(season: int, snaps: list[dict], games: pd.DataFrame | No
         s = latest[pool]
         ex = s.get("explain") or {}
         head = f"<h2>{_esc(s['name'])}<span class=\"tag\">{_esc(FORMAT_LABEL.get(s['mode'], s['mode']))}</span></h2><div class=\"sub\">week {s['week']}</div>"
+        graded = rec[pool]["by_week"].get(s["week"], {}).get("graded", {})    # games already played this week
         if not s["picks"]:
             body = "<div class=\"pick\"><div class=\"who\"><div class=\"team\">Eliminated</div></div></div>"
         elif s["mode"] == "strikes":
             r = s["picks"][0]
-            body = _hero_pick(r) + f"<p class=\"why\">{_pick_why(s, r['team'])}</p>"
+            body = _hero_pick(r, graded.get(r["entry"], "")) + f"<p class=\"why\">{_pick_why(s, r['team'])}</p>"
         else:
             top = max(s["picks"], key=lambda r: r["p_win"] or 0)
-            body = _hero_pick(top) + f"<p class=\"why\">{_pick_why(s, top['team'])}</p>" + _exposure_chips(s["picks"])
+            body = _hero_pick(top, graded.get(top["entry"], "")) + f"<p class=\"why\">{_pick_why(s, top['team'])}</p>" + _exposure_chips(s["picks"], graded)
             if ex.get("exposure"):
                 body += f"<p class=\"why\">{_esc(ex['exposure'])}</p>"
         body += _pool_summary_tiles(s)
@@ -515,19 +541,34 @@ def render_week_page(season: int, week: int, snaps: list[dict], games: pd.DataFr
         if s.get("options"):
             whys = ex.get("options") or []
             rows = []
-            multi = s["mode"] != "strikes" and any(o.get("p_pool_add") is not None for o in s["options"])
+            moves = s["mode"] != "strikes" and any(o.get("p_move") is not None for o in s["options"])
+            multi = s["mode"] != "strikes" and not moves and any(o.get("p_pool_add") is not None for o in s["options"])
             n_live = s["summary"].get("n_live", 0)
             for i, o in enumerate(s["options"]):
                 why = whys[i] if i < len(whys) else ""
-                right = (f"<div class=\"r two\"><span><b>{_surv(o['p_season'])}</b><span class=\"sub\"> alone</span></span>"
-                         f"<span><b>{_pct(o.get('p_pool_add'), 2)}</b><span class=\"sub\"> adds</span></span></div>") if multi else \
-                        f"<div class=\"r\"><b>{_surv(o['p_season'])}</b><span class=\"sub\"> season</span></div>"
+                if moves:
+                    mv = o.get("p_move")
+                    noise = mv is not None and o.get("move_se") is not None and abs(mv) < 2 * float(o["move_se"])
+                    cls = "sub" if mv is None or noise else ("good" if mv > 0 else "")   # negative is the expected state
+                    right = (f"<div class=\"r two\"><span><b>{_surv(o['p_season'])}</b><span class=\"sub\"> alone</span></span>"
+                             f"<span><b class=\"{cls}\">{_pts(mv)}</b><span class=\"sub\"> move one</span></span></div>")
+                elif multi:
+                    right = (f"<div class=\"r two\"><span><b>{_surv(o['p_season'])}</b><span class=\"sub\"> alone</span></span>"
+                             f"<span><b>{_pct(o.get('p_pool_add'), 2)}</b><span class=\"sub\"> adds</span></span></div>")
+                else:
+                    right = f"<div class=\"r\"><b>{_surv(o['p_season'])}</b><span class=\"sub\"> season</span></div>"
                 policy = s.get("allocation_view") == "policy"
                 lead = "" if policy else f"<span class=\"sub\">score {_pct(o['score'], 2)}</span> &middot; "
+                if moves and o.get("move_from"):
+                    lead += f"<span class=\"sub\">move one entry from {_esc(o['move_from'])}</span> &middot; "
                 rows.append(f"<div class=\"row\"><div>{_team(o['team'], 26)}</div><div class=\"mid\">{_meter(o['p_now'])}</div>{right}"
                             f"<div class=\"m why more\">{lead}{_esc(why)}<br><span class=\"plan\">{_esc(' '.join(o['plan']))}</span></div></div>")
             policy = s.get("allocation_view") == "policy"
-            if multi and policy:
+            if moves:
+                intro = (f"One entry uses the team now and from then on takes the best team still available each week, at the line at the time. <b>Alone</b> is that entry's chance of surviving the season. "
+                         f"<b>Move one</b> is what the pool's season odds (any of the {n_live} entries survives) would do if one entry moved off the largest group onto that team now, in percentage points. "
+                         f"Zero or negative everywhere means no single change beats this split; a positive number outside the noise is a move the split missed. Details names the entry that would move.")
+            elif multi and policy:
                 intro = (f"One entry uses the team now and from then on takes the best team still available each week, at the line at the time. <b>Alone</b> is that entry's chance of surviving the season. "
                          f"<b>Adds</b> is what the same team adds to the pool as your {n_live}th entry: it counts only in the seasons where the other {n_live - 1} are all dead, "
                          f"so a team that survives in the same seasons as the crowd adds little. The split is built on Adds. Details shows the reasoning and a sketch of the later weeks.")
