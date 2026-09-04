@@ -31,6 +31,31 @@ def test_projection_uses_lines_now_and_model_later(games_all, cfg, before_week1)
     assert t[t.week == 18].line_var.min() > t[t.week == 10].line_var.max()
 
 
+def test_week18_rest_is_settled_in_each_simulated_season(games_all, cfg, before_week1):
+    from eliminator.optimize.simulate import simulate_season
+    st = assemble(games_all, 2026, 1, cfg, [], None, "market")
+    g = regular_season(games_all, 2026)
+    proj = build_projection(g, 2026, 1, st, cfg, now=before_week1)
+    before = proj.prob[-1].copy()
+    sim = simulate_season(proj, cfg, n=3000, seed=5)
+    assert proj.rest is not None and set(proj.rest) >= {"bye", "locked", "out", "expected_points"}
+    # the strongest teams are the ones most often resting; nobody is flagged as settled 100% in week 1
+    strong = np.argsort(-st.healthy.reindex(TEAMS).to_numpy())[:4]
+    settled = proj.rest["bye"] + proj.rest["locked"]
+    assert settled[strong].mean() > settled.mean() and settled.max() < 0.9
+    assert proj.rest["out"].max() > 0.5
+    # the strongest teams are docked the most, week-18 probabilities moved, and the scenario average
+    # is what the projection now reports
+    pts = proj.rest["expected_points"]
+    assert pts[strong].mean() > pts.mean() and pts.max() > 0.5
+    assert np.abs(proj.prob[-1] - before).max() > 0.005
+    assert np.abs(sim.probs[:, -1, :].mean(axis=0) - proj.prob[-1]).max() < 1e-4      # float32 probabilities
+    # a fixed-path simulation does not rewrite the projection
+    snap = proj.prob[-1].copy()
+    simulate_season(proj, cfg, n=500, seed=6, discount=16.0, update_projection=False)
+    assert np.array_equal(snap, proj.prob[-1])
+
+
 def test_qb_ledger_moves_projection(games_all, cfg, before_week1):
     base = assemble(games_all, 2026, 1, cfg, [], None, "market")
     hurt = assemble(games_all, 2026, 1, cfg, [QBSituation(team="KC", penalty=7, status="out", injury="acl", injured_week=1)], None, "market")

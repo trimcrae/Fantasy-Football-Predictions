@@ -25,8 +25,12 @@ DEFAULTS: dict[str, Any] = {
         "future_discount": 16.0,    # planning.mode = discount only: multiplier on horizon variance when *choosing* plans
         "posted_line_var_a": 1.0,   # variance (points^2) of a posted line vs its close, next week
         "posted_line_var_b": 1.0,   # additional variance per week of horizon: how far a line can move
-        "week18_shrink": 0.6,       # week-18 probabilities shrunk toward 0.5 (starters rest)
-        "week18_extra_var": 20.0,   # extra spread variance for week 18 projections
+        "week18_shrink": 0.94,      # residual flattening of week-18 lines after the rest flags below
+        "week18_extra_var": 3.0,    # residual extra spread variance for week 18 after the rest flags
+        # Points docked in week 18, per simulated season, from a team whose playoff seed is settled
+        # after week 17 (a bye, or a seed with a wild-card game to play) or that is eliminated.
+        "week18_rest": {"bye": 9.6, "locked": 6.9, "out": 1.1},
+        "week18_rest_draws": 16,    # random week-18 outcomes used to test whether a seed can still move
         "ratings_source": "auto",   # auto | inpredictable | market | blend
         "inpredictable_weight": 0.5,  # used when ratings_source == blend
         "inpredictable_max_rmse": 2.0,  # auto: reject inpredictable when it differs from the market fit by more (points rms)

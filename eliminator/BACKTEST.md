@@ -33,8 +33,14 @@ Geometric mean of the expected season survival over 2015-2025:
 
 | planner | policy h=1 | policy h=2 | policy h=4 | discount x16 (previous) | greedy |
 |---|---|---|---|---|---|
-| single elimination | **1.96%** | 1.94% | 1.81% | 1.78% | 1.58% |
-| two strikes, out on the 2nd loss (seasons survived) | **10.6%** (1) | 10.6% (2) | 10.1% (2) | 9.9% (1) | 9.0% (1) |
+| single elimination | **1.97%** | 1.94% | 1.81% | 1.78% | 1.58% |
+| two strikes, out on the 2nd loss (seasons survived) | **10.7%** (1) | 10.6% (2) | 10.1% (2) | 9.9% (1) | 9.0% (1) |
+
+The `policy h=1` column is with the week-18 rest model (README section 4: standings after
+week 17 in every simulated season, settled seeds and eliminated teams docked the fitted
+points); the other columns predate it. It moves the replay very little, since the replay's
+own week-18 picks are made on closing lines either way; its job is the live tool's December
+planning, which the replay does not reward.
 
 Reading: committing only this week and treating everything after as "best available then"
 is the best planner in both single-entry formats, 10% better than the discount planner for

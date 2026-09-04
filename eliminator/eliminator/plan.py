@@ -105,6 +105,11 @@ def make_plan(state: PoolState, games_all: pd.DataFrame, cfg: dict, ledger: list
     proj = build_projection(games, season, week, strength, cfg, now=now, overrides=overrides)
     statuses = evaluate_entries(state, games, week, now)
 
+    plan_disc = float(cfg["model"].get("future_discount", 1.0))
+    real_disc = float(cfg["simulation"].get("discount", 1.0))
+    sim = simulate_season(proj, cfg, n=scenarios, discount=real_disc)            # calibrated: reporting, and choosing in policy mode
+    # (the simulation also settles week 18: who rests, scenario by scenario, and the projection's
+    # week-18 probabilities become the scenario average; read them only after this point)
     P = proj.prob.copy()
     pickable_now = proj.pickable[0].copy()
     entries: list[EntryPlan] = []
@@ -121,9 +126,6 @@ def make_plan(state: PoolState, games_all: pd.DataFrame, cfg: dict, ledger: list
         losses_ahead = s.losses - (1 if s.locked_now is not None and s.results.get(week) == "loss" else 0)
         entries.append(EntryPlan(entry_id=s.entry_id, available=available, fixed=fixed,
                                  strikes_left=max(state.lives - losses_ahead, 0), alive=s.alive or ignore_elimination))
-    plan_disc = float(cfg["model"].get("future_discount", 1.0))
-    real_disc = float(cfg["simulation"].get("discount", 1.0))
-    sim = simulate_season(proj, cfg, n=scenarios, discount=real_disc)            # calibrated: reporting, and choosing in policy mode
     wins = sim.wins
     wins_policy = wins if policy or abs(plan_disc - real_disc) < 1e-9 else simulate_wins(proj, cfg, n=scenarios, discount=plan_disc)
     live = [e for e in entries if e.alive]

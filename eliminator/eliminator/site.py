@@ -126,6 +126,13 @@ def build_snapshot(res: PlanResult, pool: str, generated_at: dt.datetime, previo
     from .explain import explain_all
     explain = explain_all(res, cfg)
 
+    week18_rest = {}
+    rest = getattr(p, "rest", None)
+    if rest:
+        for i, t in enumerate(TEAMS):
+            week18_rest[t] = {"bye": _f(rest["bye"][i]), "locked": _f(rest["locked"][i]), "out": _f(rest["out"][i]),
+                              "points": _f(rest["expected_points"][i])}
+
     revisions = list((previous or {}).get("revisions") or [])
     if previous and previous.get("generated_at"):
         revisions.append({"generated_at": previous["generated_at"], "picks": _pick_summary(previous.get("picks", []))})
@@ -140,6 +147,7 @@ def build_snapshot(res: PlanResult, pool: str, generated_at: dt.datetime, previo
         "summary": summary, "picks": picks, "options": options, "board": board, "plans": plans,
         "statuses": statuses, "ratings": {k: _f(v) for k, v in res.strength.healthy.items()},
         "qb_situations": qb_situations, "explain": explain, "allocation_view": res.allocation_view,
+        "week18_rest": week18_rest,
         "horizon": res.horizon,
         "revisions": revisions,
     }
@@ -607,6 +615,16 @@ def render_week_page(season: int, week: int, snaps: list[dict], games: pd.DataFr
                        f"<td class=\"sub\">{_esc(q['source'])}</td><td class=\"plan\">{_esc(' '.join(f'w{w}:{int(round(100 * v))}%' for w, v in sorted(q['p_out'].items(), key=lambda kv: int(kv[0]))))}</td></tr>" for q in qbs)
         shared.append(f"<details open><summary>Quarterback situations ({len(qbs)})</summary><div class=\"sub\">Penalty is points off the team while the starter is out. Automatic entries come from the injury report; an entry in qb_status.yaml replaces them.</div>"
                       f"<div class=\"tw\"><table><thead><tr><th>team</th><th>player</th><th>status</th><th>injury</th><th class=\"n\">penalty</th><th class=\"n\">since</th><th class=\"n\">return</th><th>source</th><th>P(out) by week</th></tr></thead><tbody>{rows}</tbody></table></div></details>")
+    w18 = snaps[0].get("week18_rest") or {}
+    if w18 and week < 18:
+        rows = sorted(w18.items(), key=lambda kv: -((kv[1].get("bye") or 0) + (kv[1].get("locked") or 0)))
+        rows = [(t, v) for t, v in rows if ((v.get("bye") or 0) + (v.get("locked") or 0)) >= 0.02][:12]
+        if rows:
+            body = "".join(f"<tr><td>{_team(t)}</td><td class=\"n\">{_pct(v.get('bye'), 0)}</td><td class=\"n\">{_pct(v.get('locked'), 0)}</td>"
+                           f"<td class=\"n\">{_pct(v.get('out'), 0)}</td><td class=\"n\">{float(v.get('points') or 0):.1f}</td></tr>" for t, v in rows)
+            shared.append(f"<details><summary>Week 18: who is likely to have nothing to play for</summary>"
+                          f"<div class=\"sub\">From the simulated seasons: how often each team's playoff seed is settled after week 17 (a first-round bye, or a seed with a wild-card game still to play) or it is eliminated, and the points that takes off its week-18 line on average. A settled bye costs about 10 points, a settled seed 7, elimination 1, fitted on 2011-2025 closing lines.</div>"
+                          f"<div class=\"tw\" style=\"max-width:560px\"><table><thead><tr><th>team</th><th class=\"n\">bye settled</th><th class=\"n\">seed settled</th><th class=\"n\">eliminated</th><th class=\"n\">avg pts off</th></tr></thead><tbody>{body}</tbody></table></div></details>")
     ratings = snaps[0].get("ratings") or {}
     if ratings:
         rows = "".join(f"<tr><td>{_team(t)}</td><td class=\"n\">{float(v):+.1f}</td></tr>" for t, v in sorted(ratings.items(), key=lambda kv: -(kv[1] or 0)))

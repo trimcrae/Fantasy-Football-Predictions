@@ -21,10 +21,10 @@ model:
   # planning.mode = discount only (the previous planner): how much to distrust future weeks
   # when choosing a fixed 18-week path. Kept for comparison; see BACKTEST.md.
   future_discount: 16
-  # Week 18: calibration finds closing lines ~12% flatter and noisier than projections because
-  # clinched teams rest starters. 0.8 is deliberately a bit more cautious than the fitted 0.88,
-  # since the teams a survivor plan wants in week 18 are exactly the ones likely to rest.
-  week18_shrink: 0.8
+  # Week 18: in every simulated season the standings after week 17 decide who has nothing to
+  # play for, and those teams are docked the points fitted in calibration.json (week18_rest:
+  # about 10 for a clinched bye, 7 for a settled seed, 1 for an eliminated team). The residual
+  # flattening and extra variance of week-18 lines come from calibration.json too.
 
 qb:
   default_tier: average

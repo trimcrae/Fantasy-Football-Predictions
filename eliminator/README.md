@@ -130,8 +130,9 @@ and have the same log-loss, so either is fine; the moneyline is the direct price
   kicked off in `site/data/lines/<season>.csv`, and once at least 150 of those observations
   have a closing line to compare with (across three or more horizons) the allowance is
   fitted from how far the lines actually moved and replaces the default on every run.
-* A week-18 line posted early is shrunk like a projection (see week 18 below): a line set in
-  September cannot know who will rest starters.
+* A week-18 line posted early gets the week-18 treatment of a projection (see below): a line
+  set in September cannot know who will rest starters, so the rest flags apply to it scenario
+  by scenario.
 
 ### 3. Valuing the future
 The projection error of a rating-based spread against the eventual closing line grows with
@@ -163,8 +164,8 @@ closing prices, geometric mean over 2015-2025 (`BACKTEST.md`):
 
 | planner | policy, horizon 1 | policy, horizon 2 | policy, horizon 4 | fixed paths, discount 16 (previous) | greedy (no lookahead) |
 |---|---|---|---|---|---|
-| single elimination | **1.96%** | 1.94% | 1.81% | 1.78% | 1.58% |
-| two strikes (out on the 2nd loss) | **10.6%** | 10.6% | 10.1% | 9.9% | 9.0% |
+| single elimination | **1.97%** | 1.94% | 1.81% | 1.78% | 1.58% |
+| two strikes (out on the 2nd loss) | **10.7%** | 10.6% | 10.1% | 9.9% | 9.0% |
 
 The default is `planning: {mode: policy, horizon: 1}`. The previous planner (fixed paths
 chosen on a simulation with the future variance inflated 16x, `planning.mode: discount`) is
@@ -178,13 +179,24 @@ what makes 25 entries sharing a team correlated, and it is what the multi-entry 
 evaluated on. The expected win probability of every game still matches the projection.
 
 ### 4. Week 18
-Teams that have clinched rest starters. Calibration finds week-18 closing lines about 12%
-flatter than late-season projections and 13 points squared noisier, and projected 6-9 point
-favourites close on average 2 points shorter than they normally would. Week-18 projections
-are therefore shrunk (`week18_shrink`, set to 0.8 in `config.yaml`, a bit more cautious than
-the fitted 0.88) and given extra variance. When week 18 itself arrives the posted lines,
-which already know who is resting, are used directly. `state/overrides.yaml` lets you add a
-rest risk per team (`week18_rest_risk: {KC: 0.7}`) once the playoff picture is clear.
+Teams whose playoff seed is settled rest starters, and the market prices it: on 2011-2025
+closing lines a team that had clinched a first-round bye after week 17 closed 9.6 points
+worse than its rating said (standard error 1.6), a team whose seed was settled but still had
+a wild-card game to play 6.9 points worse (1.2), and an eliminated team 1.1 points worse
+(0.4). The simulation draws every game of every scenario, so it works out the standings after
+week 17 scenario by scenario (division winners by record, ties on division then conference
+record; head-to-head is not tracked, so a seed that rides on a tiebreaker counts as still in
+play), tests whether each team's seed can still move by replaying week 18 at random, and
+docks the flagged teams those points in that scenario's week-18 line. A projected 7-point
+favourite is therefore a 7-point favourite in the seasons where it is still playing for
+something and a 2-3 point underdog in the ones where it has clinched a bye, instead of a
+blanket 5.6-point favourite. What is left after the flags is a residual 10% flattening and a
+little extra variance (`week18_shrink`, `week18_extra_var`, refitted by `calibrate`), against
+a 20% haircut for everyone before. The week page lists who is likeliest to have nothing to
+play for. When week 18 itself arrives the posted lines, which already know who is resting,
+are used directly. `state/overrides.yaml` can still add a rest risk by hand
+(`week18_rest_risk: {KC: 0.7}`) when you know something the standings do not, such as a coach
+who plays starters regardless.
 
 ### 5. Quarterbacks
 `state/qb_status.yaml` is the source of truth: team, player, tier or explicit points penalty

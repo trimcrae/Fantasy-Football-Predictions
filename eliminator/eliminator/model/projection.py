@@ -45,6 +45,8 @@ class Projection:
     table: pd.DataFrame             # one row per (week, team) with the explanation
     opponent: np.ndarray            # [n_weeks, 32] opponent index or -1
     week18_shrink: float
+    past_record: object = None      # standings.Record [1, 32] of the weeks before the current one
+    rest: dict | None = None        # week-18 rest probabilities per team, set by the simulation
 
     def week_index(self, week: int) -> int:
         return self.weeks.index(week)
@@ -165,4 +167,22 @@ def build_projection(games: pd.DataFrame, season: int, current_week: int, streng
     table = pd.DataFrame(rows).sort_values(["week", "prob"], ascending=[True, False]).reset_index(drop=True)
     return Projection(season=season, current_week=current_week, season_weeks=season_weeks, weeks=weeks,
                       prob=prob, spread=spread, line_var=lvar, sigma=sigma, pickable=pickable,
-                      has_game=has_game, table=table, opponent=opp, week18_shrink=w18_shrink)
+                      has_game=has_game, table=table, opponent=opp, week18_shrink=w18_shrink,
+                      past_record=_past_record(games, current_week))
+
+
+def _past_record(games: pd.DataFrame, current_week: int):
+    """Wins (overall, conference, division) from the played games before the current week."""
+    from .standings import CONF_OF, DIV_OF, Record
+    idx = {t: i for i, t in enumerate(TEAMS)}
+    wins = np.zeros((1, NT), np.int16); conf = np.zeros((1, NT), np.int16); div = np.zeros((1, NT), np.int16)
+    past = games[(games["week"] < current_week) & games["played"]]
+    for g in past.itertuples(index=False):
+        ih, ia = idx[g.home], idx[g.away]
+        win = ih if g.result > 0 else (ia if g.result < 0 else None)
+        if win is None:
+            continue
+        wins[0, win] += 1
+        conf[0, win] += CONF_OF[ih] == CONF_OF[ia]
+        div[0, win] += DIV_OF[ih] == DIV_OF[ia]
+    return Record(wins, conf, div)
