@@ -27,7 +27,7 @@
   17,
   18
  ],
- "generated_at": "2026-09-03T20:23:01.114075-04:00",
+ "generated_at": "2026-09-03T20:27:37.149927-04:00",
  "ratings_source": "market",
  "n_lines_posted": 112,
  "n_priced_games": 112,
@@ -398,9 +398,6 @@
    "score": 0.0287,
    "p_season": 0.0287,
    "p_pool_add": null,
-   "p_move": -4.5e-05,
-   "move_se": 2.2e-05,
-   "move_from": "JAX",
    "plan": [
     "SF",
     "DET",
@@ -427,9 +424,6 @@
    "score": 0.0276,
    "p_season": 0.0276,
    "p_pool_add": null,
-   "p_move": -0.000164,
-   "move_se": 2.1e-05,
-   "move_from": "LAC",
    "plan": [
     "LAC",
     "SF",
@@ -456,9 +450,6 @@
    "score": 0.0248,
    "p_season": 0.0248,
    "p_pool_add": null,
-   "p_move": -0.000261,
-   "move_se": 2.1e-05,
-   "move_from": "LAC",
    "plan": [
     "LAC",
     "SF",
@@ -485,9 +476,6 @@
    "score": 0.024,
    "p_season": 0.024,
    "p_pool_add": null,
-   "p_move": -0.000334,
-   "move_se": 1.8e-05,
-   "move_from": "LAC",
    "plan": [
     "LAC",
     "SF",
@@ -514,9 +502,6 @@
    "score": 0.023,
    "p_season": 0.023,
    "p_pool_add": null,
-   "p_move": -0.00039,
-   "move_se": 1.9e-05,
-   "move_from": "LAC",
    "plan": [
     "LAC",
     "SF",
@@ -543,9 +528,6 @@
    "score": 0.0229,
    "p_season": 0.0229,
    "p_pool_add": null,
-   "p_move": -0.000523,
-   "move_se": 2e-05,
-   "move_from": "LAC",
    "plan": [
     "LAC",
     "SF",
@@ -572,9 +554,6 @@
    "score": 0.0227,
    "p_season": 0.0227,
    "p_pool_add": null,
-   "p_move": -0.000471,
-   "move_se": 2e-05,
-   "move_from": "LAC",
    "plan": [
     "LAC",
     "SF",
@@ -601,9 +580,6 @@
    "score": 0.0214,
    "p_season": 0.0214,
    "p_pool_add": null,
-   "p_move": -0.000703,
-   "move_se": 1.9e-05,
-   "move_from": "LAC",
    "plan": [
     "SF",
     "DET",
@@ -630,9 +606,6 @@
    "score": 0.0206,
    "p_season": 0.0206,
    "p_pool_add": null,
-   "p_move": -0.000837,
-   "move_se": 2e-05,
-   "move_from": "LAC",
    "plan": [
     "SF",
     "DET",
@@ -659,9 +632,6 @@
    "score": 0.0204,
    "p_season": 0.0204,
    "p_pool_add": null,
-   "p_move": -0.000778,
-   "move_se": 1.8e-05,
-   "move_from": "LAC",
    "plan": [
     "LAC",
     "SF",
@@ -688,9 +658,6 @@
    "score": 0.0203,
    "p_season": 0.0203,
    "p_pool_add": null,
-   "p_move": -0.000834,
-   "move_se": 1.9e-05,
-   "move_from": "LAC",
    "plan": [
     "LAC",
     "SF",
@@ -717,9 +684,6 @@
    "score": 0.0201,
    "p_season": 0.0201,
    "p_pool_add": null,
-   "p_move": -0.000896,
-   "move_se": 1.9e-05,
-   "move_from": "LAC",
    "plan": [
     "LAC",
     "SF",
@@ -746,9 +710,6 @@
    "score": 0.0197,
    "p_season": 0.0197,
    "p_pool_add": null,
-   "p_move": -0.001095,
-   "move_se": 2.2e-05,
-   "move_from": "LAC",
    "plan": [
     "LAC",
     "SF",
@@ -775,9 +736,6 @@
    "score": 0.0192,
    "p_season": 0.0192,
    "p_pool_add": null,
-   "p_move": -0.00107,
-   "move_se": 2e-05,
-   "move_from": "LAC",
    "plan": [
     "SF",
     "DET",
@@ -804,9 +762,6 @@
    "score": 0.0185,
    "p_season": 0.0185,
    "p_pool_add": null,
-   "p_move": -0.001112,
-   "move_se": 1.9e-05,
-   "move_from": "LAC",
    "plan": [
     "LAC",
     "SF",
@@ -833,9 +788,6 @@
    "score": 0.0176,
    "p_season": 0.0176,
    "p_pool_add": null,
-   "p_move": -0.001361,
-   "move_se": 2e-05,
-   "move_from": "LAC",
    "plan": [
     "LAC",
     "SF",
@@ -3972,7 +3924,7 @@
     "probability": "From the betting odds: LV favoured by 4.1 at home.",
     "timing": "LV's best spot all season; next best is 54% (wk 16 vs TEN).",
     "not_used": "Passed: LAC 82% saved for wk 2; JAX 77% saved for wk 12; DET 72% saved for wk 14.",
-    "hedge": "Switching this entry to PIT (the next best) would cost the pool 0.03 points; back onto LAC would cost the pool 0.08 points."
+    "hedge": ""
    },
    "LAC": {
     "probability": "From the betting odds: LAC favoured by 10.5 at home.",
@@ -3990,7 +3942,7 @@
     "probability": "From the betting odds: DET favoured by 6.8 at home.",
     "timing": "DET's 4th-best spot of 17; best is 77% in wk 3 vs NYJ, but later weeks are worth whoever is best available then, not a named team.",
     "not_used": "Passed: LAC 82% saved for wk 2; JAX 77% saved for wk 12.",
-    "hedge": "Switching this entry to PIT (the next best) would cost the pool 0.03 points; back onto LAC would cost the pool 0.04 points."
+    "hedge": ""
    }
   },
   "options": [

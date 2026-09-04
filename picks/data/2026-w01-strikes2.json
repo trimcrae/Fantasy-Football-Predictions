@@ -27,7 +27,7 @@
   17,
   18
  ],
- "generated_at": "2026-09-03T20:26:35.351056-04:00",
+ "generated_at": "2026-09-03T20:30:25.953253-04:00",
  "ratings_source": "market",
  "n_lines_posted": 112,
  "n_priced_games": 112,
@@ -62,9 +62,6 @@
    "score": 0.1382,
    "p_season": 0.1382,
    "p_pool_add": null,
-   "p_move": null,
-   "move_se": null,
-   "move_from": null,
    "plan": [
     "SF",
     "DET",
@@ -91,9 +88,6 @@
    "score": 0.1341,
    "p_season": 0.1341,
    "p_pool_add": null,
-   "p_move": null,
-   "move_se": null,
-   "move_from": null,
    "plan": [
     "LAC",
     "SF",
@@ -120,9 +114,6 @@
    "score": 0.1239,
    "p_season": 0.1239,
    "p_pool_add": null,
-   "p_move": null,
-   "move_se": null,
-   "move_from": null,
    "plan": [
     "LAC",
     "SF",
@@ -149,9 +140,6 @@
    "score": 0.1218,
    "p_season": 0.1218,
    "p_pool_add": null,
-   "p_move": null,
-   "move_se": null,
-   "move_from": null,
    "plan": [
     "LAC",
     "SF",
@@ -178,9 +166,6 @@
    "score": 0.1179,
    "p_season": 0.1179,
    "p_pool_add": null,
-   "p_move": null,
-   "move_se": null,
-   "move_from": null,
    "plan": [
     "LAC",
     "SF",
@@ -207,9 +192,6 @@
    "score": 0.1173,
    "p_season": 0.1173,
    "p_pool_add": null,
-   "p_move": null,
-   "move_se": null,
-   "move_from": null,
    "plan": [
     "LAC",
     "SF",
@@ -236,9 +218,6 @@
    "score": 0.1166,
    "p_season": 0.1166,
    "p_pool_add": null,
-   "p_move": null,
-   "move_se": null,
-   "move_from": null,
    "plan": [
     "LAC",
     "SF",
@@ -265,9 +244,6 @@
    "score": 0.1118,
    "p_season": 0.1118,
    "p_pool_add": null,
-   "p_move": null,
-   "move_se": null,
-   "move_from": null,
    "plan": [
     "SF",
     "DET",
@@ -294,9 +270,6 @@
    "score": 0.1089,
    "p_season": 0.1089,
    "p_pool_add": null,
-   "p_move": null,
-   "move_se": null,
-   "move_from": null,
    "plan": [
     "LAC",
     "SF",
@@ -323,9 +296,6 @@
    "score": 0.1086,
    "p_season": 0.1086,
    "p_pool_add": null,
-   "p_move": null,
-   "move_se": null,
-   "move_from": null,
    "plan": [
     "SF",
     "DET",
@@ -352,9 +322,6 @@
    "score": 0.1082,
    "p_season": 0.1082,
    "p_pool_add": null,
-   "p_move": null,
-   "move_se": null,
-   "move_from": null,
    "plan": [
     "LAC",
     "SF",
@@ -381,9 +348,6 @@
    "score": 0.1074,
    "p_season": 0.1074,
    "p_pool_add": null,
-   "p_move": null,
-   "move_se": null,
-   "move_from": null,
    "plan": [
     "LAC",
     "SF",
@@ -410,9 +374,6 @@
    "score": 0.1049,
    "p_season": 0.1049,
    "p_pool_add": null,
-   "p_move": null,
-   "move_se": null,
-   "move_from": null,
    "plan": [
     "LAC",
     "SF",
@@ -439,9 +400,6 @@
    "score": 0.1037,
    "p_season": 0.1037,
    "p_pool_add": null,
-   "p_move": null,
-   "move_se": null,
-   "move_from": null,
    "plan": [
     "SF",
     "DET",
@@ -468,9 +426,6 @@
    "score": 0.1018,
    "p_season": 0.1018,
    "p_pool_add": null,
-   "p_move": null,
-   "move_se": null,
-   "move_from": null,
    "plan": [
     "LAC",
     "SF",
@@ -497,9 +452,6 @@
    "score": 0.0983,
    "p_season": 0.0983,
    "p_pool_add": null,
-   "p_move": null,
-   "move_se": null,
-   "move_from": null,
    "plan": [
     "LAC",
     "SF",
