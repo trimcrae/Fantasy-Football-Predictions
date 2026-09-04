@@ -115,6 +115,108 @@ def explain_not_used(res: PlanResult, entry, team: str) -> str:
     return "Passed: " + "; ".join(bits) + "."
 
 
+def _policy_gains(res: PlanResult):
+    """Live entries with, for each, its per-scenario contribution to P(any): P(it survives and every
+    other entry is dead | that scenario's lines). Policy mode only."""
+    from .optimize.portfolio import dead_given
+    live = [e for e in res.entries if e.alive and e.path is not None and e.surv is not None and e.picks is not None]
+    gains = {}
+    for e in live:
+        others = [o for o in live if o is not e]
+        if e.strikes_left == 0:
+            gains[e.entry_id] = e.surv * dead_given(others, e.picks)
+        else:
+            dead = ~np.vstack([o.alive_mask for o in others]).any(axis=0) if others else np.ones(len(e.surv), bool)
+            gains[e.entry_id] = (e.alive_mask & dead).astype(float)
+    return live, gains
+
+
+def _probe_gain(res: PlanResult, scorer, base, team: int, others: list, option=None, rng=None) -> np.ndarray | None:
+    """Per-scenario contribution to P(any) of an entry in ``base``'s place (same later-week pattern,
+    same teams used) that picks ``team`` now."""
+    from .optimize.portfolio import EntryPlan, _candidates, dead_given
+    if not base.available[team] or not res.projection.pickable[0][team]:
+        return None
+    probe = EntryPlan(entry_id="probe", available=base.available, fixed={**base.fixed, 0: int(team)},
+                      strikes_left=base.strikes_left, slot=base.slot)
+    if res.horizon == 1 and option is not None:
+        cands = [option]
+    else:
+        cands = _candidates(res.projection.prob, res.projection.pickable[0], probe, np.zeros(res.projection.prob.shape),
+                            40, rng or np.random.default_rng(11), res.horizon)
+    dead_plain = None
+    best = None
+    for c in cands:
+        picks, surv, won = scorer.run(probe, c)
+        if probe.strikes_left == 0:
+            x = surv * dead_given(others, picks)
+        else:
+            if dead_plain is None:
+                dead_plain = ~np.vstack([o.alive_mask for o in others]).any(axis=0)
+            x = (((~won).sum(axis=1) <= probe.strikes_left) & dead_plain).astype(float)
+        if best is None or x.mean() > best.mean():
+            best = x
+    return best
+
+
+def move_values(res: PlanResult) -> dict[int, dict]:
+    """For each of this week's options: how the pool's P(any) would change if one entry moved onto
+    that team now. The entry moved is the cheapest one in the largest group not already on the
+    team (its own contribution to P(any) is the smallest), so this is the best single move onto
+    each team. Zero or negative everywhere means the split is at least as good as any one-entry
+    change; a positive value beyond the noise is a move the optimiser missed. Each value:
+    ``delta`` (probability, paired on the same simulated seasons), ``se``, ``from`` (team), ``entry``."""
+    from .optimize.portfolio import make_scorer
+    if not res.horizon or res.sim is None or res.state.mode == "strikes":
+        return {}
+    live, gains = _policy_gains(res)
+    if len(live) < 2:
+        return {}
+    groups: dict[int, list] = {}
+    for e in live:
+        groups.setdefault(e.path.teams[0], []).append(e)
+    scorer = make_scorer(res.sim, res.planning, len(live), res.planning.get("seed", 2))
+    rng = np.random.default_rng(11)
+    out: dict[int, dict] = {}
+    for i, o in enumerate(res.options[:16]):
+        t = o.teams[0]
+        movable = [(team, [e for e in es if 0 not in e.fixed]) for team, es in groups.items() if team != t]
+        movable = [(team, es) for team, es in movable if es]
+        if not movable:
+            continue
+        src_team, src = max(movable, key=lambda kv: (len(kv[1]), -min(gains[e.entry_id].mean() for e in kv[1])))
+        moved = min(src, key=lambda e: gains[e.entry_id].mean())
+        others = [e for e in live if e is not moved]
+        x = _probe_gain(res, scorer, moved, t, others, option=o, rng=rng)
+        if x is None:
+            continue
+        d = x - gains[moved.entry_id]
+        out[i] = {"delta": float(d.mean()), "se": float(d.std() / np.sqrt(len(d))), "from": TEAMS[src_team], "entry": moved.entry_id}
+    return out
+
+
+def switch_values(res: PlanResult, entry) -> dict[int, tuple[float, float]]:
+    """For one entry: how P(any) would change if that entry alone switched to each option's team
+    now (paired delta, standard error). What the hedge sentence is built on."""
+    from .optimize.portfolio import make_scorer
+    if not res.horizon or res.sim is None:
+        return {}
+    live, gains = _policy_gains(res)
+    if entry.entry_id not in gains or 0 in entry.fixed:
+        return {}
+    others = [e for e in live if e is not entry]
+    scorer = make_scorer(res.sim, res.planning, len(live), res.planning.get("seed", 2))
+    rng = np.random.default_rng(11)
+    out = {}
+    for i, o in enumerate(res.options[:16]):
+        x = _probe_gain(res, scorer, entry, o.teams[0], others, option=o, rng=rng)
+        if x is None:
+            continue
+        d = x - gains[entry.entry_id]
+        out[i] = (float(d.mean()), float(d.std() / np.sqrt(len(d))))
+    return out
+
+
 def pool_add_values(res: PlanResult, detail: bool = False) -> dict:
     """What each option's team would add to the pool as its last entry: how often an entry on
     that team survives while every other entry is dead, scored exactly as the split was built.
@@ -210,10 +312,40 @@ def _pool_add_values_paths(res: PlanResult) -> dict[int, float]:
     return out
 
 
+def _pts(x: float) -> str:
+    return f"{100 * float(x):+.2f} points"
+
+
 def explain_hedge(res: PlanResult, entry, team: str, adds: dict[int, float] | None = None) -> str:
-    """Why this team for an entry on its own: what its best path adds when every other entry is dead."""
+    """Why this team for an entry on its own: what switching that entry to each alternative would do
+    to the pool's season odds (policy mode), or what its best path adds when every other entry is
+    dead (fixed-path mode)."""
     if res.state.mode == "strikes" or entry.path is None:
         return ""
+    if res.horizon and res.sim is not None:
+        sw = switch_values(res, entry)
+        if not sw:
+            return ""
+        top = None
+        counts: dict[str, int] = {}
+        for e in res.entries:
+            if e.alive and e.path is not None:
+                counts[TEAMS[e.path.teams[0]]] = counts.get(TEAMS[e.path.teams[0]], 0) + 1
+        top = max(counts, key=counts.get) if counts else None
+        by_team = {TEAMS[res.options[i].teams[0]]: v for i, v in sw.items() if TEAMS[res.options[i].teams[0]] != team}
+        if not by_team:
+            return ""
+        ranked = sorted(by_team.items(), key=lambda kv: -kv[1][0])
+        def clause(t, d, se):
+            return f"{t} {_pts(d)}" + (" (within noise)" if abs(d) < 2 * se else "")
+        best_t, (best_d, best_se) = ranked[0]
+        head = "Switching this entry to " + clause(best_t, best_d, best_se)
+        if best_d > 2 * best_se:
+            head += ", a move the split missed"
+        rest = [clause(t, d, se) for t, (d, se) in ranked[1:3]]
+        if top and top != team and top in by_team and top not in (best_t, ranked[1][0] if len(ranked) > 1 else None, ranked[2][0] if len(ranked) > 2 else None):
+            rest.append("back onto " + clause(top, *by_team[top]))
+        return head + ("; " + ", ".join(rest) if rest else "") + ". Negative is what the pool's season odds would lose."
     adds = pool_add_values(res, detail=True) if adds is None else adds
     if not adds:
         return ""

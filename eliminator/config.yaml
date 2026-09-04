@@ -32,6 +32,7 @@ qb:
 simulation:
   # Season odds are scored exactly from each simulated season's lines (no coin flips), so
   # 50k seasons put the noise on a ~2% survival number well under 0.01 points and on the
-  # 25-entry "adds" column under about 0.03 points. The 25-entry plan takes ~3 minutes.
+  # 25-entry "move one" column (paired on the same seasons) well under that. The 25-entry plan
+  # takes ~3 minutes.
   scenarios: 50000
   seed: 7

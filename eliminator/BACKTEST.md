@@ -153,7 +153,7 @@ survival is reported on the calibrated one. Scoring the split on the calibrated 
 instead (`portfolio.allocation_view: calibrated`) was replayed over 2015-2025 with the same
 400 scenarios: a survivor in 3 of 11 seasons (mean 0.27) against 4 of 11 (mean 0.36) for the
 planning view. Eleven realised seasons cannot separate the two, but there is no evidence for
-switching, so the planning view stays the default. The site's "adds" column for this week's
+switching, so the planning view stays the default. With that planner the site's "adds" column for this week's
 options is scored on whichever view built the split, so the column and the split agree.
 
 ## Caveats
