@@ -11,7 +11,9 @@ What gets estimated and how:
 * prior_weight / recency_half_life   grid search minimising one-week-ahead projection error.
 * horizon variance var(h, k) = a + b*h + c/(1+k): squared error of projected vs closing
                    spreads as a function of horizon h (weeks ahead) and as-of week k.
-* week-18 shrink   slope of week-18 closing spreads on projections vs other late weeks.
+* week-18 rest     points a settled playoff seed (bye / wild-card game) or elimination takes off a
+                   team's week-18 line (standings after week 17 vs closing lines); then the
+                   residual flattening and extra variance of week-18 lines.
 """
 from __future__ import annotations
 
@@ -153,6 +155,55 @@ def week18_effect(errs: pd.DataFrame, last_week: int = 18) -> dict:
             "n_week18": int(len(w18))}
 
 
+def fit_week18_rest(df: pd.DataFrame, seasons: list[int], hfa: float, rest: float, regression: float,
+                    prior_weight: float, half_life: float, late_mse: float | None = None) -> dict:
+    """Points a settled playoff seed (bye / wild-card game to play) or elimination takes off a
+    team's week-18 line, from closing lines against the as-of-week-17 projection, plus what is
+    left of the week-18 flattening and extra variance once the flags are in."""
+    from .model.standings import CONF_OF, DIV_OF, Record, week18_flags
+    from .teams import TEAM_INDEX
+    rows = []
+    for s in seasons:
+        cur = regular_season(df, s)
+        prev = regular_season(df, s - 1)
+        last = int(cur["week"].max())
+        prior = preseason_prior(season_final_ratings(prev, hfa, rest) if prev["spread_line"].notna().sum() > 200 else None, regression)
+        r = as_of_ratings(cur, last - 1, hfa, rest, prior, prior_weight, half_life, include_future_lines=False).ratings
+        before = cur[(cur["week"] < last) & cur["played"]]
+        wins = np.zeros((1, len(TEAMS))); conf = np.zeros((1, len(TEAMS))); div = np.zeros((1, len(TEAMS)))
+        for g in before.itertuples(index=False):
+            ih, ia = TEAM_INDEX[g.home], TEAM_INDEX[g.away]
+            win = ih if g.result > 0 else (ia if g.result < 0 else None)
+            if win is None:
+                continue
+            wins[0, win] += 1
+            conf[0, win] += CONF_OF[ih] == CONF_OF[ia]
+            div[0, win] += DIV_OF[ih] == DIV_OF[ia]
+        w18 = cur[cur["week"] == last]
+        pairs = [(TEAM_INDEX[g.home], TEAM_INDEX[g.away]) for g in w18.itertuples(index=False)]
+        fl = week18_flags(Record(wins, conf, div), pairs, s, draws=256, rng=np.random.default_rng(s))
+        for g in w18[w18["spread_line"].notna()].itertuples(index=False):
+            ih, ia = TEAM_INDEX[g.home], TEAM_INDEX[g.away]
+            proj = r[g.home] - r[g.away] + hfa * (not g.neutral) + rest * g.rest_diff
+            rows.append((float(g.spread_line), float(proj), *(int(fl[k][0, ih]) - int(fl[k][0, ia]) for k in ("bye", "locked", "out"))))
+    d = np.array(rows, float)
+    spread, proj, X = d[:, 0], d[:, 1], d[:, 2:]
+    err = spread - proj
+    beta, *_ = np.linalg.lstsq(X, err, rcond=None)
+    resid = err - X @ beta
+    se = np.sqrt(np.diag(np.linalg.inv(X.T @ X)) * resid.var())
+    adj = proj + X @ beta
+    slope_after = float(np.sum(adj * spread) / max(np.sum(adj * adj), 1e-9))
+    out = {"bye": float(-beta[0]), "locked": float(-beta[1]), "out": float(-beta[2]),
+           "se": {"bye": float(se[0]), "locked": float(se[1]), "out": float(se[2])},
+           "n_games": int(len(d)), "n_flagged": int(np.sum(np.any(X[:, :2] != 0, axis=1))),
+           "mse_before": float(np.mean(err ** 2)), "mse_after": float(np.mean(resid ** 2)),
+           "slope_after": slope_after}
+    if late_mse is not None:
+        out["extra_var_after"] = float(max(out["mse_after"] - late_mse, 0.0))
+    return out
+
+
 def calibrate(df: pd.DataFrame, seasons: list[int] | None = None, verbose: bool = True) -> dict:
     seasons = seasons or list(range(2012, int(df["season"].max()) + 1))
     played_seasons = [s for s in seasons if regular_season(df, s)["played"].sum() > 200]
@@ -177,16 +228,21 @@ def calibrate(df: pd.DataFrame, seasons: list[int] | None = None, verbose: bool 
     _, prior_weight, half_life, errs = best
     hv = fit_horizon_variance(errs)
     w18 = week18_effect(errs, last_week=int(regular_season(df, played_seasons[-1])["week"].max()))
+    w18_rest = fit_week18_rest(df, played_seasons, hfa, rest, pr["prior_regression"], prior_weight, half_life,
+                               late_mse=w18["late_weeks_mse"])
     model = {
         "sigma": sigma, "hfa": hfa, "rest_per_day": rest,
         "prior_regression": pr["prior_regression"], "prior_weight": prior_weight,
         "recency_half_life": half_life,
         "horizon_var_a": hv["horizon_var_a"], "horizon_var_b": hv["horizon_var_b"], "horizon_var_c": hv["horizon_var_c"],
-        "week18_shrink": float(np.clip(w18["week18_slope"] / max(w18["late_weeks_slope"], 1e-6), 0.3, 1.0)),
-        "week18_extra_var": float(max(w18["week18_mse"] - w18["late_weeks_mse"], 0.0)),
+        # week 18: the rest flags carry the effect; what is left is a residual flattening and variance
+        "week18_shrink": float(np.clip(w18_rest["slope_after"] / max(w18["late_weeks_slope"], 1e-6), 0.3, 1.0)),
+        "week18_extra_var": float(w18_rest.get("extra_var_after", 0.0)),
+        "week18_rest": {k: round(w18_rest[k], 2) for k in ("bye", "locked", "out")},
     }
     out = {"model": model, "diagnostics": {"moneyline_vs_spread": ml, "hfa_by_season": hr["hfa_by_season"],
                                            "prior": pr, "grid": grid_log, "horizon": hv, "week18": w18,
+                                           "week18_rest": w18_rest,
                                            "seasons": played_seasons}}
     if verbose:
         print(json.dumps(out, indent=1, default=float))

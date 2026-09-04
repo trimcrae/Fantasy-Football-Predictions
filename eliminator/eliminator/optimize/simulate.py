@@ -35,8 +35,10 @@ class Sim:
 
 
 def simulate_season(proj: Projection, cfg: dict, n: int | None = None, seed: int | None = None,
-                    discount: float | None = None) -> Sim:
-    """``discount`` multiplies the calibrated drift variance (1 = calibrated)."""
+                    discount: float | None = None, update_projection: bool = True) -> Sim:
+    """``discount`` multiplies the calibrated drift variance (1 = calibrated). With
+    ``update_projection`` the week-18 probabilities in ``proj`` become the scenario average once
+    the rest flags are in (see ``_price_week18``)."""
     sim = cfg["simulation"]
     n = int(n or sim["scenarios"])
     rng = np.random.default_rng(sim["seed"] if seed is None else seed)
@@ -60,6 +62,9 @@ def simulate_season(proj: Projection, cfg: dict, n: int | None = None, seed: int
     tab = proj.table
     home_rows = tab[tab["home"]]
     plan_disc = float(m.get("future_discount", 1.0))
+    rest_pen = m.get("week18_rest") or {}
+    last_wi = nW - 1 if proj.weeks[-1] == proj.season_weeks and any(float(v) > 0 for v in rest_pen.values()) else None
+    deferred = []                                           # week-18 games priced after the standings are known
     for r in home_rows.itertuples(index=False):
         wi = proj.weeks.index(int(r.week)); h = wi
         ih, ia = TEAMS.index(r.team), TEAMS.index(r.opp)
@@ -68,6 +73,9 @@ def simulate_season(proj: Projection, cfg: dict, n: int | None = None, seed: int
             aw = proj.prob[wi, ia] >= 0.5                     # both False after a tie
             wins[:, wi, ih] = hw; wins[:, wi, ia] = aw
             probs[:, wi, ih] = float(hw); probs[:, wi, ia] = float(aw)
+            continue
+        if wi == last_wi and h >= 1:
+            deferred.append((r, ih, ia, h))
             continue
         if r.line_var <= 0:
             p = np.full(n, float(r.prob), dtype=np.float32)
@@ -91,13 +99,57 @@ def simulate_season(proj: Projection, cfg: dict, n: int | None = None, seed: int
         wins[:, wi, ia] = ~hw
         probs[:, wi, ih] = p
         probs[:, wi, ia] = 1.0 - p
+    if deferred:
+        _price_week18(proj, cfg, wins, probs, drift, deferred, rng, n, sigma, a, b, c, k, la, lb, plan_disc, update_projection)
     return Sim(wins=wins, probs=probs, has_game=proj.has_game.copy(), weeks=list(proj.weeks))
+
+
+def _price_week18(proj: Projection, cfg: dict, wins, probs, drift, deferred, rng, n, sigma, a, b, c, k, la, lb, plan_disc,
+                  update_projection: bool = True) -> None:
+    """Week 18 in each scenario: standings after week 17 from that scenario's own results, then a
+    team whose seed is settled (bye, or a seed with a wild-card game to play) or that is eliminated
+    is docked the fitted points. The projection's week-18 probabilities are replaced by the
+    scenario average so the plug-in plan and the display agree with the simulation."""
+    from ..model.standings import Record, rest_penalty, week18_flags
+    m = cfg["model"]
+    wi = len(proj.weeks) - 1
+    rec = Record.from_results(wins[:, :wi, :], proj.opponent[:wi])
+    if proj.past_record is not None:
+        rec = rec.plus(proj.past_record)
+    pairs = [(ih, ia) for _, ih, ia, _ in deferred]
+    flags = week18_flags(rec, pairs, proj.season, draws=int(m.get("week18_rest_draws", 16)), rng=rng)
+    pen = rest_penalty(flags, m.get("week18_rest") or {})
+    if update_projection:
+        proj.rest = {key: flags[key].mean(axis=0) for key in ("bye", "locked", "out")}
+        proj.rest["expected_points"] = pen.mean(axis=0)
+    for r, ih, ia, h in deferred:
+        A = max(a + b * h + c / (1.0 + k), 0.0)
+        if str(r.source).startswith("posted"):
+            L = max(la + lb * h, 0.0)
+            scale = np.sqrt(L / A) if A > 0 else 0.0
+            extra = max(float(r.line_var) - plan_disc * L, 0.0)
+        else:
+            scale = 1.0
+            extra = max(float(r.line_var) - plan_disc * A, 0.0)
+        game_noise = rng.standard_normal(n) * np.sqrt(extra) if extra > 1e-9 else 0.0
+        line = float(r.spread) + scale * (drift[:, h, ih] - drift[:, h, ia]) + game_noise - pen[:, ih] + pen[:, ia]
+        p = norm.cdf(line / sigma).astype(np.float32)
+        hw = rng.random(n) < p
+        wins[:, wi, ih] = hw; wins[:, wi, ia] = ~hw
+        probs[:, wi, ih] = p; probs[:, wi, ia] = 1.0 - p
+        if update_projection:
+            p_mean = float(p.mean())
+            proj.prob[wi, ih] = p_mean; proj.prob[wi, ia] = 1.0 - p_mean
+    if update_projection:
+        t = proj.table
+        sel = t["week"] == proj.weeks[wi]
+        t.loc[sel, "prob"] = [proj.prob[wi, TEAMS.index(x)] for x in t.loc[sel, "team"]]
 
 
 def simulate_wins(proj: Projection, cfg: dict, n: int | None = None, seed: int | None = None,
                   discount: float | None = None) -> np.ndarray:
     """Boolean array [n, n_weeks, 32]: does the team win its game that week in scenario s."""
-    return simulate_season(proj, cfg, n=n, seed=seed, discount=discount).wins
+    return simulate_season(proj, cfg, n=n, seed=seed, discount=discount, update_projection=False).wins
 
 
 def path_alive(wins: np.ndarray, teams: list[int], strikes: int = 0, prior_losses: int = 0) -> np.ndarray:

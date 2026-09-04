@@ -368,7 +368,16 @@ def notes(res: PlanResult, cfg: dict | None = None) -> list[str]:
             r = p.row(res.week, team)
             if r.get("qb_note"):
                 out.append(f"{team}: {r['qb_note']}.")
-    if 18 in p.weeks:
+    rest = getattr(p, "rest", None)
+    if 18 in p.weeks and rest is not None:
+        pen = m.get("week18_rest") or {}
+        settled = rest["bye"] + rest["locked"]
+        i = int(np.argmax(settled))
+        lead = (f" Right now {TEAMS[i]} is the likeliest to be resting ({_pct(settled[i])})." if settled[i] >= 0.05 else "")
+        out.append(f"Week 18: in each simulated season a team whose playoff seed is settled after week 17 is docked "
+                   f"{float(pen.get('bye', 0)):.0f} points for a bye or {float(pen.get('locked', 0)):.0f} for a seed with a wild-card game, "
+                   f"and an eliminated team {float(pen.get('out', 0)):.0f}, fitted on 2011-2025 closing lines.{lead}")
+    elif 18 in p.weeks:
         out.append(f"Week 18 spots are shrunk {int(round(100 * (1 - float(m.get('week18_shrink', 0.8)))))}% toward 50% for resting starters.")
     fit = m.get("posted_line_fit")
     if fit:
