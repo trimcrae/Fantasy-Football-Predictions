@@ -64,15 +64,6 @@ def _f(x) -> float | None:
     return None if np.isnan(v) else round(v, 4)
 
 
-def _f6(x) -> float | None:
-    """Paired differences are far smaller than the survival numbers: keep six decimals."""
-    try:
-        v = float(x)
-    except (TypeError, ValueError):
-        return None
-    return None if np.isnan(v) else round(v, 6)
-
-
 def build_snapshot(res: PlanResult, pool: str, generated_at: dt.datetime, previous: dict | None = None,
                    ledger: list | None = None, cfg: dict | None = None) -> dict:
     """Serialise a plan result. ``previous`` is the snapshot this one replaces (same week)."""
@@ -91,16 +82,11 @@ def build_snapshot(res: PlanResult, pool: str, generated_at: dt.datetime, previo
                       "qb_note": str(r.qb_note or "")})
 
     options = []
-    from .explain import move_values, pool_add_values
-    policy = bool(res.horizon) and res.sim is not None
-    moves = move_values(res) if s.mode != "strikes" and policy else {}
-    pool_add = pool_add_values(res) if s.mode != "strikes" and not policy else {}
+    from .explain import pool_add_values
+    pool_add = pool_add_values(res) if s.mode != "strikes" and not res.horizon else {}
     for i, o in enumerate(res.options[:16]):
-        mv = moves.get(i)
         options.append({"team": TEAMS[o.teams[0]], "p_now": _f(o.detail.get("now_prob", 0.0)), "score": _f(o.value),
-                        "p_season": _f(o.detail.get("sim")), "p_pool_add": _f(pool_add.get(i)),
-                        "p_move": _f6(mv["delta"]) if mv else None, "move_se": _f6(mv["se"]) if mv else None,
-                        "move_from": mv["from"] if mv else None, "plan": [TEAMS[t] for t in o.teams[1:]]})
+                        "p_season": _f(o.detail.get("sim")), "p_pool_add": _f(pool_add.get(i)), "plan": [TEAMS[t] for t in o.teams[1:]]})
 
     picks = []
     for r in res.this_week().to_dict(orient="records"):
@@ -274,7 +260,6 @@ main{max-width:1040px;margin:0 auto;padding:28px 20px 64px}
 .chip{display:inline-flex;align-items:center;gap:7px;background:var(--chip);border-radius:999px;padding:5px 12px 5px 6px;font-size:13.5px;font-weight:600}
 .chip img{width:22px;height:22px;border-radius:50%}.chip .c{font-weight:500;color:var(--ink2)}.chip .p{font-weight:500;color:var(--ink3)}
 .badge{display:inline-flex;align-items:center;gap:4px;font-size:11.5px;font-weight:650;padding:1px 7px;border-radius:999px}
-b.good{color:var(--good)}b.bad{color:var(--bad)}b.sub{color:var(--ink3)}
 .badge.win{color:var(--good);background:var(--good-bg)}.badge.loss{color:var(--bad);background:var(--bad-bg)}.badge.pending{color:var(--ink3);background:var(--chip)}
 .meter{display:inline-flex;align-items:center;gap:8px;min-width:150px;width:150px}.meter .bar{display:block;flex:1;height:6px;border-radius:3px;background:var(--track);overflow:hidden}.meter .fill{display:block;height:100%;background:var(--accent);border-radius:0 3px 3px 0}.meter .mv{display:block;font-variant-numeric:tabular-nums;width:40px;text-align:right;font-size:13px;font-weight:600}
 details{margin:14px 0 0}summary{cursor:pointer;color:var(--accent);font-size:13.5px;font-weight:500;list-style:none;display:inline-block}summary::-webkit-details-marker{display:none}summary::before{content:"\\25B8";margin-right:6px;font-size:11px}details[open]>summary::before{content:"\\25BE"}
@@ -343,11 +328,6 @@ def _pct(x, digits: int = 1) -> str:
 def _surv(x) -> str:
     """Season survival to a precision the simulation supports: 0.9%, 1.2%, 17.1%."""
     return _pct(x, 1)
-
-
-def _pts(x) -> str:
-    """A change in a probability, in percentage points: +0.12 / -0.35."""
-    return "&mdash;" if x is None else f"{100 * float(x):+.2f}"
 
 
 def _spread(x) -> str:
@@ -552,20 +532,13 @@ def render_week_page(season: int, week: int, snaps: list[dict], games: pd.DataFr
                 if pool:
                     n = on_team.get(o["team"], 0)
                     right = f"<div class=\"r\"><b>{'&times;%d' % n if n else ''}</b></div>"
-                    # the numbers behind the split live in Details: one entry on this team alone, and
-                    # what moving one entry onto it (or adding it as the last entry) would do to the pool
-                    bits.append(f"alone {_surv(o['p_season'])}")
-                    if o.get("p_move") is not None:
-                        bits.append(f"move one from {_esc(o.get('move_from') or '')}: {_pts(o['p_move'])} pts")
-                    elif o.get("p_pool_add") is not None:
-                        bits.append(f"adds {_pct(o['p_pool_add'], 2)} as the last entry")
                 else:
                     right = f"<div class=\"r\"><b>{_surv(o['p_season'])}</b><span class=\"sub\"> season</span></div>"
                 lead = (f"<span class=\"sub\">{' &middot; '.join(bits)}</span> &middot; " if bits else "")
                 rows.append(f"<div class=\"row\"><div>{_team(o['team'], 26)}</div><div class=\"mid\">{_meter(o['p_now'])}</div>{right}"
                             f"<div class=\"m why more\">{lead}{_esc(why)}<br><span class=\"plan\">{_esc(' '.join(o['plan']))}</span></div></div>")
             if pool:
-                intro = "Every team you could use this week and how many entries are on it. Details has the numbers behind the split and the reasoning."
+                intro = "Every team you could use this week and how many entries are on it. Details has the reasoning."
             elif policy:
                 intro = "Use the team now and from then on take the best team still available each week, at the line at the time. The right-hand number is the chance of surviving the season; Details adds the reasoning and a sketch of the later weeks."
             else:
