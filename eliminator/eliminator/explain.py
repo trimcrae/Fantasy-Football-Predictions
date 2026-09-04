@@ -294,21 +294,30 @@ def explain_option(res: PlanResult, option, best, cfg: dict | None = None) -> st
     p = res.projection
     now, bnow = float(option.detail.get("now_prob", 0)), float(best.detail.get("now_prob", 0))
     if res.horizon:
-        if option is best:
-            return "Best season odds for a single entry: this week's win chance times what is left to pick from afterwards."
+        team, bteam = TEAMS[option.teams[0]], TEAMS[best.teams[0]]
+        later = best_later_spot(res, team)
+        rank, n = team_rank(res, team)
+        if later is None:
+            timing = f"{team}'s last game of the season"
+        elif rank == 1:
+            timing = f"{team}'s best spot of the season (next best {_pct(later[2])}, wk {later[0]} vs {later[1]})"
+        else:
+            timing = f"{team}'s {_ordinal(rank)}-best spot of {n} (best {_pct(later[2])} in wk {later[0]} vs {later[1]})"
         sim, bsim = float(option.detail.get("sim") or 0), float(best.detail.get("sim") or 0)
+        if option is best:
+            return f"Best season odds: {_pct(now)} now, and {timing}."
         if option.detail.get("surv") is not None and best.detail.get("surv") is not None:
             d = option.detail["surv"] - best.detail["surv"]            # common random numbers
             se = float(d.std() / np.sqrt(len(d)))
         else:
-            n = res.sim.n if res.sim is not None else float(((cfg or {}).get("simulation") or {}).get("scenarios", 20000))
-            se = np.sqrt(max(sim * (1 - sim), 1e-12) / n + max(bsim * (1 - bsim), 1e-12) / n)
-        out = f"{_pct(now)} now vs {_pct(bnow)}."
+            n_sc = res.sim.n if res.sim is not None else float(((cfg or {}).get("simulation") or {}).get("scenarios", 20000))
+            se = np.sqrt(max(sim * (1 - sim), 1e-12) / n_sc + max(bsim * (1 - bsim), 1e-12) / n_sc)
+        out = f"{_pct(now)} now vs {_pct(bnow)} for {bteam}. {timing}"
         if abs(sim - bsim) < 2 * se:
-            return out + " Season odds within simulation noise of the top row."
-        if now > bnow:
-            return out + " Likelier now, but using this team costs more later than the top row's does."
-        return out + " Less likely now, and what is left afterwards does not make up for it."
+            return out + f"; season odds level with {bteam} within noise."
+        if rank == 1 or later is None:
+            return out + f", so using it now gives up nothing later; it trails {bteam} only on this week's chance ({_pct(sim, 1)} season vs {_pct(bsim, 1)})."
+        return out + f", so using it now spends a better week ({_pct(sim, 1)} season vs {_pct(bsim, 1)})."
     if option is best:
         return "Best now and best schedule after for a single entry."
     diffs = [(i, option.teams[i], best.teams[i]) for i in range(1, min(len(option.teams), len(best.teams))) if option.teams[i] != best.teams[i]]
