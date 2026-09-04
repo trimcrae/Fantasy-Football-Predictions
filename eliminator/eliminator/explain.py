@@ -336,16 +336,21 @@ def explain_hedge(res: PlanResult, entry, team: str, adds: dict[int, float] | No
         if not by_team:
             return ""
         ranked = sorted(by_team.items(), key=lambda kv: -kv[1][0])
-        def clause(t, d, se):
-            return f"{t} {_pts(d)}" + (" (within noise)" if abs(d) < 2 * se else "")
         best_t, (best_d, best_se) = ranked[0]
-        head = "Switching this entry to " + clause(best_t, best_d, best_se)
+
+        def cost(d: float, se: float) -> str:
+            if abs(d) < 2 * se:
+                return "about nothing"
+            return f"{'cost' if d < 0 else 'gain'} the pool {abs(100 * d):.2f} points"
+
         if best_d > 2 * best_se:
-            head += ", a move the split missed"
-        rest = [clause(t, d, se) for t, (d, se) in ranked[1:3]]
-        if top and top != team and top in by_team and top not in (best_t, ranked[1][0] if len(ranked) > 1 else None, ranked[2][0] if len(ranked) > 2 else None):
-            rest.append("back onto " + clause(top, *by_team[top]))
-        return head + ("; " + ", ".join(rest) if rest else "") + ". Negative is what the pool's season odds would lose."
+            out = f"Switching this entry to {best_t} would gain the pool {100 * best_d:.2f} points, a move the split missed"
+        else:
+            out = f"Switching this entry to {best_t} (the next best) would {cost(best_d, best_se)}"
+        if top and top != team and top in by_team and top != best_t:
+            d, se = by_team[top]
+            out += f"; back onto {top} would {cost(d, se)}"
+        return out + "."
     adds = pool_add_values(res, detail=True) if adds is None else adds
     if not adds:
         return ""
