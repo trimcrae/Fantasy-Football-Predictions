@@ -97,7 +97,7 @@ def explain_timing(res: PlanResult, team: str) -> str:
     if rank == 1:
         return f"{team}'s best spot all season; next best is {_pct(pr)} (wk {w} vs {opp})."
     if res.horizon:
-        return f"{team}'s {_ordinal(rank)}-best spot of {n}; best is {_pct(pr)} in wk {w} vs {opp}, but later weeks are worth whoever is best available then, not a named team."
+        return f"{team}'s {_ordinal(rank)}-best spot of {n}; best is {_pct(pr)} in wk {w} vs {opp}, but later weeks are valued as whichever teams are best available then, not named ones."
     return f"{team}'s {_ordinal(rank)}-best spot of {n}; best is {_pct(pr)} in wk {w} vs {opp}, but far-off games are deliberately trusted less."
 
 
@@ -283,7 +283,7 @@ def explain_summary(res: PlanResult, cfg: dict | None = None) -> str:
     per = float(np.mean(sims)) if sims else float("nan")
     indep = 1 - (1 - per) ** len(live)
     if res.horizon:
-        return (f"Chance that one of {len(live)} entries wins {n_weeks} straight, from simulated seasons in which the pool is re-split over the best available teams every week. "
+        return (f"Chance that one of {len(live)} entries wins {n_weeks} straight, from simulated seasons in which the pool is spread each week across the best few teams still available to it, in fixed proportions (most entries on the best, some on the second and third), at the lines at the time. "
                 f"Each entry survives {_pct(per, 2)} on average; if they were independent that would be {_pct(indep, 1)}, but they share teams, so {_pct(res.summary['p_any'], 1)}.")
     return (f"Chance that one of {len(live)} entries wins {n_weeks} straight, from simulated seasons. Alone each survives {_pct(per, 2)}; "
             f"if they were independent that would be {_pct(indep, 1)}, but they share teams, so {_pct(res.summary['p_any'], 1)}.")
@@ -367,8 +367,10 @@ def notes(res: PlanResult, cfg: dict | None = None) -> list[str]:
     else:
         out.append(f"How much a posted line can still move is a default (about {np.sqrt(float(m.get('posted_line_var_a', 1.0)) + float(m.get('posted_line_var_b', 1.0))):.1f} pts one week out) until enough archived lines have closed to fit it.")
     if res.horizon:
-        out.append("Later weeks are not planned as named teams: season odds assume the entry takes the best team still available each week at the line at the time. "
-                   "Simulated spreads widen as the season goes on, as real ones do, so the later menu is richer than today's board.")
+        out.append(("Later weeks are not planned as named teams: season odds assume the pool is spread each week across the best few teams still available to it, in fixed proportions, at the lines at the time. "
+                    if res.state.mode != "strikes" else
+                    "Later weeks are not planned as named teams: season odds assume the entry takes the best team still available each week at the line at the time. ")
+                   + "Simulated spreads widen as the season goes on, as real ones do, so the later menu is richer than today's board.")
     else:
         out.append("Percentages for later weeks are deliberately pulled toward 50% because far-off games are trusted much less; the season survival percentages are not.")
     n = res.sim.n if res.sim is not None else int(((cfg or {}).get("simulation") or {}).get("scenarios", 20000))
