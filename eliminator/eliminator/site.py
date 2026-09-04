@@ -541,43 +541,31 @@ def render_week_page(season: int, week: int, snaps: list[dict], games: pd.DataFr
         if s.get("options"):
             whys = ex.get("options") or []
             rows = []
-            moves = s["mode"] != "strikes" and any(o.get("p_move") is not None for o in s["options"])
-            multi = s["mode"] != "strikes" and not moves and any(o.get("p_pool_add") is not None for o in s["options"])
-            n_live = s["summary"].get("n_live", 0)
+            pool = s["mode"] != "strikes"
+            on_team: dict[str, int] = {}
+            for r in s["picks"]:
+                on_team[r["team"]] = on_team.get(r["team"], 0) + 1
+            policy = s.get("allocation_view") == "policy"
             for i, o in enumerate(s["options"]):
                 why = whys[i] if i < len(whys) else ""
-                if moves:
-                    mv = o.get("p_move")
-                    noise = mv is not None and o.get("move_se") is not None and abs(mv) < 2 * float(o["move_se"])
-                    cls = "sub" if mv is None or noise else ("good" if mv > 0 else "")   # negative is the expected state
-                    right = (f"<div class=\"r two\"><span><b>{_surv(o['p_season'])}</b><span class=\"sub\"> alone</span></span>"
-                             f"<span><b class=\"{cls}\">{_pts(mv)}</b><span class=\"sub\"> move one</span></span></div>")
-                elif multi:
-                    right = (f"<div class=\"r two\"><span><b>{_surv(o['p_season'])}</b><span class=\"sub\"> alone</span></span>"
-                             f"<span><b>{_pct(o.get('p_pool_add'), 2)}</b><span class=\"sub\"> adds</span></span></div>")
+                bits = [] if policy else [f"score {_pct(o['score'], 2)}"]
+                if pool:
+                    n = on_team.get(o["team"], 0)
+                    right = f"<div class=\"r\"><b>{'&times;%d' % n if n else ''}</b></div>"
+                    # the numbers behind the split live in Details: one entry on this team alone, and
+                    # what moving one entry onto it (or adding it as the last entry) would do to the pool
+                    bits.append(f"alone {_surv(o['p_season'])}")
+                    if o.get("p_move") is not None:
+                        bits.append(f"move one from {_esc(o.get('move_from') or '')}: {_pts(o['p_move'])} pts")
+                    elif o.get("p_pool_add") is not None:
+                        bits.append(f"adds {_pct(o['p_pool_add'], 2)} as the last entry")
                 else:
                     right = f"<div class=\"r\"><b>{_surv(o['p_season'])}</b><span class=\"sub\"> season</span></div>"
-                policy = s.get("allocation_view") == "policy"
-                lead = "" if policy else f"<span class=\"sub\">score {_pct(o['score'], 2)}</span> &middot; "
-                if moves and o.get("move_from"):
-                    lead += f"<span class=\"sub\">move one entry from {_esc(o['move_from'])}</span> &middot; "
+                lead = (f"<span class=\"sub\">{' &middot; '.join(bits)}</span> &middot; " if bits else "")
                 rows.append(f"<div class=\"row\"><div>{_team(o['team'], 26)}</div><div class=\"mid\">{_meter(o['p_now'])}</div>{right}"
                             f"<div class=\"m why more\">{lead}{_esc(why)}<br><span class=\"plan\">{_esc(' '.join(o['plan']))}</span></div></div>")
-            policy = s.get("allocation_view") == "policy"
-            if moves:
-                intro = (f"One entry uses the team now and from then on takes the best team still available each week, at the line at the time. <b>Alone</b> is that entry's chance of surviving the season. "
-                         f"<b>Move one</b> is what the pool's season odds (any of the {n_live} entries survives) would do if one entry moved off the largest group onto that team now, in percentage points. "
-                         f"Zero or negative everywhere means no single change beats this split; a positive number outside the noise is a move the split missed. Details names the entry that would move.")
-            elif multi and policy:
-                intro = (f"One entry uses the team now and from then on takes the best team still available each week, at the line at the time. <b>Alone</b> is that entry's chance of surviving the season. "
-                         f"<b>Adds</b> is what the same team adds to the pool as your {n_live}th entry: it counts only in the seasons where the other {n_live - 1} are all dead, "
-                         f"so a team that survives in the same seasons as the crowd adds little. The split is built on Adds. Details shows the reasoning and a sketch of the later weeks.")
-            elif multi:
-                view = ("on the planning view, which trusts later weeks much less, so these are smaller than the survival numbers"
-                        if s.get("allocation_view", "planning") != "calibrated" else "on the same simulation as the survival numbers")
-                intro = (f"One entry uses the team now, then plays the rest of the season optimally. <b>Alone</b> is that one path's chance of surviving the season. "
-                         f"<b>Adds</b> is what the best path behind that team adds to the pool as your {n_live}th entry: it counts only in the seasons where the other {n_live - 1} are all dead, "
-                         f"so a path that survives in the same seasons as the crowd adds little. The split is built on Adds, scored {view}. Details shows the ranking score, the reasoning and the rest of the plan.")
+            if pool:
+                intro = "Every team you could use this week and how many entries are on it. Details has the numbers behind the split and the reasoning."
             elif policy:
                 intro = "Use the team now and from then on take the best team still available each week, at the line at the time. The right-hand number is the chance of surviving the season; Details adds the reasoning and a sketch of the later weeks."
             else:

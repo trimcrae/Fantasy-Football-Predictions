@@ -27,7 +27,7 @@ def test_snapshot_roundtrip_and_site(tmp_path, games_all, cfg, before_week1):
             teams = {r["team"] for r in snap["picks"]}
             top = max(teams, key=lambda t: sum(r["team"] == t for r in snap["picks"]))
             lone = [t for t in teams if t != top and sum(r["team"] == t for r in snap["picks"]) <= 2]
-            assert all(snap["explain"]["picks"][t]["hedge"].startswith("Switching this entry to") for t in lone)
+            assert all(snap["explain"]["picks"][t]["hedge"].startswith("Switching this entry to") and snap["explain"]["picks"][t]["hedge"].endswith(".") for t in lone)
             # move-one column: a paired change in P(any) for every option the pool could move onto
             mv = [o for o in snap["options"] if o["p_move"] is not None]
             assert mv and all(abs(o["p_move"]) < 0.5 and o["move_se"] >= 0 and o["move_from"] in teams for o in mv)
