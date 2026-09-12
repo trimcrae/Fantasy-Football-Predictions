@@ -44,9 +44,12 @@ Other commands: `calibrate` (refit all model parameters from history, writes
 `.github/workflows/eliminator-pages.yml` publishes the recommendations for every pool format
 to GitHub Pages at `https://<user>.github.io/Fantasy-Football-Predictions/` (the page itself
 lives under `/picks/`; the root forwards there). Pages serves the `master` branch, root
-folder. The workflow runs every morning, Thursday evening and Sunday late morning during the
-season (and on any push that touches `eliminator/`), and it can be started by hand from the
-Actions tab.
+folder. The workflow runs every morning, Thursday afternoon and several times on Sunday
+morning during the season (and on any push that touches `eliminator/`), and it can be started
+by hand from the Actions tab. GitHub starts scheduled runs hours late (1.5-4 hours has been
+typical for this repository), so the game-day slots are deliberately early: Sunday is
+scheduled at 07:23, 09:23, 11:23 and 14:23 UTC so that at least one run lands before 9am ET
+whatever the delay, and each run logs how late it started.
 
 Each run does three things:
 

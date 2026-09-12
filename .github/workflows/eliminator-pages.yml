@@ -16,9 +16,21 @@ on:
       - ".github/workflows/eliminator-pages.yml"
   schedule:
     # Times are UTC. ET is UTC-4 until early November, then UTC-5.
-    - cron: "0 13 * * *"    # every morning ~9 ET: fresh lines, Tuesday picks up Monday-night results
-    - cron: "0 22 * * 4"    # Thursday ~6 ET, before Thursday night kickoff
-    - cron: "30 15 * * 0"   # Sunday ~11:30 ET, before the early window
+    #
+    # GitHub does not start scheduled runs on time: this workflow's slots have been starting
+    # 1.5-4 hours late (the 13:00 UTC slot at 15:40-17:00 UTC, the Sunday 15:30 slot at
+    # 17:37 UTC, i.e. after the 1pm ET kickoffs). Every game-day slot below is therefore
+    # scheduled hours before the time we actually need the picks, and Sunday gets several
+    # slots so that at least one lands before 9am ET (the earliest Sunday kickoff, a London
+    # game, is 9:30 ET) and the latest of them carries the freshest lines. Off-the-hour
+    # minutes are used because the :00 slots are the most congested. Extra runs are cheap:
+    # each is idempotent and only adds a revision to the week's snapshot.
+    - cron: "23 13 * * *"   # every day, nominally ~9 ET: fresh lines, Tuesday picks up Monday-night results
+    - cron: "23 20 * * 4"   # Thursday, nominally ~4:30 ET, lands well before the 8:15 ET kickoff
+    - cron: "23 7 * * 0"    # Sunday, nominally ~3:30 ET: lands by ~7:30 ET even 4 hours late
+    - cron: "23 9 * * 0"    # Sunday, nominally ~5:30 ET: lands by ~9 ET up to 3.5 hours late
+    - cron: "23 11 * * 0"   # Sunday, nominally ~7:30 ET: the fresh pre-9am lines when it runs on time
+    - cron: "23 14 * * 0"   # Sunday, nominally ~10:30 ET: last refresh before the early window
 
 permissions:
   contents: write
@@ -31,6 +43,24 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      - name: How late is this scheduled run?
+        if: github.event_name == 'schedule'
+        env:
+          CRON: ${{ github.event.schedule }}
+        run: |
+          python3 - <<'PY'
+          import datetime as dt, os
+          minute, hour = (int(x) for x in os.environ["CRON"].split()[:2])
+          now = dt.datetime.now(dt.timezone.utc)
+          slot = now.replace(hour=hour, minute=minute, second=0, microsecond=0)
+          if slot > now:
+              slot -= dt.timedelta(days=1)
+          late = (now - slot).total_seconds() / 60
+          print(f"slot '{os.environ['CRON']}' = {slot:%Y-%m-%d %H:%M} UTC; started {now:%H:%M} UTC, {late:.0f} min late")
+          if late > 120:
+              print(f"::warning::scheduled run started {late:.0f} minutes after its {slot:%H:%M} UTC slot")
+          PY
+
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
