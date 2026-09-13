@@ -2,5 +2,33 @@ name: 25-entry single elimination
 mode: multi
 entries: 25
 strikes: 0
-season: null
-picks: {}
+season: 2026
+picks:
+  '4':
+    1: JAX
+  '6':
+    1: JAX
+  '7':
+    1: JAX
+  '8':
+    1: JAX
+  '9':
+    1: PIT
+  '10':
+    1: JAX
+  '14':
+    1: PIT
+  '16':
+    1: JAX
+  '18':
+    1: JAX
+  '19':
+    1: JAX
+  '20':
+    1: PIT
+  '22':
+    1: PIT
+  '23':
+    1: DET
+  '25':
+    1: JAX
