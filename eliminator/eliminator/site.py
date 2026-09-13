@@ -268,7 +268,7 @@ main{max-width:1040px;margin:0 auto;padding:28px 20px 64px}
 .chip{display:inline-flex;align-items:center;gap:7px;background:var(--chip);border-radius:999px;padding:5px 12px 5px 6px;font-size:13.5px;font-weight:600}
 .chip img{width:22px;height:22px;border-radius:50%}.chip .c{font-weight:500;color:var(--ink2)}.chip .p{font-weight:500;color:var(--ink3)}
 .badge{display:inline-flex;align-items:center;gap:4px;font-size:11.5px;font-weight:650;padding:1px 7px;border-radius:999px}
-.badge.win{color:var(--good);background:var(--good-bg)}.badge.loss{color:var(--bad);background:var(--bad-bg)}.badge.pending{color:var(--ink3);background:var(--chip)}
+.badge.win{color:var(--good);background:var(--good-bg)}.badge.loss{color:var(--bad);background:var(--bad-bg)}
 .meter{display:inline-flex;align-items:center;gap:8px;min-width:150px;width:150px}.meter .bar{display:block;flex:1;height:6px;border-radius:3px;background:var(--track);overflow:hidden}.meter .fill{display:block;height:100%;background:var(--accent);border-radius:0 3px 3px 0}.meter .mv{display:block;font-variant-numeric:tabular-nums;width:40px;text-align:right;font-size:13px;font-weight:600}
 details{margin:14px 0 0}summary{cursor:pointer;color:var(--accent);font-size:13.5px;font-weight:500;list-style:none;display:inline-block}summary::-webkit-details-marker{display:none}summary::before{content:"\\25B8";margin-right:6px;font-size:11px}details[open]>summary::before{content:"\\25BE"}
 .tw{overflow-x:auto;margin:10px 0 0}table{border-collapse:collapse;width:100%;font-size:13.5px}
@@ -342,11 +342,22 @@ def _spread(x) -> str:
     return "" if x is None else f"{float(x):+.1f}"
 
 
+def _clock(when: dt.datetime) -> str:
+    """12-hour clock with AM/PM and no leading zero: 9:05 AM, 12:30 PM."""
+    return f"{(when.hour % 12) or 12}:{when.minute:02d} {'AM' if when.hour < 12 else 'PM'}"
+
+
 def _dt(iso: str) -> str:
     try:
-        return dt.datetime.fromisoformat(iso).astimezone(ET).strftime("%a %b %d, %H:%M ET")
+        when = dt.datetime.fromisoformat(iso).astimezone(ET)
     except (TypeError, ValueError):
         return iso
+    return f"{when.strftime('%a %b %d')}, {_clock(when)} ET"
+
+
+def _built(when: dt.datetime) -> str:
+    when = when.astimezone(ET)
+    return f"{when.strftime('%a %b %d %Y')}, {_clock(when)} ET"
 
 
 def _kick(iso: str) -> str:
@@ -361,8 +372,6 @@ def _badge(res: str) -> str:
         return "<span class=\"badge win\">✓ W</span>"
     if res == "loss":
         return "<span class=\"badge loss\">✗ L</span>"
-    if res == "pending":
-        return "<span class=\"badge pending\">…</span>"
     return ""
 
 
@@ -484,7 +493,7 @@ def render_season_index(season: int, snaps: list[dict], games: pd.DataFrame | No
     body = (f"<div class=\"grid\">{''.join(cards)}</div><div style=\"height:18px\"></div>{table}"
             f"<footer>Vegas lines where they exist, market-implied ratings only for games without a line, and a season-long optimisation per format. "
             f"Later weeks of every plan re-solve on each run; only this week's pick is a recommendation. "
-            f"<a href=\"data/\">Raw snapshots</a> &middot; built {_esc(built_at.astimezone(ET).strftime('%a %b %d %Y, %H:%M ET'))}.</footer>")
+            f"<a href=\"data/\">Raw snapshots</a> &middot; built {_esc(_built(built_at))}.</footer>")
     return _page(f"Eliminator picks {season}", body, hero=f"Week {latest_week}", meta=f"{season} season &middot; updated {_esc(_dt(updated))}", nav=nav)
 
 
