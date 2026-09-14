@@ -1,6 +1,8 @@
 name: single entry, two strikes
 mode: strikes
 entries: 1
-strikes: 2          # out on the second loss
-season: null
-picks: {}
+strikes: 2
+season: 2026
+picks:
+  '1':
+    1: LAC

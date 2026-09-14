@@ -4,8 +4,16 @@ entries: 25
 strikes: 0
 season: 2026
 picks:
+  '1':
+    1: LAC
+  '2':
+    1: LAC
+  '3':
+    1: LAC
   '4':
     1: JAX
+  '5':
+    1: LAC
   '6':
     1: JAX
   '7':
@@ -16,19 +24,33 @@ picks:
     1: PIT
   '10':
     1: JAX
+  '11':
+    1: LAC
+  '12':
+    1: LAC
+  '13':
+    1: LAC
   '14':
     1: PIT
+  '15':
+    1: LAC
   '16':
     1: JAX
+  '17':
+    1: PHI
   '18':
     1: JAX
   '19':
     1: JAX
   '20':
     1: PIT
+  '21':
+    1: LAC
   '22':
     1: PIT
   '23':
     1: DET
+  '24':
+    1: LAC
   '25':
     1: JAX
