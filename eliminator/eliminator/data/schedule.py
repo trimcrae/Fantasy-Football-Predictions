@@ -116,6 +116,27 @@ def current_week(games: pd.DataFrame, now: dt.datetime | None = None) -> int:
     return int(pending["week"].min())
 
 
+def board_cutoff(games: pd.DataFrame, week: int, at: str | None) -> dt.datetime | None:
+    """When the week's board stops being a recommendation and becomes the record.
+
+    ``at`` is a local ET "HH:MM" on the day of the week's first Sunday game: the entries are
+    in by then, so from that moment the picks on file stand whatever the lines do afterwards.
+    Returns ``None`` when no cutoff is configured or the week has no games.
+    """
+    if not at:
+        return None
+    ko = list(games.loc[games["week"] == week, "kickoff"])
+    if not ko:
+        return None
+    try:
+        hh, mm = (int(x) for x in str(at).split(":")[:2])
+    except ValueError:
+        return None
+    sunday = [k for k in ko if k.weekday() == 6]
+    day = min(sunday or ko).date()
+    return dt.datetime(day.year, day.month, day.day, hh, mm, tzinfo=ET)
+
+
 def latest_season(df: pd.DataFrame) -> int:
     return int(df["season"].max())
 

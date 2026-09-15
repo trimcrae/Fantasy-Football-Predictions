@@ -3,7 +3,7 @@ import datetime as dt
 import numpy as np
 
 from eliminator.backtest import as_of_view
-from eliminator.data.schedule import ET, regular_season
+from eliminator.data.schedule import ET, board_cutoff, regular_season
 from eliminator.model.projection import build_projection
 from eliminator.model.qb import QBSituation
 from eliminator.model.strength import assemble
@@ -204,3 +204,34 @@ def test_locked_loss_is_charged_once(games_all, cfg):
         g2.loc[wk2 & (g2.home == "KC"), ["result", "home_win"]] = [-3.0, 0.0]
     st = evaluate_entries(state, regular_season(g2, 2026), 3, dt.datetime(2026, 9, 30, 12, 0, tzinfo=ET))[0]
     assert st.losses == 2 and not st.alive
+
+
+def test_board_is_frozen_once_the_entries_are_in(games_all, cfg, before_week1, tmp_path):
+    """Past planning.commit_at the picks on file for the week stand: a later line move cannot
+    re-split a pool that has already been entered."""
+    g = regular_season(games_all, 2026)
+    w1 = g[g.week == 1]
+    dog = w1.sort_values("spread_line").iloc[0]["home"]        # a team the optimiser would never choose
+    cutoff = board_cutoff(g, 1, cfg["planning"]["commit_at"])
+    assert cutoff is not None and before_week1 < cutoff < w1["kickoff"].min()
+
+    def plan(now, picks):
+        state = PoolState(name="t", mode="multi", n_entries=3, strikes=0, season=2026,
+                          picks=picks, path=tmp_path / "p.yaml")
+        return make_plan(state, games_all, cfg, [], None, now=now, season=2026, source="market", scenarios=1000)
+
+    on_file = {"1": {1: dog}}
+    before = plan(before_week1, dict(on_file))
+    assert not before.frozen
+    assert before.this_week().set_index("entry").loc["1", "status"] == "change"
+    assert TEAMS[before.entries[0].path.teams[0]] != dog
+
+    after = plan(cutoff + dt.timedelta(minutes=1), dict(on_file))
+    assert after.frozen and after.cutoff == cutoff
+    row = after.this_week().set_index("entry").loc["1"]
+    assert row["team"] == dog and row["status"] == "keep"      # kept, not re-optimised
+    # entries with nothing on file are still planned, and committing writes the board to the pool
+    assert {TEAMS[e.path.teams[0]] for e in after.entries[1:]} != {dog}
+    assert commit_picks(after) == 3
+    assert after.state.picks["1"][1] == dog
+    assert "board committed at" in render(after, show_paths=False)

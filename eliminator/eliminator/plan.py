@@ -8,7 +8,7 @@ from dataclasses import dataclass, field
 import numpy as np
 import pandas as pd
 
-from .data.schedule import ET, current_week as _current_week, latest_season, regular_season
+from .data.schedule import ET, board_cutoff, current_week as _current_week, latest_season, regular_season
 from .model.projection import Projection, build_projection
 from .model.qb import QBSituation
 from .model.strength import Strength, assemble
@@ -36,6 +36,8 @@ class PlanResult:
     sim: Sim | None = None                    # calibrated simulation with per-scenario closing probabilities
     horizon: int | None = None                # policy mode: weeks that are a commitment; later weeks re-pick
     planning: dict = field(default_factory=dict)  # the planning config the result was built with
+    cutoff: dt.datetime | None = None         # when this week's board became the record (planning.commit_at)
+    frozen: bool = False                      # past the cutoff: picks on file for the week are fixed
 
     # ---- convenience -------------------------------------------------------------
     def this_week(self) -> pd.DataFrame:
@@ -104,6 +106,8 @@ def make_plan(state: PoolState, games_all: pd.DataFrame, cfg: dict, ledger: list
     strength = assemble(games_all, season, week, cfg, ledger, inpredictable, source or cfg["model"]["ratings_source"])
     proj = build_projection(games, season, week, strength, cfg, now=now, overrides=overrides)
     statuses = evaluate_entries(state, games, week, now)
+    cutoff = board_cutoff(games, week, planning.get("commit_at"))
+    frozen = cutoff is not None and now >= cutoff
 
     plan_disc = float(cfg["model"].get("future_discount", 1.0))
     real_disc = float(cfg["simulation"].get("discount", 1.0))
@@ -116,8 +120,11 @@ def make_plan(state: PoolState, games_all: pd.DataFrame, cfg: dict, ledger: list
     for s in statuses:
         available = np.array([t not in s.used for t in TEAMS])
         fixed = {}
-        if s.locked_now is not None:
-            fixed[0] = TEAMS.index(s.locked_now)
+        # A kicked-off pick is fixed because it cannot be changed; past the cutoff a pick still on
+        # the board is fixed because the entry is already in, whatever a later line move would say.
+        on_file = s.locked_now if s.locked_now is not None else (s.provisional_now if frozen else None)
+        if on_file is not None:
+            fixed[0] = TEAMS.index(on_file)
             available[fixed[0]] = True
         # A locked pick whose result is already in sits at P = 1 or 0 in the projection and the
         # simulation, so a loss there is charged by the simulation itself; the strikes the
@@ -183,7 +190,8 @@ def make_plan(state: PoolState, games_all: pd.DataFrame, cfg: dict, ledger: list
                       statuses=statuses, summary=summary, options=options, wins=wins if keep_wins else None,
                       wins_policy=wins_policy if keep_wins and not policy else None,
                       allocation_view="policy" if policy else str(cfg.get("portfolio", {}).get("allocation_view", "planning")),
-                      sim=sim if keep_wins else None, horizon=horizon if policy else None, planning=dict(planning, seed=int(cfg["simulation"]["seed"]) + 2))
+                      sim=sim if keep_wins else None, horizon=horizon if policy else None,
+                      planning=dict(planning, seed=int(cfg["simulation"]["seed"]) + 2), cutoff=cutoff, frozen=frozen)
 
 
 def commit_picks(result: PlanResult) -> int:
@@ -224,6 +232,9 @@ def render(result: PlanResult, show_paths: bool = True, top_options: int = 12) -
     else:
         out.append(f"entries alive: {len(live)} of {len(result.entries)}; eliminated: {len(dead)}")
         out.append(f"P(at least one entry survives the season) = {result.summary['p_any']:.3f}; expected survivors = {result.summary['expected_survivors']:.2f}")
+    if result.cutoff is not None:
+        out.append(f"board {'committed' if result.frozen else 'commits'} at {result.cutoff:%a %m/%d %H:%M} ET"
+                   + (": picks on file for this week are fixed" if result.frozen else ""))
     # this week's board
     board = p.table[(p.table["week"] == result.week)].copy()
     board = board.sort_values("prob", ascending=False)

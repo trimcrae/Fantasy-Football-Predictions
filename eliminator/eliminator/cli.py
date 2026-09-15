@@ -205,6 +205,13 @@ def cmd_snapshot(args):
         snap = build_snapshot(res, pool.stem, generated_at=now, previous=previous, ledger=ledger, cfg=cfg)
         path = write_snapshot(snap, data_dir)
         print(render(res, show_paths=False))
+        # Past the cutoff the board is the record: write it to the pool file now, rather than
+        # leaving it provisional until kickoff backfills whatever a later run happened to say.
+        if res.frozen:
+            n = commit_picks(res)
+            if n:
+                state.save()
+                print(f"[{pool.stem}] committed {n} pick(s) for week {week}: the board is now the record")
         print(f"written {path}\n")
 
 

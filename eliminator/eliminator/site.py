@@ -6,10 +6,12 @@ Two commands:
   (season, week, pool) to ``site/data/<season>/w<NN>-<pool>.json``. The file for the
   current week is overwritten on every run, so it always holds the latest recommendation;
   once the season moves on to the next week the file is frozen and becomes the record of
-  what was recommended. Before planning, picks the pool file is missing for weeks that
-  have already kicked off are filled in from the snapshot of that week, so an unattended
-  pipeline keeps the entries alive without anyone running ``plan --commit``. A pick
-  entered by hand (``record``) is never overwritten.
+  what was recommended. From ``planning.commit_at`` on the day of the week's first Sunday
+  game the board is written to the pool file, so what the entries were told stays the
+  record whatever the lines do afterwards. Before planning, picks the pool file is still
+  missing for weeks that have already kicked off are filled in from the snapshot of that
+  week, so an unattended pipeline keeps the entries alive even if the committing run was
+  missed. A pick already on file is never overwritten.
 * ``eliminator site`` renders every snapshot into a self-contained set of HTML pages:
   a landing page with this week's picks for each format and a week-by-week table with
   results, plus one page per week with the full board, options and per-entry plans.
