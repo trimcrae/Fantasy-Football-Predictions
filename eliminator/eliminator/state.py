@@ -11,8 +11,10 @@ state/<pool>.yaml::
       "1": {1: LAC, 2: BUF}
       "2": {1: JAX}
 
-Picks are written by ``eliminator plan --commit`` and can be edited by hand. A pick whose
-game has kicked off is locked; anything else is provisional and re-optimised on the next run.
+Picks are written by ``eliminator plan --commit``, by ``snapshot`` once the week's board is
+committed (``planning.commit_at``), and can be edited by hand. A pick whose game has kicked
+off is locked; a pick on file past the cutoff is fixed for the week because the entry is
+already in; anything earlier is provisional and re-optimised on the next run.
 """
 from __future__ import annotations
 

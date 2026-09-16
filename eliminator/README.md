@@ -35,6 +35,12 @@ Sunday morning after Thursday night football, entries that used the Thursday tea
 the rest are re-planned around what happened. `--now "2026-09-13 12:00"` pretends it is
 another time (ET), which is handy for checking what locks.
 
+Re-optimising stops at `planning.commit_at` (default 11:00 ET on the day of the week's first
+Sunday game). By then the entries are in, so from that moment a pick on file is fixed for the
+week even if its own game is not until the late window: what you were told to enter stays the
+record, and the board you acted on is what gets graded. Set it to `null` in `config.yaml` to
+re-optimise every unlocked pick right up to its kickoff instead.
+
 Other commands: `calibrate` (refit all model parameters from history, writes
 `calibration.json`), `backtest` (replay past seasons with as-of information),
 `qb` (print the week's QB injury report), `record` (enter a pick by hand).
@@ -59,10 +65,11 @@ Each run does three things:
    separately), and an entry that lost this week keeps its pick on the week's record instead
    of vanishing with the eliminated entry, so the week-by-week table and its "alive after"
    counts are right even though the last run of a week happens on Monday morning.
-   Before planning, any pick a pool file is missing for a game that has already kicked off is
-   filled in from that week's snapshot, so the entries stay alive from week to week without
-   anyone running `plan --commit`. A pick you enter yourself (`record`, or editing the YAML)
-   is never touched, and if you enter it before kickoff the planner locks it exactly as it
+   From `planning.commit_at` on, the board is written straight to the pool files, so the week's
+   record is what the entries were actually told. Before planning, any pick a pool file is
+   still missing for a game that has already kicked off is filled in from that week's snapshot,
+   which covers a missed run. A pick you enter yourself (`record`, or editing the YAML) is
+   never touched, and if you enter it before kickoff the planner locks it exactly as it
    would your own.
 2. `python -m eliminator site` renders the snapshots into `picks/` at the repository root: a
    landing page with this week's picks per format and a week-by-week table graded against

@@ -52,7 +52,11 @@ DEFAULTS: dict[str, Any] = {
     #              entries is re-split every week: spread_weights are the frequencies with which an
     #              entry takes the best, second-best, third-best available team in a later week.
     #   discount - fixed 18-week paths scored on a simulation with model.future_discount x the drift.
-    "planning": {"mode": "policy", "horizon": 1, "spread_weights": [0.6, 0.3, 0.1]},
+    # commit_at: local ET time on the day of the week's first Sunday game, from which the board
+    # is the record rather than a recommendation. Picks on file for the week are then treated as
+    # fixed, so a run after the entries are in cannot re-split the pool on information the pool
+    # can no longer act on. null disables the freeze (every unlocked pick is re-optimised).
+    "planning": {"mode": "policy", "horizon": 1, "spread_weights": [0.6, 0.3, 0.1], "commit_at": "11:00"},
     "data": {"max_age_hours": 6.0, "odds_api_key": None, "odds_api_region": "us"},
 }
 
