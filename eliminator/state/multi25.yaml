@@ -12,18 +12,24 @@ picks:
     1: LAC
   '4':
     1: JAX
+    2: SF
   '5':
     1: LAC
   '6':
     1: JAX
+    2: SF
   '7':
     1: JAX
+    2: TB
   '8':
     1: JAX
+    2: TB
   '9':
     1: PIT
+    2: TB
   '10':
     1: JAX
+    2: SF
   '11':
     1: LAC
   '12':
@@ -32,25 +38,33 @@ picks:
     1: LAC
   '14':
     1: PIT
+    2: SF
   '15':
     1: LAC
   '16':
     1: JAX
+    2: LAC
   '17':
     1: LAC
   '18':
     1: JAX
+    2: SF
   '19':
     1: JAX
+    2: PHI
   '20':
     1: PIT
+    2: SF
   '21':
     1: LAC
   '22':
     1: PIT
+    2: TB
   '23':
     1: JAX
+    2: SF
   '24':
     1: LAC
   '25':
     1: JAX
+    2: SF
