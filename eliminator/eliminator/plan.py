@@ -8,7 +8,7 @@ from dataclasses import dataclass, field
 import numpy as np
 import pandas as pd
 
-from .data.schedule import ET, board_cutoff, current_week as _current_week, latest_season, regular_season
+from .data.schedule import ET, board_cutoff, current_week as _current_week, kickoff_text, latest_season, regular_season
 from .model.projection import Projection, build_projection
 from .model.qb import QBSituation
 from .model.strength import Strength, assemble
@@ -54,7 +54,7 @@ class PlanResult:
             r = self.projection.row(self.week, t)
             rows.append({"entry": e.entry_id, "team": t, "opp": ("" if r["home"] else "@") + r["opp"],
                          "p_win": r["prob"], "p_line": r["line_prob"], "spread": r["spread"], "source": r["source"],
-                         "kickoff": r["kickoff"].strftime("%a %m/%d %H:%M"),
+                         "kickoff": kickoff_text(r["kickoff"]),
                          "status": "locked" if st.locked_now == t else ("keep" if st.provisional_now == t else ("change" if st.provisional_now else "new")),
                          "p_season": e.path.value if e.path is not None else np.nan,
                          "p_season_sim": e.p_season() if e.path is not None and e.p_season() is not None else np.nan})
@@ -233,7 +233,7 @@ def render(result: PlanResult, show_paths: bool = True, top_options: int = 12) -
         out.append(f"entries alive: {len(live)} of {len(result.entries)}; eliminated: {len(dead)}")
         out.append(f"P(at least one entry survives the season) = {result.summary['p_any']:.3f}; expected survivors = {result.summary['expected_survivors']:.2f}")
     if result.cutoff is not None:
-        out.append(f"board {'committed' if result.frozen else 'commits'} at {result.cutoff:%a %m/%d %H:%M} ET"
+        out.append(f"board {'committed' if result.frozen else 'commits'} at {kickoff_text(result.cutoff)} ET"
                    + (": picks on file for this week are fixed" if result.frozen else ""))
     # this week's board
     board = p.table[(p.table["week"] == result.week)].copy()

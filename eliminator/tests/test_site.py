@@ -141,3 +141,19 @@ def test_played_pick_is_recorded_at_its_closing_price(tmp_path, games_all, cfg):
     assert grade(g, 2026, 1, home) == "win" and grade(g, 2026, 1, away) == "loss"
     # the timing sentence ranks the played spot at its price, not at 100%
     assert "100%" not in snap["explain"]["picks"][home]["timing"]
+
+
+def test_times_read_as_clock_times():
+    from eliminator.data.schedule import kickoff_text
+    from eliminator.site import _dt, _kick
+
+    assert _dt("2026-09-19T12:11:31.995121-04:00") == "Sat Sep 19, 12:11 PM ET"
+    assert _dt("2026-09-20T00:05:00-04:00") == "Sun Sep 20, 12:05 AM ET"
+    assert _dt("2026-09-20T13:00:00+00:00") == "Sun Sep 20, 9:00 AM ET"     # any offset is shown in ET
+    assert _dt("not a time") == "not a time"
+    assert kickoff_text(dt.datetime(2026, 9, 20, 16, 25, tzinfo=ET)) == "Sun 09/20 4:25 PM"
+    assert _kick("2026-09-20T16:25:00-04:00") == "Sun 09/20 4:25 PM"
+    assert _kick("Sun 09/20 16:25") == "Sun 09/20 4:25 PM"       # 24-hour text stored by earlier snapshots
+    assert _kick("Sun 09/20 4:25 PM") == "Sun 09/20 4:25 PM"
+    assert _kick("Mon 09/21 00:15") == "Mon 09/21 12:15 AM"
+    assert _kick("tbd") == "tbd"

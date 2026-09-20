@@ -16,13 +16,17 @@ on:
       - ".github/workflows/eliminator-pages.yml"
   schedule:
     # Times are UTC. ET is UTC-4 until early November, then UTC-5.
-    - cron: "0 13 * * *"    # every morning ~9 ET: fresh lines, Tuesday picks up Monday-night results
-    - cron: "0 22 * * 4"    # Thursday ~6 ET, before Thursday night kickoff
-    # Two Sunday runs so that one lands after the 11:00 ET board cutoff (planning.commit_at) in
-    # both offsets: 15:30 UTC is 11:30 ET on EDT, 16:10 UTC is 11:10 ET on EST. The first run past
-    # the cutoff commits the board to the pool files; the later one is then a no-op for picks.
-    - cron: "30 15 * * 0"
-    - cron: "10 16 * * 0"
+    #
+    # GitHub starts scheduled runs late when its queue is busy (this repo's runs have started 1 to
+    # 5 hours after their cron time, and one Sunday the morning run never started at all), and
+    # top-of-the-hour slots are the most delayed. So the minutes below are off the hour, and
+    # Sunday has a slot every half hour from early morning until the late-afternoon kickoffs:
+    # whichever ones GitHub does start keep the site current through the morning, the first one
+    # to start after the 11:00 ET board cutoff (planning.commit_at) commits the board to the pool
+    # files, and the rest are no-ops for picks. The concurrency group below queues them in turn.
+    - cron: "17 12 * * *"        # every morning ~8:17 ET: fresh lines, Tuesday picks up Monday-night results
+    - cron: "17 21 * * 4"        # Thursday ~5:17 ET, before Thursday night kickoff
+    - cron: "17,47 11-20 * * 0"  # Sunday every 30 min, 7:17 ET .. 4:47 ET (EDT); an hour earlier on EST
 
 permissions:
   contents: write

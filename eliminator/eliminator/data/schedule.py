@@ -21,6 +21,17 @@ from ..teams import normalize
 GAMES_URL = "https://raw.githubusercontent.com/nflverse/nfldata/master/data/games.csv"
 ET = ZoneInfo("America/New_York")
 
+
+def clock12(hour: int, minute: int) -> str:
+    """A wall-clock time the way people read it: 1:00 PM, 12:11 PM, 8:20 AM."""
+    return f"{hour % 12 or 12}:{minute:02d} {'AM' if hour < 12 else 'PM'}"
+
+
+def kickoff_text(t: dt.datetime) -> str:
+    """Kickoff as shown on the site and in pick summaries: 'Sun 09/20 4:25 PM' (ET)."""
+    t = t.astimezone(ET)
+    return f"{t:%a %m/%d} {clock12(t.hour, t.minute)}"
+
 _COLS = [
     "game_id", "season", "game_type", "week", "gameday", "weekday", "gametime", "away_team",
     "away_score", "home_team", "home_score", "location", "result", "away_rest", "home_rest",

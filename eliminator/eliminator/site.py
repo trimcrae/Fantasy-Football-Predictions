@@ -28,7 +28,7 @@ import numpy as np
 import pandas as pd
 
 from .config import ROOT
-from .data.schedule import ET
+from .data.schedule import ET, clock12, kickoff_text
 from .plan import PlanResult
 from .state import PoolState, lives
 from .teams import TEAMS
@@ -345,17 +345,26 @@ def _spread(x) -> str:
 
 
 def _dt(iso: str) -> str:
+    """'Sat Sep 19, 12:11 PM ET' from an ISO timestamp."""
     try:
-        return dt.datetime.fromisoformat(iso).astimezone(ET).strftime("%a %b %d, %H:%M ET")
+        t = dt.datetime.fromisoformat(iso).astimezone(ET)
     except (TypeError, ValueError):
         return iso
+    return f"{t:%a %b %d}, {clock12(t.hour, t.minute)} ET"
 
 
-def _kick(iso: str) -> str:
+_KICK_24H = re.compile(r"^(\w{3} \d\d/\d\d) (\d\d):(\d\d)$")
+
+
+def _kick(s: str) -> str:
+    """'Sun 09/20 4:25 PM' from an ISO timestamp, or from the 24-hour 'Sun 09/20 16:25' text
+    that snapshots written before the clock changed to AM/PM carry."""
     try:
-        return dt.datetime.fromisoformat(iso).astimezone(ET).strftime("%a %m/%d %H:%M")
+        return kickoff_text(dt.datetime.fromisoformat(s))
     except (TypeError, ValueError):
-        return iso
+        pass
+    m = _KICK_24H.match(s) if isinstance(s, str) else None
+    return f"{m[1]} {clock12(int(m[2]), int(m[3]))}" if m else s
 
 
 def _badge(res: str) -> str:
@@ -396,7 +405,7 @@ def _hero_pick(r: dict, res: str = "") -> str:
     pre, opp = _opp_text(r)
     lock = " <span class=\"tag\">locked</span>" if r.get("status") == "locked" else ""
     return (f"<div class=\"pick\"><img src=\"logos/{_esc(r['team'])}.png\" alt=\"\"><div class=\"who\"><div class=\"team\">{_esc(r['team'])}{lock} {_badge(res)}</div>"
-            f"<div class=\"vs\">{pre} {_esc(opp)} &middot; {_esc(r['kickoff'])} &middot; {_spread(r['spread'])}</div></div>"
+            f"<div class=\"vs\">{pre} {_esc(opp)} &middot; {_esc(_kick(r['kickoff']))} &middot; {_spread(r['spread'])}</div></div>"
             f"<div class=\"num\">{_pct(r['p_win'], 0)}<small>to win</small></div></div>")
 
 
@@ -486,7 +495,7 @@ def render_season_index(season: int, snaps: list[dict], games: pd.DataFrame | No
     body = (f"<div class=\"grid\">{''.join(cards)}</div><div style=\"height:18px\"></div>{table}"
             f"<footer>Vegas lines where they exist, market-implied ratings only for games without a line, and a season-long optimisation per format. "
             f"Later weeks of every plan re-solve on each run; only this week's pick is a recommendation. "
-            f"<a href=\"data/\">Raw snapshots</a> &middot; built {_esc(built_at.astimezone(ET).strftime('%a %b %d %Y, %H:%M ET'))}.</footer>")
+            f"<a href=\"data/\">Raw snapshots</a> &middot; built {_esc(_dt(built_at.isoformat()))}.</footer>")
     return _page(f"Eliminator picks {season}", body, hero=f"Week {latest_week}", meta=f"{season} season &middot; updated {_esc(_dt(updated))}", nav=nav)
 
 
@@ -516,7 +525,7 @@ def render_week_page(season: int, week: int, snaps: list[dict], games: pd.DataFr
                 pre, opp = _opp_text(r)
                 res = graded.get(ents[0], "")
                 lock = " <span class=\"tag\">locked</span>" if r["status"] == "locked" else ""
-                rows.append(f"<div class=\"row\"><div>{_team(team, 30)}{lock}</div><div class=\"mid\">{_meter(r['p_win'])}<span class=\"sub\">{pre} {_esc(opp)} &middot; {_esc(r['kickoff'])}</span></div>"
+                rows.append(f"<div class=\"row\"><div>{_team(team, 30)}{lock}</div><div class=\"mid\">{_meter(r['p_win'])}<span class=\"sub\">{pre} {_esc(opp)} &middot; {_esc(_kick(r['kickoff']))}</span></div>"
                             f"<div class=\"r\"><b>&times;{len(ents)}</b> {_badge(res)}</div>"
                             f"<div class=\"m\"><span class=\"why\">{_pick_why(s, team, full=True)}</span></div></div>")
             card.append(f"<div class=\"picks-list\">{''.join(rows)}</div>")
