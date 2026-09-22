@@ -25,7 +25,7 @@
   17,
   18
  ],
- "generated_at": "2026-09-22T09:59:32.806946-04:00",
+ "generated_at": "2026-09-22T10:05:37-04:00",
  "ratings_source": "inpredictable",
  "n_lines_posted": 48,
  "n_priced_games": 16,
@@ -1305,5 +1305,10 @@
   }
  },
  "horizon": 1,
- "revisions": []
+ "revisions": [
+  {
+   "generated_at": "2026-09-22T09:59:32.806946-04:00",
+   "picks": "KC"
+  }
+ ]
 }
