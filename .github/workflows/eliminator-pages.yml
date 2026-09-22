@@ -15,9 +15,21 @@ on:
       - "eliminator/**"
       - ".github/workflows/eliminator-pages.yml"
   schedule:
-    # Times are UTC. ET is UTC-4 until early November, then UTC-5.
-    - cron: "0 13 * * *"    # every morning ~9 ET: fresh lines, Tuesday picks up Monday-night results
-    - cron: "0 22 * * 4"    # Thursday ~6 ET, before Thursday night kickoff
+    # Times are UTC and are requests, not guarantees: GitHub queues scheduled runs and drops
+    # them under load. On this repository the "0 13" daily run has been starting between
+    # 16:09 and 18:44 UTC - three to five hours late - which is why the week's board has been
+    # turning up on Tuesday afternoon rather than Tuesday morning, when it turned up at all.
+    # So Tuesday asks five times, from just after Monday night through the morning: whichever
+    # attempt GitHub starts first publishes the board and the rest are no-ops, because a run
+    # commits only what changed. Off-the-hour minutes queue less badly than ":00".
+    # ET is UTC-4 until early November, then UTC-5.
+    - cron: "40 4 * * 2"    # Tuesday, once Monday night is final and week N+1 is the current week
+    - cron: "40 6 * * 2"
+    - cron: "40 8 * * 2"
+    - cron: "40 10 * * 2"
+    - cron: "40 12 * * 2"
+    - cron: "7 13 * * *"    # every day: fresh lines
+    - cron: "7 22 * * 4"    # Thursday ~6 ET, before Thursday night kickoff
     # Two Sunday runs so that one lands after the 11:00 ET board cutoff (planning.commit_at) in
     # both offsets: 15:30 UTC is 11:30 ET on EDT, 16:10 UTC is 11:10 ET on EST. The first run past
     # the cutoff commits the board to the pool files; the later one is then a no-op for picks.
@@ -48,11 +60,17 @@ jobs:
       - name: Install
         run: pip install -r eliminator/requirements.txt
 
+      # One clock for the whole job, so the week the snapshot plans and the week the check
+      # below looks for cannot differ when a run straddles a kickoff.
+      - name: Pin the clock for this run
+        run: |
+          python3 -c "import datetime, zoneinfo; print('NOW=' + datetime.datetime.now(zoneinfo.ZoneInfo('America/New_York')).strftime('%Y-%m-%d %H:%M:%S'))" >> "$GITHUB_ENV"
+
       - name: Snapshot this week's recommendations
         working-directory: eliminator
         env:
           ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
-        run: python -m eliminator snapshot
+        run: python -m eliminator snapshot --now "$NOW"
 
       - name: Render site into picks/
         working-directory: eliminator
@@ -61,6 +79,32 @@ jobs:
           python -m eliminator site --offline --out ../picks
           printf '<!doctype html><meta charset="utf-8"><meta http-equiv="refresh" content="0; url=picks/"><title>Eliminator picks</title><p><a href="picks/">Eliminator picks</a></p>\n' > ../index.html
           touch ../.nojekyll
+
+      - name: Check the current week's board is on the site
+        working-directory: eliminator
+        run: |
+          python - <<'PY'
+          import os, sys
+          from pathlib import Path
+          import pandas as pd
+          sys.path.insert(0, ".")
+          from eliminator.config import ROOT, load_config
+          from eliminator.data.schedule import ET, current_week, latest_season, load_games, regular_season
+          from eliminator.site import pool_files, snapshot_path
+
+          cfg = load_config()
+          df = load_games(refresh=False)
+          season = int(cfg.get("season") or latest_season(df))
+          now = pd.Timestamp(os.environ["NOW"]).tz_localize(ET).to_pydatetime()
+          week = current_week(regular_season(df, season), now)
+          missing = [p.stem for p in pool_files(ROOT / "state") if not snapshot_path(season, week, p.stem).exists()]
+          page = Path("..") / "picks" / f"s{season}-w{week:02d}.html"
+          if missing or not page.exists():
+              print(f"::error::season {season} week {week} did not publish: "
+                    f"missing snapshots {missing or 'none'}, week page present: {page.exists()}")
+              raise SystemExit(1)
+          print(f"ok: week {week} board is on the site for every pool")
+          PY
 
       - name: Commit snapshot, filled-in picks and the rendered site
         id: commit
