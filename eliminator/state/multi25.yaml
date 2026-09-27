@@ -13,11 +13,13 @@ picks:
   '4':
     1: JAX
     2: SF
+    3: KC
   '5':
     1: LAC
   '6':
     1: JAX
     2: SF
+    3: SEA
   '7':
     1: JAX
     2: TB
@@ -30,6 +32,7 @@ picks:
   '10':
     1: JAX
     2: SF
+    3: KC
   '11':
     1: LAC
   '12':
@@ -39,6 +42,7 @@ picks:
   '14':
     1: PIT
     2: SF
+    3: SEA
   '15':
     1: LAC
   '16':
@@ -49,12 +53,15 @@ picks:
   '18':
     1: JAX
     2: SF
+    3: SEA
   '19':
     1: JAX
     2: PHI
+    3: KC
   '20':
     1: PIT
     2: SF
+    3: KC
   '21':
     1: LAC
   '22':
@@ -63,8 +70,10 @@ picks:
   '23':
     1: JAX
     2: SF
+    3: DET
   '24':
     1: LAC
   '25':
     1: JAX
     2: SF
+    3: KC
