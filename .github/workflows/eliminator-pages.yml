@@ -30,6 +30,15 @@ on:
     - cron: "40 12 * * 2"
     - cron: "7 13 * * *"    # every day: fresh lines
     - cron: "7 22 * * 4"    # Thursday ~6 ET, before Thursday night kickoff
+    # Sunday morning is when fresh numbers matter most, and the daily "7 13" run has been landing
+    # around 16:30-17:00 UTC - past noon ET, often at kickoff. Ask from the small hours so that even
+    # a run GitHub starts three to five hours late has published by breakfast, and ask again later
+    # in the morning for the final injury news and line moves. Before planning.commit_at these runs
+    # only refresh the board; they never lock picks.
+    - cron: "40 5 * * 0"    # 1:40 ET (EDT); lands ~6-10 ET after GitHub's usual delay
+    - cron: "40 8 * * 0"
+    - cron: "40 10 * * 0"
+    - cron: "40 12 * * 0"
     # Two Sunday runs so that one lands after the 11:00 ET board cutoff (planning.commit_at) in
     # both offsets: 15:30 UTC is 11:30 ET on EDT, 16:10 UTC is 11:10 ET on EST. The first run past
     # the cutoff commits the board to the pool files; the later one is then a no-op for picks.
