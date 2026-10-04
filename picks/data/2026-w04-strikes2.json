@@ -24,7 +24,7 @@
   17,
   18
  ],
- "generated_at": "2026-10-04T13:27:24-04:00",
+ "generated_at": "2026-10-04T14:42:07-04:00",
  "ratings_source": "inpredictable",
  "n_lines_posted": 64,
  "n_priced_games": 14,
@@ -46,8 +46,8 @@
    "spread": 10.0794,
    "source": "moneyline",
    "kickoff": "Sun 10/04 16:05",
-   "status": "new",
-   "on_file": null,
+   "status": "keep",
+   "on_file": "MIN",
    "score": 0.0654,
    "p_season": 0.0654
   }
@@ -58,190 +58,6 @@
    "p_now": 0.8082,
    "score": 0.0654,
    "p_season": 0.0654,
-   "p_pool_add": null,
-   "plan": [
-    "DAL",
-    "LA",
-    "HOU",
-    "CIN",
-    "PHI",
-    "IND",
-    "BUF",
-    "DET",
-    "DEN",
-    "SEA",
-    "GB",
-    "BAL",
-    "JAX",
-    "NE"
-   ]
-  },
-  {
-   "team": "SEA",
-   "p_now": 0.7508,
-   "score": 0.0576,
-   "p_season": 0.0576,
-   "p_pool_add": null,
-   "plan": [
-    "DAL",
-    "LA",
-    "HOU",
-    "CIN",
-    "PHI",
-    "IND",
-    "BUF",
-    "DET",
-    "DEN",
-    "BAL",
-    "GB",
-    "MIN",
-    "JAX",
-    "NE"
-   ]
-  },
-  {
-   "team": "DET",
-   "p_now": 0.6369,
-   "score": 0.0489,
-   "p_season": 0.0489,
-   "p_pool_add": null,
-   "plan": [
-    "CIN",
-    "LA",
-    "HOU",
-    "SEA",
-    "PHI",
-    "IND",
-    "BUF",
-    "JAX",
-    "DEN",
-    "BAL",
-    "GB",
-    "MIN",
-    "DAL",
-    "NE"
-   ]
-  },
-  {
-   "team": "NO",
-   "p_now": 0.5427,
-   "score": 0.0462,
-   "p_season": 0.0462,
-   "p_pool_add": null,
-   "plan": [
-    "DAL",
-    "LA",
-    "HOU",
-    "CIN",
-    "PHI",
-    "IND",
-    "BUF",
-    "DET",
-    "DEN",
-    "SEA",
-    "GB",
-    "BAL",
-    "JAX",
-    "NE"
-   ]
-  },
-  {
-   "team": "ATL",
-   "p_now": 0.4573,
-   "score": 0.0389,
-   "p_season": 0.0389,
-   "p_pool_add": null,
-   "plan": [
-    "DAL",
-    "LA",
-    "HOU",
-    "CIN",
-    "PHI",
-    "IND",
-    "BUF",
-    "DET",
-    "DEN",
-    "SEA",
-    "GB",
-    "BAL",
-    "JAX",
-    "NE"
-   ]
-  },
-  {
-   "team": "CAR",
-   "p_now": 0.3631,
-   "score": 0.031,
-   "p_season": 0.031,
-   "p_pool_add": null,
-   "plan": [
-    "DAL",
-    "LA",
-    "HOU",
-    "CIN",
-    "PHI",
-    "IND",
-    "BUF",
-    "DET",
-    "DEN",
-    "SEA",
-    "GB",
-    "BAL",
-    "JAX",
-    "NE"
-   ]
-  },
-  {
-   "team": "DEN",
-   "p_now": 0.4066,
-   "score": 0.0304,
-   "p_season": 0.0304,
-   "p_pool_add": null,
-   "plan": [
-    "DAL",
-    "LA",
-    "HOU",
-    "CIN",
-    "PHI",
-    "IND",
-    "BUF",
-    "DET",
-    "MIN",
-    "SEA",
-    "GB",
-    "BAL",
-    "JAX",
-    "NE"
-   ]
-  },
-  {
-   "team": "LV",
-   "p_now": 0.3364,
-   "score": 0.0287,
-   "p_season": 0.0287,
-   "p_pool_add": null,
-   "plan": [
-    "DAL",
-    "LA",
-    "HOU",
-    "CIN",
-    "PHI",
-    "IND",
-    "BUF",
-    "DET",
-    "DEN",
-    "SEA",
-    "GB",
-    "BAL",
-    "JAX",
-    "NE"
-   ]
-  },
-  {
-   "team": "MIA",
-   "p_now": 0.1918,
-   "score": 0.0169,
-   "p_season": 0.0169,
    "p_pool_add": null,
    "plan": [
     "DAL",
@@ -773,7 +589,8 @@
    "picks": {
     "1": "LAC",
     "2": "SF",
-    "3": "KC"
+    "3": "KC",
+    "4": "MIN"
    },
    "results": {
     "1": "loss",
@@ -885,15 +702,7 @@
    }
   },
   "options": [
-   "Best season odds: 81% now, and MIN's best spot of the season (next best 74%, wk 16 vs WAS).",
-   "75% now vs 81% for MIN. SEA's 4th-best spot of 14 (best 84% in wk 14 vs NYG), so using it now spends a better week (5.8% season vs 6.5%).",
-   "64% now vs 81% for MIN. DET's 10th-best spot of 14 (best 81% in wk 16 vs NYG), so using it now spends a better week (4.9% season vs 6.5%).",
-   "54% now vs 81% for MIN. NO's 5th-best spot of 14 (best 66% in wk 9 vs CLE), so using it now spends a better week (4.6% season vs 6.5%).",
-   "46% now vs 81% for MIN. ATL's 7th-best spot of 14 (best 63% in wk 6 vs CHI), so using it now spends a better week (3.9% season vs 6.5%).",
-   "36% now vs 81% for MIN. CAR's 11th-best spot of 14 (best 67% in wk 7 vs TB), so using it now spends a better week (3.1% season vs 6.5%).",
-   "41% now vs 81% for MIN. DEN's 14th-best spot of 14 (best 84% in wk 13 vs MIA), so using it now spends a better week (3.0% season vs 6.5%).",
-   "34% now vs 81% for MIN. LV's 8th-best spot of 14 (best 65% in wk 16 vs TEN), so using it now spends a better week (2.9% season vs 6.5%).",
-   "19% now vs 81% for MIN. MIA's 11th-best spot of 14 (best 49% in wk 12 vs NYJ), so using it now spends a better week (1.7% season vs 6.5%)."
+   "Best season odds: 81% now, and MIN's best spot of the season (next best 74%, wk 16 vs WAS)."
   ],
   "entries": {
    "1": "Avg 79% per pick; weakest wk 10 IND 73%."
@@ -1146,6 +955,10 @@
   },
   {
    "generated_at": "2026-10-03T13:12:37-04:00",
+   "picks": "MIN"
+  },
+  {
+   "generated_at": "2026-10-04T13:27:24-04:00",
    "picks": "MIN"
   }
  ]
