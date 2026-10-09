@@ -15,6 +15,7 @@ picks:
     2: SF
     3: KC
     4: MIN
+    5: DAL
   '5':
     1: LAC
   '6':
@@ -35,6 +36,7 @@ picks:
     2: SF
     3: KC
     4: BAL
+    5: DAL
   '11':
     1: LAC
   '12':
@@ -61,6 +63,7 @@ picks:
     2: PHI
     3: KC
     4: MIN
+    5: DAL
   '20':
     1: PIT
     2: SF
@@ -76,6 +79,7 @@ picks:
     2: SF
     3: DET
     4: BAL
+    5: DAL
   '24':
     1: LAC
   '25':
