@@ -22,54 +22,54 @@
   17,
   18
  ],
- "generated_at": "2026-10-13T15:29:19-04:00",
+ "generated_at": "2026-10-13T15:50:24-04:00",
  "ratings_source": "inpredictable",
  "n_lines_posted": 107,
  "n_priced_games": 28,
  "summary": {
-  "p_any": 0.1238,
-  "expected_survivors": 0.1369,
+  "p_any": 0.1257,
+  "expected_survivors": 0.139,
   "n_live": 3,
   "p_each": [
-   0.0728,
-   0.0375,
+   0.074,
+   0.0384,
    0.0266
   ],
-  "p_plugin_first": 0.0728
+  "p_plugin_first": 0.074
  },
  "picks": [
   {
    "entry": "10",
    "team": "LA",
    "opp": "ARI",
-   "p_win": 0.8579,
-   "spread": 12.3935,
+   "p_win": 0.863,
+   "spread": 12.6577,
    "source": "moneyline",
    "kickoff": "Sun 10/18 16:05",
    "status": "new",
    "on_file": null,
-   "score": 0.0728,
-   "p_season": 0.0728
+   "score": 0.074,
+   "p_season": 0.074
   },
   {
    "entry": "23",
    "team": "LA",
    "opp": "ARI",
-   "p_win": 0.8579,
-   "spread": 12.3935,
+   "p_win": 0.863,
+   "spread": 12.6577,
    "source": "moneyline",
    "kickoff": "Sun 10/18 16:05",
    "status": "new",
    "on_file": null,
-   "score": 0.0375,
-   "p_season": 0.0375
+   "score": 0.0384,
+   "p_season": 0.0384
   },
   {
    "entry": "25",
    "team": "LA",
    "opp": "ARI",
-   "p_win": 0.8579,
-   "spread": 12.3935,
+   "p_win": 0.863,
+   "spread": 12.6577,
    "source": "moneyline",
    "kickoff": "Sun 10/18 16:05",
    "status": "new",
@@ -81,12 +81,12 @@
  "options": [
   {
    "team": "LA",
-   "p_now": 0.8579,
-   "score": 0.0728,
-   "p_season": 0.0728,
+   "p_now": 0.863,
+   "score": 0.074,
+   "p_season": 0.074,
    "p_pool_add": null,
    "plan": [
-    "NYJ",
+    "MIN",
     "PIT",
     "CHI",
     "IND",
@@ -103,11 +103,11 @@
   {
    "team": "NE",
    "p_now": 0.76,
-   "score": 0.0672,
-   "p_season": 0.0672,
+   "score": 0.0676,
+   "p_season": 0.0676,
    "p_pool_add": null,
    "plan": [
-    "NYJ",
+    "MIN",
     "PIT",
     "CHI",
     "LA",
@@ -124,11 +124,11 @@
   {
    "team": "IND",
    "p_now": 0.7335,
-   "score": 0.064,
-   "p_season": 0.064,
+   "score": 0.0645,
+   "p_season": 0.0645,
    "p_pool_add": null,
    "plan": [
-    "NYJ",
+    "MIN",
     "PIT",
     "CHI",
     "LA",
@@ -145,11 +145,11 @@
   {
    "team": "BUF",
    "p_now": 0.6854,
-   "score": 0.0576,
-   "p_season": 0.0576,
+   "score": 0.0581,
+   "p_season": 0.0581,
    "p_pool_add": null,
    "plan": [
-    "NYJ",
+    "MIN",
     "CIN",
     "SEA",
     "LA",
@@ -158,7 +158,7 @@
     "DEN",
     "DET",
     "GB",
-    "MIN",
+    "LV",
     "DAL",
     "NE"
    ]
@@ -166,11 +166,11 @@
   {
    "team": "CHI",
    "p_now": 0.6164,
-   "score": 0.0551,
-   "p_season": 0.0551,
+   "score": 0.0555,
+   "p_season": 0.0555,
    "p_pool_add": null,
    "plan": [
-    "NYJ",
+    "MIN",
     "CIN",
     "SEA",
     "LA",
@@ -179,7 +179,7 @@
     "DEN",
     "DET",
     "GB",
-    "MIN",
+    "LV",
     "DAL",
     "NE"
    ]
@@ -187,11 +187,11 @@
   {
    "team": "PIT",
    "p_now": 0.5514,
-   "score": 0.0512,
-   "p_season": 0.0512,
+   "score": 0.0515,
+   "p_season": 0.0515,
    "p_pool_add": null,
    "plan": [
-    "NYJ",
+    "MIN",
     "CIN",
     "CHI",
     "LA",
@@ -208,11 +208,11 @@
   {
    "team": "NO",
    "p_now": 0.5108,
-   "score": 0.049,
-   "p_season": 0.049,
+   "score": 0.0493,
+   "p_season": 0.0493,
    "p_pool_add": null,
    "plan": [
-    "NYJ",
+    "MIN",
     "CIN",
     "CHI",
     "LA",
@@ -229,11 +229,11 @@
   {
    "team": "PHI",
    "p_now": 0.5108,
-   "score": 0.0482,
-   "p_season": 0.0482,
+   "score": 0.0485,
+   "p_season": 0.0485,
    "p_pool_add": null,
    "plan": [
-    "NYJ",
+    "MIN",
     "CIN",
     "CHI",
     "LA",
@@ -250,11 +250,11 @@
   {
    "team": "SEA",
    "p_now": 0.5721,
-   "score": 0.0481,
-   "p_season": 0.0481,
+   "score": 0.0484,
+   "p_season": 0.0484,
    "p_pool_add": null,
    "plan": [
-    "NYJ",
+    "MIN",
     "CIN",
     "CHI",
     "LA",
@@ -263,7 +263,7 @@
     "DEN",
     "DET",
     "GB",
-    "MIN",
+    "LV",
     "DAL",
     "NE"
    ]
@@ -271,11 +271,11 @@
   {
    "team": "NYG",
    "p_now": 0.4892,
-   "score": 0.0474,
-   "p_season": 0.0474,
+   "score": 0.0477,
+   "p_season": 0.0477,
    "p_pool_add": null,
    "plan": [
-    "NYJ",
+    "MIN",
     "CIN",
     "CHI",
     "LA",
@@ -292,11 +292,11 @@
   {
    "team": "GB",
    "p_now": 0.5261,
-   "score": 0.0464,
-   "p_season": 0.0464,
+   "score": 0.0467,
+   "p_season": 0.0467,
    "p_pool_add": null,
    "plan": [
-    "NYJ",
+    "MIN",
     "PIT",
     "CHI",
     "LA",
@@ -313,11 +313,11 @@
   {
    "team": "CAR",
    "p_now": 0.4892,
-   "score": 0.046,
-   "p_season": 0.046,
+   "score": 0.0463,
+   "p_season": 0.0463,
    "p_pool_add": null,
    "plan": [
-    "NYJ",
+    "MIN",
     "CIN",
     "CHI",
     "LA",
@@ -334,11 +334,11 @@
   {
    "team": "TB",
    "p_now": 0.4486,
-   "score": 0.0429,
-   "p_season": 0.0429,
+   "score": 0.0432,
+   "p_season": 0.0432,
    "p_pool_add": null,
    "plan": [
-    "NYJ",
+    "MIN",
     "CIN",
     "CHI",
     "LA",
@@ -355,32 +355,32 @@
   {
    "team": "DAL",
    "p_now": 0.4739,
-   "score": 0.0416,
-   "p_season": 0.0416,
+   "score": 0.0419,
+   "p_season": 0.0419,
    "p_pool_add": null,
    "plan": [
-    "NYJ",
+    "MIN",
     "CIN",
-    "SEA",
-    "LA",
     "CHI",
+    "LA",
+    "BUF",
     "IND",
     "DEN",
-    "DET",
+    "SEA",
     "GB",
-    "MIN",
-    "BUF",
+    "DET",
+    "PIT",
     "NE"
    ]
   },
   {
    "team": "DEN",
    "p_now": 0.4279,
-   "score": 0.0365,
-   "p_season": 0.0365,
+   "score": 0.0367,
+   "p_season": 0.0367,
    "p_pool_add": null,
    "plan": [
-    "NYJ",
+    "MIN",
     "PIT",
     "CHI",
     "LA",
@@ -397,11 +397,11 @@
   {
    "team": "ATL",
    "p_now": 0.3836,
-   "score": 0.0364,
-   "p_season": 0.0364,
+   "score": 0.0367,
+   "p_season": 0.0367,
    "p_pool_add": null,
    "plan": [
-    "NYJ",
+    "MIN",
     "CIN",
     "CHI",
     "LA",
@@ -422,8 +422,8 @@
    "opp": "ARI",
    "home": true,
    "neutral": false,
-   "prob": 0.8579,
-   "spread": 12.3935,
+   "prob": 0.863,
+   "spread": 12.6577,
    "source": "moneyline",
    "kickoff": "2026-10-18T16:05:00-04:00",
    "locked": false,
@@ -773,8 +773,8 @@
    "opp": "LA",
    "home": false,
    "neutral": false,
-   "prob": 0.1421,
-   "spread": -12.3935,
+   "prob": 0.137,
+   "spread": -12.6577,
    "source": "moneyline",
    "kickoff": "2026-10-18T16:05:00-04:00",
    "locked": false,
@@ -832,18 +832,18 @@
    "entry": "10",
    "alive": true,
    "strikes_left": 0,
-   "score": 0.0728,
-   "p_season": 0.0728,
+   "score": 0.074,
+   "p_season": 0.074,
    "path": [
     {
      "week": 6,
      "team": "LA",
-     "p": 0.8579
+     "p": 0.863
     },
     {
      "week": 7,
-     "team": "NYJ",
-     "p": 0.6631
+     "team": "MIN",
+     "p": 0.6876
     },
     {
      "week": 8,
@@ -898,7 +898,7 @@
     {
      "week": 18,
      "team": "NE",
-     "p": 0.7682
+     "p": 0.7681
     }
    ]
   },
@@ -966,18 +966,18 @@
    "entry": "23",
    "alive": true,
    "strikes_left": 0,
-   "score": 0.0375,
-   "p_season": 0.0375,
+   "score": 0.0384,
+   "p_season": 0.0384,
    "path": [
     {
      "week": 6,
      "team": "LA",
-     "p": 0.8579
+     "p": 0.863
     },
     {
      "week": 7,
-     "team": "NYJ",
-     "p": 0.6631
+     "team": "MIN",
+     "p": 0.6876
     },
     {
      "week": 8,
@@ -1021,8 +1021,8 @@
     },
     {
      "week": 16,
-     "team": "MIN",
-     "p": 0.6709
+     "team": "LV",
+     "p": 0.6507
     },
     {
      "week": 17,
@@ -1032,7 +1032,7 @@
     {
      "week": 18,
      "team": "NE",
-     "p": 0.7682
+     "p": 0.7681
     }
    ]
   },
@@ -1051,12 +1051,12 @@
     {
      "week": 6,
      "team": "LA",
-     "p": 0.8579
+     "p": 0.863
     },
     {
      "week": 7,
      "team": "HOU",
-     "p": 0.7769
+     "p": 0.7438
     },
     {
      "week": 8,
@@ -1111,7 +1111,7 @@
     {
      "week": 18,
      "team": "NE",
-     "p": 0.7682
+     "p": 0.7681
     }
    ]
   }
@@ -1616,11 +1616,11 @@
   }
  ],
  "explain": {
-  "summary": "Chance that one of 3 entries wins 13 straight, from simulated seasons in which the pool is spread each week across the best few teams still available to it, in fixed proportions (most entries on the best, some on the second and third), at the lines at the time. Each entry survives 4.56% on average; if they were independent that would be 13.1%, but they share teams, so 12.4%.",
+  "summary": "Chance that one of 3 entries wins 13 straight, from simulated seasons in which the pool is spread each week across the best few teams still available to it, in fixed proportions (most entries on the best, some on the second and third), at the lines at the time. Each entry survives 4.63% on average; if they were independent that would be 13.3%, but they share teams, so 12.6%.",
   "exposure": "Board: 4 teams at 75%+, then 73%. Spreading further would lower P(at least one survives). If ARI wins, 3 entries go out together.",
   "picks": {
    "LA": {
-    "probability": "From the betting odds: LA favoured by 12.4 at home.",
+    "probability": "From the betting odds: LA favoured by 12.7 at home.",
     "timing": "LA's best spot all season; next best is 78% (wk 10 vs ARI).",
     "not_used": "",
     "hedge": ""
@@ -1628,21 +1628,21 @@
   },
   "options": [
    "Best season odds: 86% now, and LA's best spot of the season (next best 78%, wk 10 vs ARI).",
-   "76% now vs 86% for LA. NE's 2nd-best spot of 12 (best 77% in wk 18 vs MIA), so using it now spends a better week (6.7% season vs 7.3%).",
-   "73% now vs 86% for LA. IND's best spot of the season (next best 73%, wk 10 vs MIA), so using it now gives up nothing later; it trails LA only on this week's chance (6.4% season vs 7.3%).",
-   "69% now vs 86% for LA. BUF's 6th-best spot of 12 (best 86% in wk 11 vs MIA), so using it now spends a better week (5.8% season vs 7.3%).",
-   "62% now vs 86% for LA. CHI's 4th-best spot of 12 (best 78% in wk 11 vs NO), so using it now spends a better week (5.5% season vs 7.3%).",
-   "55% now vs 86% for LA. PIT's 4th-best spot of 12 (best 73% in wk 8 vs CLE), so using it now spends a better week (5.1% season vs 7.3%).",
-   "51% now vs 86% for LA. NO's 3rd-best spot of 12 (best 63% in wk 9 vs CLE), so using it now spends a better week (4.9% season vs 7.3%).",
-   "51% now vs 86% for LA. PHI's 6th-best spot of 12 (best 66% in wk 9 vs NYG), so using it now spends a better week (4.8% season vs 7.3%).",
-   "57% now vs 86% for LA. SEA's 9th-best spot of 12 (best 84% in wk 14 vs NYG), so using it now spends a better week (4.8% season vs 7.3%).",
-   "49% now vs 86% for LA. NYG's 2nd-best spot of 12 (best 56% in wk 15 vs CLE), so using it now spends a better week (4.7% season vs 7.3%).",
-   "53% now vs 86% for LA. GB's 5th-best spot of 12 (best 77% in wk 15 vs MIA), so using it now spends a better week (4.6% season vs 7.3%).",
-   "49% now vs 86% for LA. CAR's 7th-best spot of 13 (best 66% in wk 14 vs NO), so using it now spends a better week (4.6% season vs 7.3%).",
-   "45% now vs 86% for LA. TB's 6th-best spot of 12 (best 59% in wk 15 vs NO), so using it now spends a better week (4.3% season vs 7.3%).",
-   "47% now vs 86% for LA. DAL's 9th-best spot of 12 (best 79% in wk 11 vs TEN), so using it now spends a better week (4.2% season vs 7.3%).",
-   "43% now vs 86% for LA. DEN's 12th-best spot of 12 (best 79% in wk 13 vs MIA), so using it now spends a better week (3.6% season vs 7.3%).",
-   "38% now vs 86% for LA. ATL's 7th-best spot of 12 (best 61% in wk 17 vs NO), so using it now spends a better week (3.6% season vs 7.3%)."
+   "76% now vs 86% for LA. NE's 2nd-best spot of 12 (best 77% in wk 18 vs MIA), so using it now spends a better week (6.8% season vs 7.4%).",
+   "73% now vs 86% for LA. IND's best spot of the season (next best 73%, wk 10 vs MIA), so using it now gives up nothing later; it trails LA only on this week's chance (6.5% season vs 7.4%).",
+   "69% now vs 86% for LA. BUF's 6th-best spot of 12 (best 86% in wk 11 vs MIA), so using it now spends a better week (5.8% season vs 7.4%).",
+   "62% now vs 86% for LA. CHI's 4th-best spot of 12 (best 78% in wk 11 vs NO), so using it now spends a better week (5.5% season vs 7.4%).",
+   "55% now vs 86% for LA. PIT's 5th-best spot of 12 (best 73% in wk 8 vs CLE), so using it now spends a better week (5.2% season vs 7.4%).",
+   "51% now vs 86% for LA. NO's 3rd-best spot of 12 (best 63% in wk 9 vs CLE), so using it now spends a better week (4.9% season vs 7.4%).",
+   "51% now vs 86% for LA. PHI's 6th-best spot of 12 (best 66% in wk 9 vs NYG), so using it now spends a better week (4.9% season vs 7.4%).",
+   "57% now vs 86% for LA. SEA's 9th-best spot of 12 (best 84% in wk 14 vs NYG), so using it now spends a better week (4.8% season vs 7.4%).",
+   "49% now vs 86% for LA. NYG's 2nd-best spot of 12 (best 56% in wk 15 vs CLE), so using it now spends a better week (4.8% season vs 7.4%).",
+   "53% now vs 86% for LA. GB's 5th-best spot of 12 (best 77% in wk 15 vs MIA), so using it now spends a better week (4.7% season vs 7.4%).",
+   "49% now vs 86% for LA. CAR's 7th-best spot of 13 (best 66% in wk 14 vs NO), so using it now spends a better week (4.6% season vs 7.4%).",
+   "45% now vs 86% for LA. TB's 6th-best spot of 12 (best 59% in wk 15 vs NO), so using it now spends a better week (4.3% season vs 7.4%).",
+   "47% now vs 86% for LA. DAL's 9th-best spot of 12 (best 79% in wk 11 vs TEN), so using it now spends a better week (4.2% season vs 7.4%).",
+   "43% now vs 86% for LA. DEN's 12th-best spot of 12 (best 79% in wk 13 vs MIA), so using it now spends a better week (3.7% season vs 7.4%).",
+   "38% now vs 86% for LA. ATL's 7th-best spot of 12 (best 61% in wk 17 vs NO), so using it now spends a better week (3.7% season vs 7.4%)."
   ],
   "entries": {
    "1": "",
@@ -1654,7 +1654,7 @@
    "7": "",
    "8": "",
    "9": "",
-   "10": "Avg 77% per pick; weakest wk 7 NYJ 66%.",
+   "10": "Avg 78% per pick; weakest wk 7 MIN 69%.",
    "11": "",
    "12": "",
    "13": "",
@@ -1667,7 +1667,7 @@
    "20": "",
    "21": "",
    "22": "",
-   "23": "Avg 77% per pick; weakest wk 7 NYJ 66%.",
+   "23": "Avg 77% per pick; weakest wk 16 LV 65%.",
    "24": "",
    "25": "Avg 77% per pick; weakest wk 12 IND 71%."
   },
@@ -1685,194 +1685,194 @@
   "ARI": {
    "bye": 0.0,
    "locked": 0.0001,
-   "out": 0.9802,
-   "points": 1.0496
+   "out": 0.9804,
+   "points": 1.0499
   },
   "ATL": {
-   "bye": 0.0005,
-   "locked": 0.0418,
-   "out": 0.5124,
-   "points": 0.8412
+   "bye": 0.0006,
+   "locked": 0.0424,
+   "out": 0.5087,
+   "points": 0.8417
   },
   "BAL": {
-   "bye": 0.0241,
-   "locked": 0.0332,
-   "out": 0.1331,
-   "points": 0.6018
+   "bye": 0.0239,
+   "locked": 0.0334,
+   "out": 0.1347,
+   "points": 0.604
   },
   "BUF": {
-   "bye": 0.0808,
-   "locked": 0.0592,
-   "out": 0.0365,
-   "points": 1.2228
+   "bye": 0.0805,
+   "locked": 0.0584,
+   "out": 0.0369,
+   "points": 1.215
   },
   "CAR": {
    "bye": 0.0031,
-   "locked": 0.1033,
-   "out": 0.2902,
-   "points": 1.0516
+   "locked": 0.1026,
+   "out": 0.2877,
+   "points": 1.0444
   },
   "CHI": {
-   "bye": 0.0072,
-   "locked": 0.0371,
-   "out": 0.2873,
-   "points": 0.632
+   "bye": 0.0064,
+   "locked": 0.0363,
+   "out": 0.2916,
+   "points": 0.6237
   },
   "CIN": {
-   "bye": 0.0117,
-   "locked": 0.037,
-   "out": 0.1538,
-   "points": 0.5319
+   "bye": 0.0118,
+   "locked": 0.0379,
+   "out": 0.1527,
+   "points": 0.5382
   },
   "CLE": {
    "bye": 0.0003,
    "locked": 0.0053,
-   "out": 0.7084,
-   "points": 0.7972
+   "out": 0.7046,
+   "points": 0.793
   },
   "DAL": {
    "bye": 0.0014,
-   "locked": 0.0987,
-   "out": 0.3045,
-   "points": 1.0193
+   "locked": 0.098,
+   "out": 0.306,
+   "points": 1.0162
   },
   "DEN": {
-   "bye": 0.0074,
-   "locked": 0.0512,
-   "out": 0.2179,
-   "points": 0.6572
+   "bye": 0.0081,
+   "locked": 0.0519,
+   "out": 0.2152,
+   "points": 0.6661
   },
   "DET": {
-   "bye": 0.037,
-   "locked": 0.0516,
-   "out": 0.138,
-   "points": 0.8582
+   "bye": 0.0381,
+   "locked": 0.0525,
+   "out": 0.1377,
+   "points": 0.8744
   },
   "GB": {
-   "bye": 0.003,
-   "locked": 0.0172,
+   "bye": 0.0029,
+   "locked": 0.0169,
    "out": 0.434,
-   "points": 0.6116
+   "points": 0.6087
   },
   "HOU": {
    "bye": 0.0001,
-   "locked": 0.0093,
-   "out": 0.5697,
-   "points": 0.6741
+   "locked": 0.0091,
+   "out": 0.5755,
+   "points": 0.6788
   },
   "IND": {
    "bye": 0.0002,
-   "locked": 0.013,
-   "out": 0.535,
-   "points": 0.6639
+   "locked": 0.0127,
+   "out": 0.5405,
+   "points": 0.6671
   },
   "JAX": {
-   "bye": 0.0899,
-   "locked": 0.0625,
-   "out": 0.0221,
-   "points": 1.3175
+   "bye": 0.0895,
+   "locked": 0.0632,
+   "out": 0.0219,
+   "points": 1.3186
   },
   "KC": {
    "bye": 0.1285,
-   "locked": 0.0481,
-   "out": 0.024,
-   "points": 1.5906
+   "locked": 0.0483,
+   "out": 0.0245,
+   "points": 1.5921
   },
   "LA": {
-   "bye": 0.0149,
-   "locked": 0.0614,
-   "out": 0.1544,
-   "points": 0.7308
+   "bye": 0.015,
+   "locked": 0.061,
+   "out": 0.1536,
+   "points": 0.7284
   },
   "LAC": {
    "bye": 0.0,
    "locked": 0.0003,
-   "out": 0.9588,
-   "points": 1.0279
+   "out": 0.9589,
+   "points": 1.0278
   },
   "LV": {
    "bye": 0.0003,
-   "locked": 0.0106,
-   "out": 0.5957,
-   "points": 0.7131
+   "locked": 0.0107,
+   "out": 0.5951,
+   "points": 0.713
   },
   "MIA": {
    "bye": 0.0,
    "locked": 0.0001,
-   "out": 0.9902,
-   "points": 1.0601
+   "out": 0.9897,
+   "points": 1.0594
   },
   "MIN": {
-   "bye": 0.0942,
-   "locked": 0.054,
-   "out": 0.0691,
-   "points": 1.3501
+   "bye": 0.0961,
+   "locked": 0.0539,
+   "out": 0.0664,
+   "points": 1.3648
   },
   "NE": {
-   "bye": 0.0105,
-   "locked": 0.0543,
-   "out": 0.1862,
-   "points": 0.6736
+   "bye": 0.0107,
+   "locked": 0.0548,
+   "out": 0.1825,
+   "points": 0.6755
   },
   "NO": {
    "bye": 0.0,
-   "locked": 0.0162,
-   "out": 0.7972,
-   "points": 0.9648
+   "locked": 0.0161,
+   "out": 0.8007,
+   "points": 0.9678
   },
   "NYG": {
    "bye": 0.0002,
-   "locked": 0.0217,
-   "out": 0.6924,
-   "points": 0.8922
+   "locked": 0.0223,
+   "out": 0.6883,
+   "points": 0.8923
   },
   "NYJ": {
    "bye": 0.0002,
-   "locked": 0.0061,
-   "out": 0.7374,
-   "points": 0.833
+   "locked": 0.0062,
+   "out": 0.7402,
+   "points": 0.8361
   },
   "PHI": {
    "bye": 0.0007,
    "locked": 0.0656,
-   "out": 0.4671,
-   "points": 0.9585
+   "out": 0.468,
+   "points": 0.9591
   },
   "PIT": {
-   "bye": 0.0023,
-   "locked": 0.0176,
-   "out": 0.3428,
-   "points": 0.51
+   "bye": 0.0022,
+   "locked": 0.0181,
+   "out": 0.3409,
+   "points": 0.5101
   },
   "SEA": {
-   "bye": 0.0245,
-   "locked": 0.0608,
-   "out": 0.1349,
-   "points": 0.7981
+   "bye": 0.0247,
+   "locked": 0.0609,
+   "out": 0.1345,
+   "points": 0.8009
   },
   "SF": {
-   "bye": 0.214,
-   "locked": 0.0396,
-   "out": 0.022,
-   "points": 2.3505
+   "bye": 0.2093,
+   "locked": 0.0401,
+   "out": 0.0232,
+   "points": 2.311
   },
   "TB": {
    "bye": 0.0,
-   "locked": 0.0243,
-   "out": 0.7597,
-   "points": 0.98
+   "locked": 0.0237,
+   "out": 0.7645,
+   "points": 0.9814
   },
   "TEN": {
    "bye": 0.0,
    "locked": 0.0,
-   "out": 0.9903,
-   "points": 1.0599
+   "out": 0.9905,
+   "points": 1.06
   },
   "WAS": {
    "bye": 0.0,
-   "locked": 0.0051,
-   "out": 0.8603,
-   "points": 0.9557
+   "locked": 0.005,
+   "out": 0.8606,
+   "points": 0.955
   }
  },
  "horizon": 1,
@@ -1895,6 +1895,10 @@
   },
   {
    "generated_at": "2026-10-13T13:46:46-04:00",
+   "picks": "LA x3"
+  },
+  {
+   "generated_at": "2026-10-13T15:29:19-04:00",
    "picks": "LA x3"
   }
  ]
