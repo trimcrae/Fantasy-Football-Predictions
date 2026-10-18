@@ -37,6 +37,7 @@ picks:
     3: KC
     4: BAL
     5: HOU
+    6: LA
   '11':
     1: LAC
   '12':
@@ -81,6 +82,7 @@ picks:
     3: DET
     4: BAL
     5: HOU
+    6: LA
   '24':
     1: LAC
   '25':
@@ -89,3 +91,4 @@ picks:
     3: KC
     4: MIN
     5: CIN
+    6: LA
