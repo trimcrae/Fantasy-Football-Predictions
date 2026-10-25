@@ -4,7 +4,7 @@
 - team: BAL
   player: Lamar Jackson
   penalty: 3.5
-  status: questionable
+  status: out
   injury: ankle
   injured_week: 7
   note: 'auto: nflverse injury report, average tier'
