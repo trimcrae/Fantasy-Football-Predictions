@@ -1,0 +1,715 @@
+{
+ "schema": 1,
+ "pool": "strikes2",
+ "name": "single entry, two strikes",
+ "mode": "strikes",
+ "entries": 1,
+ "strikes": 2,
+ "season": 2026,
+ "week": 8,
+ "planning_weeks": [
+  8,
+  9,
+  10,
+  11,
+  12,
+  13,
+  14,
+  15,
+  16,
+  17,
+  18
+ ],
+ "generated_at": "2026-10-27T06:00:31-04:00",
+ "ratings_source": "inpredictable",
+ "n_lines_posted": 121,
+ "n_priced_games": 14,
+ "summary": {
+  "p_any": 0.0,
+  "expected_survivors": 0.0,
+  "n_live": 0,
+  "p_each": []
+ },
+ "picks": [],
+ "options": [],
+ "board": [
+  {
+   "team": "CIN",
+   "opp": "TEN",
+   "home": true,
+   "neutral": false,
+   "prob": 0.8223,
+   "spread": 10.6946,
+   "source": "moneyline",
+   "kickoff": "2026-11-01T13:00:00-05:00",
+   "locked": false,
+   "played": false,
+   "qb_note": ""
+  },
+  {
+   "team": "JAX",
+   "opp": "IND",
+   "home": true,
+   "neutral": false,
+   "prob": 0.7659,
+   "spread": 8.3935,
+   "source": "moneyline",
+   "kickoff": "2026-11-01T13:00:00-05:00",
+   "locked": false,
+   "played": false,
+   "qb_note": ""
+  },
+  {
+   "team": "NE",
+   "opp": "MIA",
+   "home": false,
+   "neutral": false,
+   "prob": 0.7659,
+   "spread": 8.3935,
+   "source": "moneyline",
+   "kickoff": "2026-11-01T16:25:00-05:00",
+   "locked": false,
+   "played": false,
+   "qb_note": ""
+  },
+  {
+   "team": "DAL",
+   "opp": "ARI",
+   "home": true,
+   "neutral": false,
+   "prob": 0.718,
+   "spread": 6.6741,
+   "source": "moneyline",
+   "kickoff": "2026-11-01T13:00:00-05:00",
+   "locked": false,
+   "played": false,
+   "qb_note": ""
+  },
+  {
+   "team": "LA",
+   "opp": "LAC",
+   "home": true,
+   "neutral": false,
+   "prob": 0.7095,
+   "spread": 6.3875,
+   "source": "moneyline",
+   "kickoff": "2026-11-01T16:05:00-05:00",
+   "locked": false,
+   "played": false,
+   "qb_note": ""
+  },
+  {
+   "team": "WAS",
+   "opp": "PHI",
+   "home": true,
+   "neutral": false,
+   "prob": 0.6447,
+   "spread": 4.2942,
+   "source": "moneyline",
+   "kickoff": "2026-11-01T20:20:00-05:00",
+   "locked": false,
+   "played": false,
+   "qb_note": ""
+  },
+  {
+   "team": "BUF",
+   "opp": "BAL",
+   "home": true,
+   "neutral": false,
+   "prob": 0.6309,
+   "spread": 3.8685,
+   "source": "moneyline",
+   "kickoff": "2026-11-01T13:00:00-05:00",
+   "locked": false,
+   "played": false,
+   "qb_note": ""
+  },
+  {
+   "team": "GB",
+   "opp": "CAR",
+   "home": true,
+   "neutral": false,
+   "prob": 0.6225,
+   "spread": 3.6096,
+   "source": "moneyline",
+   "kickoff": "2026-10-29T20:15:00-04:00",
+   "locked": false,
+   "played": false,
+   "qb_note": ""
+  },
+  {
+   "team": "PIT",
+   "opp": "CLE",
+   "home": true,
+   "neutral": false,
+   "prob": 0.6164,
+   "spread": 3.4265,
+   "source": "moneyline",
+   "kickoff": "2026-11-01T13:00:00-05:00",
+   "locked": false,
+   "played": false,
+   "qb_note": ""
+  },
+  {
+   "team": "DET",
+   "opp": "MIN",
+   "home": true,
+   "neutral": false,
+   "prob": 0.6038,
+   "spread": 3.044,
+   "source": "moneyline",
+   "kickoff": "2026-11-01T13:00:00-05:00",
+   "locked": false,
+   "played": false,
+   "qb_note": ""
+  },
+  {
+   "team": "SEA",
+   "opp": "CHI",
+   "home": true,
+   "neutral": false,
+   "prob": 0.6038,
+   "spread": 3.044,
+   "source": "moneyline",
+   "kickoff": "2026-11-02T20:15:00-05:00",
+   "locked": false,
+   "played": false,
+   "qb_note": ""
+  },
+  {
+   "team": "TB",
+   "opp": "ATL",
+   "home": true,
+   "neutral": false,
+   "prob": 0.5514,
+   "spread": 1.4961,
+   "source": "moneyline",
+   "kickoff": "2026-11-01T13:00:00-05:00",
+   "locked": false,
+   "played": false,
+   "qb_note": ""
+  },
+  {
+   "team": "KC",
+   "opp": "DEN",
+   "home": false,
+   "neutral": false,
+   "prob": 0.5325,
+   "spread": 0.9427,
+   "source": "moneyline",
+   "kickoff": "2026-11-01T16:25:00-05:00",
+   "locked": false,
+   "played": false,
+   "qb_note": ""
+  },
+  {
+   "team": "NYJ",
+   "opp": "LV",
+   "home": true,
+   "neutral": false,
+   "prob": 0.5,
+   "spread": 0.0,
+   "source": "moneyline",
+   "kickoff": "2026-11-01T13:00:00-05:00",
+   "locked": false,
+   "played": false,
+   "qb_note": ""
+  },
+  {
+   "team": "LV",
+   "opp": "NYJ",
+   "home": false,
+   "neutral": false,
+   "prob": 0.5,
+   "spread": -0.0,
+   "source": "moneyline",
+   "kickoff": "2026-11-01T13:00:00-05:00",
+   "locked": false,
+   "played": false,
+   "qb_note": ""
+  },
+  {
+   "team": "DEN",
+   "opp": "KC",
+   "home": true,
+   "neutral": false,
+   "prob": 0.4675,
+   "spread": -0.9427,
+   "source": "moneyline",
+   "kickoff": "2026-11-01T16:25:00-05:00",
+   "locked": false,
+   "played": false,
+   "qb_note": ""
+  },
+  {
+   "team": "ATL",
+   "opp": "TB",
+   "home": false,
+   "neutral": false,
+   "prob": 0.4486,
+   "spread": -1.4961,
+   "source": "moneyline",
+   "kickoff": "2026-11-01T13:00:00-05:00",
+   "locked": false,
+   "played": false,
+   "qb_note": ""
+  },
+  {
+   "team": "MIN",
+   "opp": "DET",
+   "home": false,
+   "neutral": false,
+   "prob": 0.3962,
+   "spread": -3.044,
+   "source": "moneyline",
+   "kickoff": "2026-11-01T13:00:00-05:00",
+   "locked": false,
+   "played": false,
+   "qb_note": ""
+  },
+  {
+   "team": "CHI",
+   "opp": "SEA",
+   "home": false,
+   "neutral": false,
+   "prob": 0.3962,
+   "spread": -3.044,
+   "source": "moneyline",
+   "kickoff": "2026-11-02T20:15:00-05:00",
+   "locked": false,
+   "played": false,
+   "qb_note": ""
+  },
+  {
+   "team": "CLE",
+   "opp": "PIT",
+   "home": false,
+   "neutral": false,
+   "prob": 0.3836,
+   "spread": -3.4265,
+   "source": "moneyline",
+   "kickoff": "2026-11-01T13:00:00-05:00",
+   "locked": false,
+   "played": false,
+   "qb_note": ""
+  },
+  {
+   "team": "CAR",
+   "opp": "GB",
+   "home": false,
+   "neutral": false,
+   "prob": 0.3775,
+   "spread": -3.6096,
+   "source": "moneyline",
+   "kickoff": "2026-10-29T20:15:00-04:00",
+   "locked": false,
+   "played": false,
+   "qb_note": ""
+  },
+  {
+   "team": "BAL",
+   "opp": "BUF",
+   "home": false,
+   "neutral": false,
+   "prob": 0.3691,
+   "spread": -3.8685,
+   "source": "moneyline",
+   "kickoff": "2026-11-01T13:00:00-05:00",
+   "locked": false,
+   "played": false,
+   "qb_note": ""
+  },
+  {
+   "team": "PHI",
+   "opp": "WAS",
+   "home": false,
+   "neutral": false,
+   "prob": 0.3553,
+   "spread": -4.2942,
+   "source": "moneyline",
+   "kickoff": "2026-11-01T20:20:00-05:00",
+   "locked": false,
+   "played": false,
+   "qb_note": ""
+  },
+  {
+   "team": "LAC",
+   "opp": "LA",
+   "home": false,
+   "neutral": false,
+   "prob": 0.2905,
+   "spread": -6.3875,
+   "source": "moneyline",
+   "kickoff": "2026-11-01T16:05:00-05:00",
+   "locked": false,
+   "played": false,
+   "qb_note": ""
+  },
+  {
+   "team": "ARI",
+   "opp": "DAL",
+   "home": false,
+   "neutral": false,
+   "prob": 0.282,
+   "spread": -6.6741,
+   "source": "moneyline",
+   "kickoff": "2026-11-01T13:00:00-05:00",
+   "locked": false,
+   "played": false,
+   "qb_note": ""
+  },
+  {
+   "team": "IND",
+   "opp": "JAX",
+   "home": false,
+   "neutral": false,
+   "prob": 0.2341,
+   "spread": -8.3935,
+   "source": "moneyline",
+   "kickoff": "2026-11-01T13:00:00-05:00",
+   "locked": false,
+   "played": false,
+   "qb_note": ""
+  },
+  {
+   "team": "MIA",
+   "opp": "NE",
+   "home": true,
+   "neutral": false,
+   "prob": 0.2341,
+   "spread": -8.3935,
+   "source": "moneyline",
+   "kickoff": "2026-11-01T16:25:00-05:00",
+   "locked": false,
+   "played": false,
+   "qb_note": ""
+  },
+  {
+   "team": "TEN",
+   "opp": "CIN",
+   "home": false,
+   "neutral": false,
+   "prob": 0.1777,
+   "spread": -10.6946,
+   "source": "moneyline",
+   "kickoff": "2026-11-01T13:00:00-05:00",
+   "locked": false,
+   "played": false,
+   "qb_note": ""
+  }
+ ],
+ "plans": [
+  {
+   "entry": "1",
+   "alive": false,
+   "strikes_left": 0
+  }
+ ],
+ "statuses": [
+  {
+   "entry": "1",
+   "alive": false,
+   "losses": 4,
+   "picks": {
+    "1": "LAC",
+    "2": "SF",
+    "3": "KC",
+    "4": "MIN",
+    "5": "DAL"
+   },
+   "results": {
+    "1": "loss",
+    "2": "win",
+    "3": "win",
+    "4": "win",
+    "5": "loss",
+    "6": "missed",
+    "7": "missed"
+   }
+  }
+ ],
+ "ratings": {
+  "ARI": -4.5584,
+  "ATL": -0.5369,
+  "BAL": 2.4566,
+  "BUF": 3.9266,
+  "CAR": -0.3584,
+  "CHI": 3.7416,
+  "CIN": 4.0416,
+  "CLE": -2.5584,
+  "DAL": 0.6416,
+  "DEN": 2.1416,
+  "DET": 3.4416,
+  "GB": 1.4416,
+  "HOU": 1.5416,
+  "IND": -1.7584,
+  "JAX": 4.6416,
+  "KC": 4.5416,
+  "LA": 4.4416,
+  "LAC": -1.5584,
+  "LV": -2.9584,
+  "MIA": -6.4584,
+  "MIN": 2.3416,
+  "NE": 2.7416,
+  "NO": -2.6584,
+  "NYG": -7.6584,
+  "NYJ": -3.6584,
+  "PHI": -6.3584,
+  "PIT": 0.1416,
+  "SEA": 5.0416,
+  "SF": 2.5416,
+  "TB": -0.1099,
+  "TEN": -5.1584,
+  "WAS": -3.4584
+ },
+ "qb_situations": [
+  {
+   "team": "BAL",
+   "player": "Lamar Jackson",
+   "status": "out",
+   "injury": "ankle",
+   "penalty": 3.5,
+   "injured_week": 7,
+   "return_week": null,
+   "source": "auto",
+   "p_out": {
+    "8": 0.6,
+    "9": 0.35,
+    "10": 0.15,
+    "11": 0.07
+   }
+  },
+  {
+   "team": "TB",
+   "player": "Baker Mayfield",
+   "status": "questionable",
+   "injury": "thumb",
+   "penalty": 3.5,
+   "injured_week": 7,
+   "return_week": null,
+   "source": "auto",
+   "p_out": {
+    "8": 0.34,
+    "9": 0.26,
+    "11": 0.18,
+    "12": 0.12,
+    "13": 0.06,
+    "14": 0.032
+   }
+  }
+ ],
+ "explain": {
+  "summary": "No entries alive.",
+  "exposure": "",
+  "picks": {},
+  "options": [],
+  "entries": {
+   "1": ""
+  },
+  "notes": [
+   "Games with no line yet use inpredictable's betting-market power ratings.",
+   "Week 18: in each simulated season a team whose playoff seed is settled after week 17 is docked 10 points for a bye or 7 for a seed with a wild-card game, and an eliminated team 1, fitted on 2011-2025 closing lines. Right now MIN is the likeliest to be resting (21%).",
+   "How much a posted line can still move is fitted from 2055 archived lines (about 2.2 pts one week out).",
+   "Later weeks are not planned as named teams: season odds assume the entry takes the best team still available each week at the line at the time. Simulated spreads widen as the season goes on, as real ones do, so the later menu is richer than today's board.",
+   "Survival percentages come from 50,000 simulated seasons; differences under about 0.09 points are noise.",
+   "A tie is a loss. Only this week's pick is a recommendation; later weeks re-solve every run."
+  ]
+ },
+ "allocation_view": "policy",
+ "week18_rest": {
+  "ARI": {
+   "bye": 0.0,
+   "locked": 0.0001,
+   "out": 0.956,
+   "points": 1.0237
+  },
+  "ATL": {
+   "bye": 0.0002,
+   "locked": 0.0575,
+   "out": 0.4401,
+   "points": 0.8691
+  },
+  "BAL": {
+   "bye": 0.0017,
+   "locked": 0.0131,
+   "out": 0.3404,
+   "points": 0.4705
+  },
+  "BUF": {
+   "bye": 0.0831,
+   "locked": 0.0485,
+   "out": 0.0346,
+   "points": 1.1689
+  },
+  "CAR": {
+   "bye": 0.0005,
+   "locked": 0.0649,
+   "out": 0.3832,
+   "points": 0.8626
+  },
+  "CHI": {
+   "bye": 0.0198,
+   "locked": 0.0633,
+   "out": 0.1232,
+   "points": 0.7578
+  },
+  "CIN": {
+   "bye": 0.0332,
+   "locked": 0.0263,
+   "out": 0.071,
+   "points": 0.5763
+  },
+  "CLE": {
+   "bye": 0.0036,
+   "locked": 0.016,
+   "out": 0.2717,
+   "points": 0.4354
+  },
+  "DAL": {
+   "bye": 0.0001,
+   "locked": 0.189,
+   "out": 0.1252,
+   "points": 1.437
+  },
+  "DEN": {
+   "bye": 0.0257,
+   "locked": 0.0544,
+   "out": 0.1019,
+   "points": 0.7308
+  },
+  "DET": {
+   "bye": 0.0442,
+   "locked": 0.0448,
+   "out": 0.0947,
+   "points": 0.8343
+  },
+  "GB": {
+   "bye": 0.0012,
+   "locked": 0.0151,
+   "out": 0.3939,
+   "points": 0.5373
+  },
+  "HOU": {
+   "bye": 0.0,
+   "locked": 0.0123,
+   "out": 0.6291,
+   "points": 0.7577
+  },
+  "IND": {
+   "bye": 0.0,
+   "locked": 0.0042,
+   "out": 0.8043,
+   "points": 0.8898
+  },
+  "JAX": {
+   "bye": 0.0321,
+   "locked": 0.1074,
+   "out": 0.0275,
+   "points": 1.0775
+  },
+  "KC": {
+   "bye": 0.1274,
+   "locked": 0.0454,
+   "out": 0.0252,
+   "points": 1.5628
+  },
+  "LA": {
+   "bye": 0.0006,
+   "locked": 0.017,
+   "out": 0.3741,
+   "points": 0.5227
+  },
+  "LAC": {
+   "bye": 0.0,
+   "locked": 0.0001,
+   "out": 0.9761,
+   "points": 1.0448
+  },
+  "LV": {
+   "bye": 0.0,
+   "locked": 0.003,
+   "out": 0.7543,
+   "points": 0.8281
+  },
+  "MIA": {
+   "bye": 0.0,
+   "locked": 0.0001,
+   "out": 0.9883,
+   "points": 1.0582
+  },
+  "MIN": {
+   "bye": 0.1749,
+   "locked": 0.037,
+   "out": 0.0256,
+   "points": 1.9617
+  },
+  "NE": {
+   "bye": 0.0101,
+   "locked": 0.0473,
+   "out": 0.1796,
+   "points": 0.6149
+  },
+  "NO": {
+   "bye": 0.0,
+   "locked": 0.013,
+   "out": 0.7906,
+   "points": 0.9357
+  },
+  "NYG": {
+   "bye": 0.0,
+   "locked": 0.0284,
+   "out": 0.6742,
+   "points": 0.9175
+  },
+  "NYJ": {
+   "bye": 0.0,
+   "locked": 0.0008,
+   "out": 0.9038,
+   "points": 0.9729
+  },
+  "PHI": {
+   "bye": 0.0,
+   "locked": 0.0071,
+   "out": 0.8541,
+   "points": 0.9629
+  },
+  "PIT": {
+   "bye": 0.0084,
+   "locked": 0.0238,
+   "out": 0.2178,
+   "points": 0.4774
+  },
+  "SEA": {
+   "bye": 0.0149,
+   "locked": 0.0542,
+   "out": 0.1028,
+   "points": 0.6266
+  },
+  "SF": {
+   "bye": 0.1195,
+   "locked": 0.0679,
+   "out": 0.025,
+   "points": 1.6421
+  },
+  "TB": {
+   "bye": 0.0,
+   "locked": 0.0366,
+   "out": 0.6475,
+   "points": 0.9453
+  },
+  "TEN": {
+   "bye": 0.0,
+   "locked": 0.0004,
+   "out": 0.9858,
+   "points": 1.0574
+  },
+  "WAS": {
+   "bye": 0.0,
+   "locked": 0.0055,
+   "out": 0.8594,
+   "points": 0.9576
+  }
+ },
+ "horizon": 1,
+ "revisions": []
+}
