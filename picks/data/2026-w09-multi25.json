@@ -19,7 +19,7 @@
   17,
   18
  ],
- "generated_at": "2026-11-03T11:28:30-05:00",
+ "generated_at": "2026-11-03T13:00:18-05:00",
  "ratings_source": "market",
  "n_lines_posted": 136,
  "n_priced_games": 15,
@@ -37,8 +37,8 @@
    "opp": "ARI",
    "home": true,
    "neutral": false,
-   "prob": 0.8271,
-   "spread": 10.9094,
+   "prob": 0.8223,
+   "spread": 10.6946,
    "source": "moneyline",
    "kickoff": "2026-11-08T16:25:00-05:00",
    "locked": false,
@@ -76,8 +76,8 @@
    "opp": "BAL",
    "home": false,
    "neutral": false,
-   "prob": 0.7958,
-   "spread": 9.5645,
+   "prob": 0.7914,
+   "spread": 9.3855,
    "source": "moneyline",
    "kickoff": "2026-11-05T20:15:00-05:00",
    "locked": false,
@@ -89,8 +89,8 @@
    "opp": "MIA",
    "home": false,
    "neutral": false,
-   "prob": 0.7478,
-   "spread": 7.7237,
+   "prob": 0.7508,
+   "spread": 7.8338,
    "source": "moneyline",
    "kickoff": "2026-11-08T13:00:00-05:00",
    "locked": false,
@@ -154,8 +154,8 @@
    "opp": "MIN",
    "home": false,
    "neutral": false,
-   "prob": 0.6225,
-   "spread": 3.6096,
+   "prob": 0.6164,
+   "spread": 3.4265,
    "source": "moneyline",
    "kickoff": "2026-11-09T20:15:00-05:00",
    "locked": false,
@@ -297,8 +297,8 @@
    "opp": "BUF",
    "home": true,
    "neutral": false,
-   "prob": 0.3775,
-   "spread": -3.6096,
+   "prob": 0.3836,
+   "spread": -3.4265,
    "source": "moneyline",
    "kickoff": "2026-11-09T20:15:00-05:00",
    "locked": false,
@@ -362,8 +362,8 @@
    "opp": "DET",
    "home": true,
    "neutral": false,
-   "prob": 0.2522,
-   "spread": -7.7237,
+   "prob": 0.2492,
+   "spread": -7.8338,
    "source": "moneyline",
    "kickoff": "2026-11-08T13:00:00-05:00",
    "locked": false,
@@ -375,8 +375,8 @@
    "opp": "JAX",
    "home": true,
    "neutral": false,
-   "prob": 0.2042,
-   "spread": -9.5645,
+   "prob": 0.2086,
+   "spread": -9.3855,
    "source": "moneyline",
    "kickoff": "2026-11-05T20:15:00-05:00",
    "locked": false,
@@ -414,8 +414,8 @@
    "opp": "SEA",
    "home": false,
    "neutral": false,
-   "prob": 0.1729,
-   "spread": -10.9094,
+   "prob": 0.1777,
+   "spread": -10.6946,
    "source": "moneyline",
    "kickoff": "2026-11-08T16:25:00-05:00",
    "locked": false,
@@ -1121,8 +1121,8 @@
   "ARI": {
    "bye": 0.0,
    "locked": 0.0003,
-   "out": 0.8981,
-   "points": 0.9632
+   "out": 0.8972,
+   "points": 0.9622
   },
   "ATL": {
    "bye": 0.0,
@@ -1133,38 +1133,38 @@
   "BAL": {
    "bye": 0.0,
    "locked": 0.0043,
-   "out": 0.5668,
-   "points": 0.6362
+   "out": 0.5656,
+   "points": 0.6351
   },
   "BUF": {
-   "bye": 0.1308,
+   "bye": 0.1304,
    "locked": 0.0395,
-   "out": 0.0092,
-   "points": 1.538
+   "out": 0.0093,
+   "points": 1.5341
   },
   "CAR": {
    "bye": 0.0001,
    "locked": 0.0562,
    "out": 0.416,
-   "points": 0.8334
+   "points": 0.8333
   },
   "CHI": {
-   "bye": 0.0364,
+   "bye": 0.0363,
    "locked": 0.0465,
    "out": 0.0749,
-   "points": 0.7494
+   "points": 0.7487
   },
   "CIN": {
-   "bye": 0.0182,
+   "bye": 0.0183,
    "locked": 0.0296,
    "out": 0.0554,
-   "points": 0.4382
+   "points": 0.4388
   },
   "CLE": {
    "bye": 0.0001,
    "locked": 0.0092,
-   "out": 0.4138,
-   "points": 0.5073
+   "out": 0.414,
+   "points": 0.5075
   },
   "DAL": {
    "bye": 0.0,
@@ -1173,27 +1173,27 @@
    "points": 0.9892
   },
   "DEN": {
-   "bye": 0.0508,
-   "locked": 0.0391,
+   "bye": 0.051,
+   "locked": 0.039,
    "out": 0.0245,
-   "points": 0.7836
+   "points": 0.7848
   },
   "DET": {
-   "bye": 0.0966,
+   "bye": 0.0967,
    "locked": 0.0412,
-   "out": 0.0443,
-   "points": 1.2593
+   "out": 0.0441,
+   "points": 1.2595
   },
   "GB": {
-   "bye": 0.0021,
+   "bye": 0.0022,
    "locked": 0.017,
-   "out": 0.2949,
-   "points": 0.4533
+   "out": 0.2948,
+   "points": 0.4531
   },
   "HOU": {
    "bye": 0.0,
    "locked": 0.0105,
-   "out": 0.5158,
+   "out": 0.5159,
    "points": 0.6245
   },
   "IND": {
@@ -1204,51 +1204,51 @@
   },
   "JAX": {
    "bye": 0.0434,
-   "locked": 0.0748,
-   "out": 0.0075,
-   "points": 0.9399
+   "locked": 0.075,
+   "out": 0.0076,
+   "points": 0.9416
   },
   "KC": {
-   "bye": 0.0254,
-   "locked": 0.0577,
+   "bye": 0.0255,
+   "locked": 0.0576,
    "out": 0.0399,
-   "points": 0.684
+   "points": 0.6844
   },
   "LA": {
    "bye": 0.0013,
    "locked": 0.0196,
    "out": 0.3073,
-   "points": 0.4762
+   "points": 0.4763
   },
   "LAC": {
    "bye": 0.0,
    "locked": 0.0,
    "out": 0.9756,
-   "points": 1.0438
+   "points": 1.0439
   },
   "LV": {
    "bye": 0.0,
    "locked": 0.0027,
-   "out": 0.6714,
+   "out": 0.6715,
    "points": 0.7373
   },
   "MIA": {
    "bye": 0.0,
-   "locked": 0.0,
-   "out": 0.9936,
-   "points": 1.0634
+   "locked": 0.0001,
+   "out": 0.9937,
+   "points": 1.0636
   },
   "MIN": {
-   "bye": 0.0741,
-   "locked": 0.0391,
-   "out": 0.0559,
-   "points": 1.0405
+   "bye": 0.0745,
+   "locked": 0.0392,
+   "out": 0.0555,
+   "points": 1.0451
   },
   "NE": {
    "bye": 0.0067,
-   "locked": 0.0522,
-   "out": 0.1497,
-   "points": 0.5837
+   "locked": 0.0521,
+   "out": 0.1499,
+   "points": 0.5834
   },
   "NO": {
    "bye": 0.0,
@@ -1258,9 +1258,9 @@
   },
   "NYG": {
    "bye": 0.0005,
-   "locked": 0.0595,
+   "locked": 0.0596,
    "out": 0.437,
-   "points": 0.8824
+   "points": 0.8827
   },
   "NYJ": {
    "bye": 0.0,
@@ -1276,21 +1276,21 @@
   },
   "PIT": {
    "bye": 0.0075,
-   "locked": 0.0311,
-   "out": 0.1314,
-   "points": 0.4266
+   "locked": 0.031,
+   "out": 0.1315,
+   "points": 0.4268
   },
   "SEA": {
    "bye": 0.0019,
-   "locked": 0.0253,
-   "out": 0.244,
-   "points": 0.4536
+   "locked": 0.0251,
+   "out": 0.2452,
+   "points": 0.4537
   },
   "SF": {
-   "bye": 0.1398,
-   "locked": 0.0677,
-   "out": 0.0251,
-   "points": 1.8349
+   "bye": 0.1396,
+   "locked": 0.068,
+   "out": 0.0252,
+   "points": 1.8352
   },
   "TB": {
    "bye": 0.0,
@@ -1302,7 +1302,7 @@
    "bye": 0.0,
    "locked": 0.0001,
    "out": 0.9975,
-   "points": 1.0678
+   "points": 1.0677
   },
   "WAS": {
    "bye": 0.0,
@@ -1319,6 +1319,10 @@
   },
   {
    "generated_at": "2026-11-03T09:36:37-05:00",
+   "picks": ""
+  },
+  {
+   "generated_at": "2026-11-03T11:28:30-05:00",
    "picks": ""
   }
  ]
