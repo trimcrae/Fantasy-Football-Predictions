@@ -1,4 +1,17 @@
 # Written by `eliminator snapshot` from the nflverse injury report: starters with a game
 # designation and no entry in qb_status.yaml. Do not edit; put your own view of a QB in
 # qb_status.yaml and it replaces the automatic entry for that team.
-[]
+- team: CLE
+  player: Deshaun Watson
+  penalty: 3.5
+  status: questionable
+  injury: concussion
+  injured_week: 9
+  note: 'auto: nflverse injury report, average tier'
+- team: SEA
+  player: Sam Darnold
+  penalty: 3.5
+  status: out
+  injury: quadricep
+  injured_week: 9
+  note: 'auto: nflverse injury report, average tier'
