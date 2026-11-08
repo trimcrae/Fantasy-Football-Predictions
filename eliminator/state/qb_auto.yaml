@@ -8,6 +8,13 @@
   injury: concussion
   injured_week: 9
   note: 'auto: nflverse injury report, average tier'
+- team: MIN
+  player: Kyler Murray
+  penalty: 3.5
+  status: out
+  injury: hamstring
+  injured_week: 9
+  note: 'auto: nflverse injury report, average tier'
 - team: SEA
   player: Sam Darnold
   penalty: 3.5
