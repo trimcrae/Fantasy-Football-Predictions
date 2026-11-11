@@ -18,7 +18,7 @@
   17,
   18
  ],
- "generated_at": "2026-11-10T15:25:59-05:00",
+ "generated_at": "2026-11-11T15:08:58-05:00",
  "ratings_source": "inpredictable",
  "n_lines_posted": 163,
  "n_priced_games": 27,
@@ -36,8 +36,8 @@
    "opp": "TEN",
    "home": false,
    "neutral": false,
-   "prob": 0.8223,
-   "spread": 10.6946,
+   "prob": 0.8082,
+   "spread": 10.0794,
    "source": "moneyline",
    "kickoff": "2026-11-15T13:00:00-05:00",
    "locked": false,
@@ -49,8 +49,8 @@
    "opp": "NYJ",
    "home": false,
    "neutral": false,
-   "prob": 0.7958,
-   "spread": 9.5645,
+   "prob": 0.7819,
+   "spread": 9.0094,
    "source": "moneyline",
    "kickoff": "2026-11-15T13:00:00-05:00",
    "locked": false,
@@ -62,8 +62,8 @@
    "opp": "ARI",
    "home": false,
    "neutral": false,
-   "prob": 0.7867,
-   "spread": 9.2006,
+   "prob": 0.7768,
+   "spread": 8.8114,
    "source": "moneyline",
    "kickoff": "2026-11-15T16:05:00-05:00",
    "locked": false,
@@ -75,8 +75,8 @@
    "opp": "LV",
    "home": false,
    "neutral": false,
-   "prob": 0.7095,
-   "spread": 6.3875,
+   "prob": 0.718,
+   "spread": 6.6741,
    "source": "moneyline",
    "kickoff": "2026-11-15T16:05:00-05:00",
    "locked": false,
@@ -88,8 +88,8 @@
    "opp": "CLE",
    "home": false,
    "neutral": false,
-   "prob": 0.6636,
-   "spread": 4.8879,
+   "prob": 0.669,
+   "spread": 5.0583,
    "source": "moneyline",
    "kickoff": "2026-11-15T13:00:00-05:00",
    "locked": false,
@@ -123,12 +123,25 @@
    "qb_note": ""
   },
   {
+   "team": "IND",
+   "opp": "MIA",
+   "home": true,
+   "neutral": false,
+   "prob": 0.6309,
+   "spread": 3.8685,
+   "source": "moneyline",
+   "kickoff": "2026-11-15T13:00:00-05:00",
+   "locked": false,
+   "played": false,
+   "qb_note": ""
+  },
+  {
    "team": "KC",
    "opp": "ATL",
    "home": false,
    "neutral": false,
-   "prob": 0.6164,
-   "spread": 3.4265,
+   "prob": 0.6225,
+   "spread": 3.6096,
    "source": "moneyline",
    "kickoff": "2026-11-15T13:00:00-05:00",
    "locked": false,
@@ -153,8 +166,8 @@
    "opp": "MIN",
    "home": true,
    "neutral": false,
-   "prob": 0.6038,
-   "spread": 3.044,
+   "prob": 0.5934,
+   "spread": 2.7332,
    "source": "moneyline",
    "kickoff": "2026-11-15T13:00:00-05:00",
    "locked": false,
@@ -175,25 +188,12 @@
    "qb_note": ""
   },
   {
-   "team": "IND",
-   "opp": "MIA",
-   "home": true,
-   "neutral": false,
-   "prob": 0.5635,
-   "spread": 1.8493,
-   "source": "moneyline",
-   "kickoff": "2026-11-15T13:00:00-05:00",
-   "locked": false,
-   "played": false,
-   "qb_note": ""
-  },
-  {
    "team": "NYG",
    "opp": "WAS",
    "home": true,
    "neutral": false,
-   "prob": 0.5427,
-   "spread": 1.2421,
+   "prob": 0.5635,
+   "spread": 1.8493,
    "source": "moneyline",
    "kickoff": "2026-11-12T20:15:00-05:00",
    "locked": false,
@@ -205,8 +205,8 @@
    "opp": "CAR",
    "home": true,
    "neutral": false,
-   "prob": 0.5261,
-   "spread": 0.7571,
+   "prob": 0.5514,
+   "spread": 1.4961,
    "source": "moneyline",
    "kickoff": "2026-11-15T13:00:00-05:00",
    "locked": false,
@@ -218,8 +218,8 @@
    "opp": "NO",
    "home": false,
    "neutral": false,
-   "prob": 0.4739,
-   "spread": -0.7571,
+   "prob": 0.4486,
+   "spread": -1.4961,
    "source": "moneyline",
    "kickoff": "2026-11-15T13:00:00-05:00",
    "locked": false,
@@ -231,23 +231,10 @@
    "opp": "NYG",
    "home": false,
    "neutral": false,
-   "prob": 0.4573,
-   "spread": -1.2421,
-   "source": "moneyline",
-   "kickoff": "2026-11-12T20:15:00-05:00",
-   "locked": false,
-   "played": false,
-   "qb_note": ""
-  },
-  {
-   "team": "MIA",
-   "opp": "IND",
-   "home": false,
-   "neutral": false,
    "prob": 0.4365,
    "spread": -1.8493,
    "source": "moneyline",
-   "kickoff": "2026-11-15T13:00:00-05:00",
+   "kickoff": "2026-11-12T20:15:00-05:00",
    "locked": false,
    "played": false,
    "qb_note": ""
@@ -270,21 +257,8 @@
    "opp": "GB",
    "home": false,
    "neutral": false,
-   "prob": 0.3962,
-   "spread": -3.044,
-   "source": "moneyline",
-   "kickoff": "2026-11-15T13:00:00-05:00",
-   "locked": false,
-   "played": false,
-   "qb_note": ""
-  },
-  {
-   "team": "ATL",
-   "opp": "KC",
-   "home": true,
-   "neutral": false,
-   "prob": 0.3836,
-   "spread": -3.4265,
+   "prob": 0.4066,
+   "spread": -2.7332,
    "source": "moneyline",
    "kickoff": "2026-11-15T13:00:00-05:00",
    "locked": false,
@@ -300,6 +274,32 @@
    "spread": -3.4265,
    "source": "moneyline",
    "kickoff": "2026-11-15T20:20:00-05:00",
+   "locked": false,
+   "played": false,
+   "qb_note": ""
+  },
+  {
+   "team": "ATL",
+   "opp": "KC",
+   "home": true,
+   "neutral": false,
+   "prob": 0.3775,
+   "spread": -3.6096,
+   "source": "moneyline",
+   "kickoff": "2026-11-15T13:00:00-05:00",
+   "locked": false,
+   "played": false,
+   "qb_note": ""
+  },
+  {
+   "team": "MIA",
+   "opp": "IND",
+   "home": false,
+   "neutral": false,
+   "prob": 0.3691,
+   "spread": -3.8685,
+   "source": "moneyline",
+   "kickoff": "2026-11-15T13:00:00-05:00",
    "locked": false,
    "played": false,
    "qb_note": ""
@@ -335,8 +335,8 @@
    "opp": "HOU",
    "home": true,
    "neutral": false,
-   "prob": 0.3364,
-   "spread": -4.8879,
+   "prob": 0.331,
+   "spread": -5.0583,
    "source": "moneyline",
    "kickoff": "2026-11-15T13:00:00-05:00",
    "locked": false,
@@ -348,8 +348,8 @@
    "opp": "SEA",
    "home": true,
    "neutral": false,
-   "prob": 0.2905,
-   "spread": -6.3875,
+   "prob": 0.282,
+   "spread": -6.6741,
    "source": "moneyline",
    "kickoff": "2026-11-15T16:05:00-05:00",
    "locked": false,
@@ -361,8 +361,8 @@
    "opp": "LA",
    "home": true,
    "neutral": false,
-   "prob": 0.2133,
-   "spread": -9.2006,
+   "prob": 0.2232,
+   "spread": -8.8114,
    "source": "moneyline",
    "kickoff": "2026-11-15T16:05:00-05:00",
    "locked": false,
@@ -374,8 +374,8 @@
    "opp": "BUF",
    "home": true,
    "neutral": false,
-   "prob": 0.2042,
-   "spread": -9.5645,
+   "prob": 0.2181,
+   "spread": -9.0094,
    "source": "moneyline",
    "kickoff": "2026-11-15T13:00:00-05:00",
    "locked": false,
@@ -387,8 +387,8 @@
    "opp": "JAX",
    "home": true,
    "neutral": false,
-   "prob": 0.1777,
-   "spread": -10.6946,
+   "prob": 0.1918,
+   "spread": -10.0794,
    "source": "moneyline",
    "kickoff": "2026-11-15T13:00:00-05:00",
    "locked": false,
@@ -429,89 +429,40 @@
   }
  ],
  "ratings": {
-  "ARI": -5.2749,
-  "ATL": -0.6749,
-  "BAL": -4.3749,
-  "BUF": 6.5251,
-  "CAR": -0.5749,
-  "CHI": 3.7251,
-  "CIN": 4.4251,
-  "CLE": -3.1313,
-  "DAL": 0.7251,
-  "DEN": 3.1251,
-  "DET": 3.9251,
-  "GB": 2.6314,
-  "HOU": 3.1516,
-  "IND": -4.0749,
-  "JAX": 6.5251,
-  "KC": 4.4251,
-  "LA": 5.1251,
-  "LAC": -6.0749,
-  "LV": -2.8424,
-  "MIA": -4.9749,
-  "MIN": 1.494,
-  "NE": 2.1251,
-  "NO": -1.1749,
-  "NYG": -4.1749,
-  "NYJ": -3.9749,
-  "PHI": -8.4749,
-  "PIT": 1.7251,
-  "SEA": 4.0427,
-  "SF": 5.2251,
-  "TB": 0.0251,
-  "TEN": -5.8749,
-  "WAS": -3.2749
+  "ARI": -6.3531,
+  "ATL": -0.5531,
+  "BAL": -2.0531,
+  "BUF": 6.7469,
+  "CAR": -1.9531,
+  "CHI": 5.0469,
+  "CIN": 3.6469,
+  "CLE": -3.2531,
+  "DAL": 0.6469,
+  "DEN": 2.6469,
+  "DET": 3.3469,
+  "GB": 2.5469,
+  "HOU": 3.7469,
+  "IND": -4.2531,
+  "JAX": 5.9469,
+  "KC": 4.8469,
+  "LA": 4.9469,
+  "LAC": -3.9531,
+  "LV": -4.8531,
+  "MIA": -6.7531,
+  "MIN": 1.1469,
+  "NE": 1.7469,
+  "NO": -1.8531,
+  "NYG": -2.8531,
+  "NYJ": -3.9531,
+  "PHI": -6.8531,
+  "PIT": 0.6469,
+  "SEA": 3.9469,
+  "SF": 5.2469,
+  "TB": 0.7469,
+  "TEN": -5.9531,
+  "WAS": -2.1531
  },
- "qb_situations": [
-  {
-   "team": "CLE",
-   "player": "Deshaun Watson",
-   "status": "questionable",
-   "injury": "concussion",
-   "penalty": 3.5,
-   "injured_week": 9,
-   "return_week": null,
-   "source": "auto",
-   "p_out": {
-    "10": 0.14,
-    "12": 0.048,
-    "13": 0.02
-   }
-  },
-  {
-   "team": "MIN",
-   "player": "Kyler Murray",
-   "status": "out",
-   "injury": "hamstring",
-   "penalty": 3.5,
-   "injured_week": 9,
-   "return_week": null,
-   "source": "auto",
-   "p_out": {
-    "10": 0.75,
-    "11": 0.5,
-    "12": 0.3,
-    "13": 0.15,
-    "14": 0.07
-   }
-  },
-  {
-   "team": "SEA",
-   "player": "Sam Darnold",
-   "status": "out",
-   "injury": "quadricep",
-   "penalty": 3.5,
-   "injured_week": 9,
-   "return_week": null,
-   "source": "auto",
-   "p_out": {
-    "10": 0.7,
-    "12": 0.45,
-    "13": 0.25,
-    "14": 0.1
-   }
-  }
- ],
+ "qb_situations": [],
  "explain": {
   "summary": "No entries alive.",
   "exposure": "",
@@ -522,7 +473,7 @@
   },
   "notes": [
    "Games with no line yet use inpredictable's betting-market power ratings.",
-   "Week 18: in each simulated season a team whose playoff seed is settled after week 17 is docked 10 points for a bye or 7 for a seed with a wild-card game, and an eliminated team 1, fitted on 2011-2025 closing lines. Right now SF is the likeliest to be resting (32%).",
+   "Week 18: in each simulated season a team whose playoff seed is settled after week 17 is docked 10 points for a bye or 7 for a seed with a wild-card game, and an eliminated team 1, fitted on 2011-2025 closing lines. Right now SF is the likeliest to be resting (29%).",
    "How much a posted line can still move is fitted from 2488 archived lines (about 2.2 pts one week out).",
    "Later weeks are not planned as named teams: season odds assume the entry takes the best team still available each week at the line at the time. Simulated spreads widen as the season goes on, as real ones do, so the later menu is richer than today's board.",
    "Survival percentages come from 50,000 simulated seasons; differences under about 0.09 points are noise.",
@@ -534,194 +485,194 @@
   "ARI": {
    "bye": 0.0,
    "locked": 0.0,
-   "out": 0.9792,
-   "points": 1.0477
+   "out": 0.9824,
+   "points": 1.0513
   },
   "ATL": {
    "bye": 0.0,
-   "locked": 0.0258,
-   "out": 0.608,
-   "points": 0.8286
+   "locked": 0.0291,
+   "out": 0.6052,
+   "points": 0.8482
   },
   "BAL": {
    "bye": 0.0,
-   "locked": 0.0007,
-   "out": 0.8427,
-   "points": 0.9067
+   "locked": 0.0019,
+   "out": 0.7515,
+   "points": 0.8169
   },
   "BUF": {
-   "bye": 0.1685,
-   "locked": 0.0307,
-   "out": 0.0015,
-   "points": 1.8311
+   "bye": 0.1857,
+   "locked": 0.0292,
+   "out": 0.0012,
+   "points": 1.985
   },
   "CAR": {
    "bye": 0.0,
-   "locked": 0.0433,
-   "out": 0.5386,
-   "points": 0.8747
+   "locked": 0.0313,
+   "out": 0.6002,
+   "points": 0.8579
   },
   "CHI": {
-   "bye": 0.0325,
-   "locked": 0.0545,
-   "out": 0.0438,
-   "points": 0.7343
+   "bye": 0.0529,
+   "locked": 0.0596,
+   "out": 0.0275,
+   "points": 0.9485
   },
   "CIN": {
-   "bye": 0.0206,
-   "locked": 0.0369,
-   "out": 0.0151,
-   "points": 0.4684
+   "bye": 0.0162,
+   "locked": 0.0388,
+   "out": 0.0185,
+   "points": 0.4423
   },
   "CLE": {
    "bye": 0.0,
-   "locked": 0.0085,
-   "out": 0.4521,
-   "points": 0.5427
+   "locked": 0.0087,
+   "out": 0.4461,
+   "points": 0.5371
   },
   "DAL": {
    "bye": 0.0,
-   "locked": 0.1093,
-   "out": 0.2515,
-   "points": 1.0225
+   "locked": 0.0869,
+   "out": 0.3141,
+   "points": 0.9349
   },
   "DEN": {
-   "bye": 0.0301,
-   "locked": 0.0395,
-   "out": 0.0197,
-   "points": 0.5822
+   "bye": 0.0356,
+   "locked": 0.0434,
+   "out": 0.0135,
+   "points": 0.6547
   },
   "DET": {
-   "bye": 0.0599,
-   "locked": 0.0471,
-   "out": 0.0395,
-   "points": 0.9412
+   "bye": 0.0518,
+   "locked": 0.0381,
+   "out": 0.0516,
+   "points": 0.8151
   },
   "GB": {
    "bye": 0.0021,
-   "locked": 0.021,
-   "out": 0.2274,
-   "points": 0.408
+   "locked": 0.0196,
+   "out": 0.2313,
+   "points": 0.4024
   },
   "HOU": {
    "bye": 0.0,
-   "locked": 0.0143,
-   "out": 0.4046,
-   "points": 0.5314
+   "locked": 0.017,
+   "out": 0.3813,
+   "points": 0.5248
   },
   "IND": {
    "bye": 0.0,
-   "locked": 0.0001,
-   "out": 0.9761,
-   "points": 1.0448
+   "locked": 0.0,
+   "out": 0.9697,
+   "points": 1.0379
   },
   "JAX": {
-   "bye": 0.0292,
-   "locked": 0.0678,
-   "out": 0.0042,
-   "points": 0.7516
+   "bye": 0.0219,
+   "locked": 0.0746,
+   "out": 0.0053,
+   "points": 0.7302
   },
   "KC": {
-   "bye": 0.0186,
-   "locked": 0.0664,
-   "out": 0.0153,
-   "points": 0.6525
+   "bye": 0.0221,
+   "locked": 0.0724,
+   "out": 0.014,
+   "points": 0.7265
   },
   "LA": {
-   "bye": 0.0007,
-   "locked": 0.0203,
-   "out": 0.266,
-   "points": 0.4313
+   "bye": 0.0005,
+   "locked": 0.0193,
+   "out": 0.2827,
+   "points": 0.4396
   },
   "LAC": {
    "bye": 0.0,
    "locked": 0.0,
-   "out": 0.9993,
-   "points": 1.0693
+   "out": 0.9984,
+   "points": 1.0683
   },
   "LV": {
    "bye": 0.0,
-   "locked": 0.0022,
-   "out": 0.6944,
-   "points": 0.7582
+   "locked": 0.0015,
+   "out": 0.7642,
+   "points": 0.8281
   },
   "MIA": {
    "bye": 0.0,
    "locked": 0.0,
-   "out": 0.9972,
-   "points": 1.067
+   "out": 0.9988,
+   "points": 1.0687
   },
   "MIN": {
-   "bye": 0.0206,
-   "locked": 0.0305,
-   "out": 0.1025,
-   "points": 0.5171
+   "bye": 0.0225,
+   "locked": 0.0303,
+   "out": 0.0999,
+   "points": 0.531
   },
   "NE": {
-   "bye": 0.0004,
-   "locked": 0.0431,
-   "out": 0.2072,
-   "points": 0.523
+   "bye": 0.0002,
+   "locked": 0.0409,
+   "out": 0.228,
+   "points": 0.5276
   },
   "NO": {
    "bye": 0.0,
-   "locked": 0.0282,
-   "out": 0.6493,
-   "points": 0.8888
+   "locked": 0.0283,
+   "out": 0.6494,
+   "points": 0.8895
   },
   "NYG": {
    "bye": 0.0002,
-   "locked": 0.0931,
-   "out": 0.3157,
-   "points": 0.9812
+   "locked": 0.1168,
+   "out": 0.261,
+   "points": 1.0856
   },
   "NYJ": {
+   "bye": 0.0,
+   "locked": 0.0,
+   "out": 0.9747,
+   "points": 1.0432
+  },
+  "PHI": {
    "bye": 0.0,
    "locked": 0.0,
    "out": 0.9811,
    "points": 1.05
   },
-  "PHI": {
-   "bye": 0.0,
-   "locked": 0.0001,
-   "out": 0.9863,
-   "points": 1.0561
-  },
   "PIT": {
-   "bye": 0.0056,
-   "locked": 0.0491,
-   "out": 0.0644,
-   "points": 0.4616
+   "bye": 0.0039,
+   "locked": 0.0442,
+   "out": 0.081,
+   "points": 0.4287
   },
   "SEA": {
-   "bye": 0.0004,
-   "locked": 0.015,
-   "out": 0.268,
-   "points": 0.3941
+   "bye": 0.0003,
+   "locked": 0.0159,
+   "out": 0.2534,
+   "points": 0.3842
   },
   "SF": {
-   "bye": 0.2664,
-   "locked": 0.0559,
-   "out": 0.0052,
-   "points": 2.9485
+   "bye": 0.2337,
+   "locked": 0.0587,
+   "out": 0.0074,
+   "points": 2.6552
   },
   "TB": {
    "bye": 0.0,
-   "locked": 0.0736,
-   "out": 0.4459,
-   "points": 0.9842
+   "locked": 0.0846,
+   "out": 0.4088,
+   "points": 1.0205
   },
   "TEN": {
    "bye": 0.0,
    "locked": 0.0,
-   "out": 0.9982,
-   "points": 1.0681
+   "out": 0.9974,
+   "points": 1.0673
   },
   "WAS": {
    "bye": 0.0,
-   "locked": 0.0012,
-   "out": 0.9027,
-   "points": 0.9743
+   "locked": 0.0021,
+   "out": 0.8868,
+   "points": 0.9636
   }
  },
  "horizon": 1,
@@ -744,6 +695,10 @@
   },
   {
    "generated_at": "2026-11-10T14:58:09-05:00",
+   "picks": ""
+  },
+  {
+   "generated_at": "2026-11-10T15:25:59-05:00",
    "picks": ""
   }
  ]
